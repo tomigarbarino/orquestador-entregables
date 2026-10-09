@@ -149,12 +149,32 @@ test('la vista general agrupa las fuentes apagadas, no tiene destinos y trae ró
   sinSuperposicion(d, 'diff general');
 });
 
+test('con más de 4 fuentes, la disposición ancha las pone en dos columnas y baja el alto', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  const siete = structuredClone(ejemplo);
+  siete.fuentes.jira.activo = true;
+  siete.entregables.daily.fuentes = ['github', 'sesiones_ia', 'calendario', 'reuniones', 'slack', 'teams', 'jira'];
+  const g = grafoEntregable({ entregableId: 'daily', config: siete, recetas, modulos });
+  const fuentes = g.nodes.filter((n) => n.data.tipo === 'fuente');
+  assert.equal(fuentes.length, 7);
+  assert.equal(new Set(fuentes.map((n) => n.position.x)).size, 2);
+  assert.ok(cajaDe(g).alto < 650, `alto: ${cajaDe(g).alto}`);
+  const posiciones = g.nodes.map((n) => `${n.position.x},${n.position.y}`);
+  assert.equal(new Set(posiciones).size, g.nodes.length);
+  sinSuperposicion(g, 'siete fuentes');
+  for (const f of fuentes) assert.ok(g.edges.some((e) => e.source === f.id && e.target.startsWith('paso:')), `${f.id} sin arista`);
+  // Angosta: sigue en una sola columna.
+  const angosta = grafoEntregable({ entregableId: 'daily', config: siete, recetas, modulos, disposicion: 'angosta' });
+  assert.equal(new Set(angosta.nodes.filter((n) => n.data.tipo === 'fuente').map((n) => n.position.x)).size, 1);
+});
+
 test('la daily entra en las dos disposiciones y sus datos son legibles', () => {
   const recetas = espacio.listarRecetas();
   const modulos = espacio.listarModulos();
   const ancha = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos });
   const cajaAncha = cajaDe(ancha);
-  assert.ok(cajaAncha.ancho <= 640 && cajaAncha.alto <= 1020, `ancha: ${cajaAncha.ancho}x${cajaAncha.alto}`);
+  assert.ok(cajaAncha.ancho <= 880 && cajaAncha.alto <= 620, `ancha: ${cajaAncha.ancho}x${cajaAncha.alto}`);
   const angosta = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos, disposicion: 'angosta' });
   assert.ok(cajaDe(angosta).ancho <= 420, `angosta: ${cajaDe(angosta).ancho}`);
   assert.deepEqual(angosta.nodes.map((n) => n.id), ancha.nodes.map((n) => n.id));

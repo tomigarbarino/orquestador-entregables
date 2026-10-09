@@ -1,0 +1,10 @@
+[
+  { "entregable": "daily", "caso": "daily-ayer", "origen": "rutina", "inicio": "2026-10-08 09:00:04", "segundos": 38, "aprobada": "2026-10-08 09:14:00" },
+  { "entregable": "registro-tareas", "caso": "registro-tareas-ayer", "origen": "rutina", "inicio": "2026-10-08 18:00:06", "segundos": 41, "aprobada": "2026-10-08 18:20:00" },
+  { "entregable": "deck-avance", "caso": "deck-avance", "origen": "rutina", "inicio": "2026-10-08 16:00:03", "segundos": 57, "aprobada": "2026-10-08 16:35:00" },
+  { "entregable": "reunion-comercial", "caso": "reunion-comercial", "origen": "interfaz", "inicio": "2026-10-08 17:40:12", "segundos": 33, "aprobada": "2026-10-08 17:55:00" },
+  { "entregable": "digest-jira", "caso": "digest-jira", "origen": "rutina", "inicio": "2026-10-09 08:30:05", "segundos": 29, "aprobada": null },
+  { "entregable": "daily", "caso": "daily", "origen": "rutina", "inicio": "2026-10-09 09:00:04", "segundos": 44, "aprobada": "2026-10-09 09:12:00" },
+  { "entregable": "registro-tareas", "caso": "registro-tareas", "origen": "interfaz", "inicio": "2026-10-09 09:25:31", "segundos": 36, "aprobada": null },
+  { "entregable": "bitacora-reuniones", "caso": "bitacora-reuniones", "origen": "interfaz", "inicio": "2026-10-09 10:15:20", "segundos": 40, "aprobada": null }
+]

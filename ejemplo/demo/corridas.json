@@ -39,13 +39,36 @@
         "refs": [
           "mail:resumen-planning-rutas"
         ]
+      },
+      "slack": {
+        "resumen": "2 mensajes: 1 pedido de Beto y 1 charla sin pedido",
+        "refs": [
+          "slack:C04PEDIDOS/1759931520.000100",
+          "slack:C04RUTAS/1759934100.000200"
+        ]
+      },
+      "teams": {
+        "resumen": "1 aviso en el canal General",
+        "refs": [
+          "teams:19-producto-general/1759927380"
+        ]
+      },
+      "jira": {
+        "resumen": "3 tickets de Rutas asignados a Ana",
+        "refs": [
+          "RUT-41",
+          "RUT-44",
+          "RUT-47"
+        ]
       }
     },
     "pasos": {
       "ventana": "Miércoles 8 a hoy",
       "evidencia": "4 PRs, 5 sesiones, 3 eventos, 1 resumen de reunión",
       "agrupar": "2 proyectos, 6 ítems",
-      "redactar": "Guion de 80 segundos"
+      "redactar": "Guion de 80 segundos",
+      "pedidos": "1 pedido por Slack, 1 aviso en Teams y 3 tickets de Jira",
+      "seguimiento-comercial": "Ningún próximo paso comercial vence hoy"
     },
     "borrador": [
       "**Hecho**",
@@ -60,10 +83,11 @@
       "- Validar con Beto la pantalla de reparto antes de pasarla a main.",
       "- Corregir la carga de remitos en Depósitos.",
       "- Pedido del planning: pasarle a Beto la lista de clientes con ventana horaria, para el 2026-10-14.",
+      "- Beto pidió por Slack que el aviso de paradas fuera de ventana horaria quede listo antes del viernes.",
       "",
       "**Bloqueos**",
       "",
-      "- Para probar con datos reales de Transportes Demo necesito el acceso de solo lectura que pidió Beto."
+      "- Para probar con datos reales de Transportes Demo necesito el acceso de solo lectura que pidió Beto (RUT-44)."
     ],
     "items": [
       {
@@ -72,6 +96,10 @@
           {
             "fuente": "github",
             "ref": "acme-ejemplo/rutas-api#212"
+          },
+          {
+            "fuente": "jira",
+            "ref": "RUT-41"
           }
         ]
       },
@@ -85,6 +113,10 @@
           {
             "fuente": "sesiones_ia",
             "ref": "claude:3f9a21c0"
+          },
+          {
+            "fuente": "jira",
+            "ref": "RUT-47"
           }
         ]
       },
@@ -125,6 +157,19 @@
           {
             "fuente": "sesiones_ia",
             "ref": "claude:9e8a7f61"
+          },
+          {
+            "fuente": "jira",
+            "ref": "RUT-44"
+          }
+        ]
+      },
+      {
+        "texto": "Beto pidió por Slack que el aviso de paradas fuera de ventana horaria quede listo antes del viernes",
+        "evidencia": [
+          {
+            "fuente": "slack",
+            "ref": "slack:C04PEDIDOS/1759931520.000100"
           }
         ]
       }
@@ -164,6 +209,20 @@
         "refs": [
           "claude:4d2c1b0a"
         ]
+      },
+      {
+        "texto": "Charla en #rutas-equipo sobre el horario del feriado",
+        "motivo": "No es un pedido ni un bloqueo: \"alguien sabe si el lunes hay reparto?\"",
+        "refs": [
+          "slack:C04RUTAS/1759934100.000200"
+        ]
+      },
+      {
+        "texto": "Aviso de Carla en Teams sobre el deploy del jueves",
+        "motivo": "Aviso informativo del equipo, sin trabajo propio: \"el jueves el deploy sale a las 18\"",
+        "refs": [
+          "teams:19-producto-general/1759927380"
+        ]
       }
     ],
     "faltantes": []
@@ -200,19 +259,36 @@
       "reuniones": {
         "resumen": "Sin resúmenes de reuniones de hoy",
         "refs": []
+      },
+      "slack": {
+        "resumen": "1 pedido de Beto",
+        "refs": [
+          "slack:C04PEDIDOS/1759931520.000100"
+        ]
+      },
+      "teams": {
+        "resumen": "Sin mensajes con pedidos",
+        "refs": []
+      },
+      "jira": {
+        "resumen": "1 ticket asignado a Ana",
+        "refs": [
+          "RUT-44"
+        ]
       }
     },
     "pasos": {
       "ventana": "Hoy, 9 de octubre",
       "evidencia": "2 PRs, 3 sesiones, 1 evento, sin resúmenes de reuniones",
       "agrupar": "2 resultados",
-      "redactar": "2 registros"
+      "redactar": "2 registros",
+      "pedidos": "1 pedido por Slack y 1 ticket de Jira"
     },
     "borrador": [
       "| Fecha | Título | Categoría | Estado | Horas | Descripción |",
       "|---|---|---|---|---|---|",
       "| 2026-10-09 | Rutas: tiempo estimado por parada en la pantalla de reparto | Desarrollo | En proceso | Sin estimar | La pantalla de reparto muestra cuánto falta para cada parada. Está en preview, falta validarla con operaciones antes de pasarla a producción (rutas-web#98). |",
-      "| 2026-10-09 | Rutas: aviso cuando una parada queda fuera de su ventana horaria | Desarrollo | En proceso | Sin estimar | El cálculo de recorridos va a avisar qué paradas no llegan a tiempo. PR abierto contra main, en revisión (rutas-api#214). |",
+      "| 2026-10-09 | Rutas: aviso cuando una parada queda fuera de su ventana horaria | Desarrollo | En proceso | Sin estimar | El cálculo de recorridos va a avisar qué paradas no llegan a tiempo, como pidió Beto por Slack. PR abierto contra main, en revisión (rutas-api#214). |",
       "",
       "**Quedó afuera:** la demo con Transportes Demo (agendada, sin confirmación de que ocurrió) y una consulta sin entrega."
     ],
@@ -240,6 +316,10 @@
           {
             "fuente": "sesiones_ia",
             "ref": "claude:c01d55e2"
+          },
+          {
+            "fuente": "slack",
+            "ref": "slack:C04PEDIDOS/1759931520.000100"
           }
         ]
       }
@@ -257,6 +337,13 @@
         "motivo": "Pregunta y respuesta sin artefacto, sin PR y sin decisión documentada",
         "refs": [
           "claude:7b2e9d14"
+        ]
+      },
+      {
+        "texto": "Ticket RUT-44 bloqueado",
+        "motivo": "Espera el acceso de Transportes Demo: no hubo trabajo propio hoy",
+        "refs": [
+          "RUT-44"
         ]
       }
     ],
@@ -277,9 +364,10 @@
         ]
       },
       "calendario": {
-        "resumen": "Reunión del 8/10, 45 min",
+        "resumen": "Reunión del 8/10, 45 min, y un sync interno",
         "refs": [
-          "evento:demo-cliente"
+          "evento:demo-cliente",
+          "evento:sync-ventas"
         ]
       }
     },
@@ -287,10 +375,11 @@
       "lectura": "Lectura de la persona incluida",
       "evidencia": "Resumen y fecha encontrados",
       "candidatas": "1 reunión con el cliente",
-      "redactar": "Ficha en tres bloques"
+      "redactar": "Ficha en tres bloques",
+      "proximos-pasos": "2 próximos pasos con responsable y fecha"
     },
     "borrador": [
-      "**Fecha:** 2026-10-08 · **Cliente:** Transportes Demo · **Participantes:** Ana Ejemplo · **Comercial:** (sin asignar)",
+      "**Fecha:** 2026-10-08 · **Cliente:** Transportes Demo · **Participantes:** Ana Ejemplo · **Comercial:** Dario Ejemplo",
       "",
       "**Contexto y conclusión.** Reunión con el jefe de logística de Transportes Demo para ver el piloto de Rutas. Hoy planifican 40 repartos diarios a mano y pierden unas dos horas por día.",
       "",
@@ -327,7 +416,32 @@
         ]
       }
     ],
-    "descartados": []
+    "descartados": [
+      {
+        "texto": "Sync interno de ventas",
+        "motivo": "No es una reunión con el cliente: el evento se llama \"Sync interno de ventas\" y no tiene participantes externos",
+        "refs": [
+          "evento:sync-ventas"
+        ]
+      }
+    ],
+    "seguimiento": {
+      "cliente": "Transportes Demo",
+      "fecha_reunion": "2026-10-08",
+      "pasos": [
+        {
+          "paso": "Enviar la propuesta del piloto ampliado",
+          "responsable": "Ana Ejemplo",
+          "fecha_limite": "2026-10-15"
+        },
+        {
+          "paso": "Compartir los datos de un mes de repartos",
+          "responsable": "Transportes Demo",
+          "fecha_limite": "2026-10-14",
+          "fecha_estimada": true
+        }
+      ]
+    }
   },
   "bitacora-reuniones": {
     "ventana": {
@@ -359,7 +473,8 @@
       "reuniones": "4 eventos, 3 reuniones",
       "resumenes": "2 resúmenes, 1 reunión sin resumen",
       "decisiones": "2 decisiones, 4 próximos pasos",
-      "redactar": "Bitácora con 2 reuniones y 1 sin resumen"
+      "redactar": "Bitácora con 2 reuniones y 1 sin resumen",
+      "proximos-pasos-cliente": "2 próximos pasos con clientes, propuestos al seguimiento"
     },
     "borrador": [
       "**Bitácora de reuniones · 2 al 9 de octubre de 2026**",
@@ -541,17 +656,18 @@
         ]
       },
       "calendario": {
-        "resumen": "2 reuniones hoy",
+        "resumen": "3 reuniones hoy",
         "refs": [
           "evento:planning-rutas",
-          "evento:demo-cliente"
+          "evento:demo-cliente",
+          "evento:daily"
         ]
       }
     },
     "pasos": {
       "ventana": "Ayer y hoy",
       "tickets": "5 tickets en 2 proyectos",
-      "reuniones": "2 reuniones",
+      "reuniones": "3 reuniones",
       "cruzar": "3 cruces",
       "redactar": "Digest listo"
     },
@@ -619,6 +735,420 @@
         ]
       }
     ],
-    "descartados": []
+    "descartados": [
+      {
+        "texto": "Daily del equipo",
+        "motivo": "Reunión recurrente, sin tickets propios que cruzar: el evento se llama \"Daily\"",
+        "refs": [
+          "evento:daily"
+        ]
+      }
+    ]
+  },
+  "deck-avance": {
+    "ventana": {
+      "tipo": "periodo",
+      "desde": "2026-10-01",
+      "hasta": "2026-10-08",
+      "descripcion": "del 2026-10-01 (última entrega) al 2026-10-08"
+    },
+    "fuentes": {
+      "github": {
+        "resumen": "5 PRs en 3 repos",
+        "refs": [
+          "acme-ejemplo/rutas-api#205",
+          "acme-ejemplo/rutas-api#212",
+          "acme-ejemplo/rutas-web#98",
+          "acme-ejemplo/depositos#38",
+          "acme-ejemplo/depositos#41"
+        ]
+      },
+      "sesiones_ia": {
+        "resumen": "6 sesiones del período",
+        "refs": [
+          "claude:3f9a21c0",
+          "claude:5a6b7c8d",
+          "claude:e1f2a3b4",
+          "claude:7b2e9d14",
+          "claude:8c9d0e1f",
+          "claude:2b3c4d5e"
+        ]
+      }
+    },
+    "pasos": {
+      "periodo": "Del 1 al 8 de octubre, desde la última entrega",
+      "evidencia": "5 PRs, 6 sesiones",
+      "guion": "5 slides: resumen, Rutas, Depósitos, riesgos y próximos pasos",
+      "redactar": "Guion con estado en cada título"
+    },
+    "borrador": [
+      "**Deck de avance de Producto · 1 al 8 de octubre**",
+      "",
+      "**Slide 1 · Resumen de la semana**",
+      "- Mensaje: Rutas ya respeta las ventanas horarias y Depósitos entendió el desfase de stock.",
+      "- Estado: en producción (Rutas) e investigación (Depósitos).",
+      "",
+      "**Slide 2 · Rutas: ventanas horarias, en producción**",
+      "- Mensaje: el cálculo de recorridos respeta la ventana de cada cliente.",
+      "- Evidencia visual: captura del recorrido de Transportes Demo con las ventanas marcadas (rutas-api#212).",
+      "- Notas para decir: arrancó como un pedido del planning y salió en una semana.",
+      "",
+      "**Slide 3 · Rutas: tiempo por parada, en preview**",
+      "- Mensaje: la pantalla de reparto muestra cuánto falta para cada parada.",
+      "- Evidencia visual: pantalla de reparto en preview (rutas-web#98).",
+      "- Notas para decir: falta validarla con operaciones antes de pasarla a producción.",
+      "",
+      "**Slide 4 · Depósitos: por qué se desfasa el stock, en investigación**",
+      "- Mensaje: el desfase al cierre viene de remitos cargados dos veces.",
+      "- Evidencia visual: ejemplo de un remito duplicado (depositos#38).",
+      "- Notas para decir: el arreglo todavía no está mergeado.",
+      "",
+      "**Slide 5 · Próximos pasos**",
+      "- Validar la pantalla de reparto con Beto y corregir la carga de remitos."
+    ],
+    "items": [
+      {
+        "texto": "Cálculo de recorridos con ventanas horarias, en producción",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#212"
+          },
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#205"
+          }
+        ]
+      },
+      {
+        "texto": "Tiempo estimado por parada, en preview",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-web#98"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:3f9a21c0"
+          }
+        ]
+      },
+      {
+        "texto": "El desfase de stock viene de remitos cargados dos veces",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/depositos#38"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:7b2e9d14"
+          }
+        ]
+      },
+      {
+        "texto": "Validar la pantalla de reparto con Beto y corregir la carga de remitos",
+        "evidencia": [
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:5a6b7c8d"
+          }
+        ]
+      }
+    ],
+    "descartados": [
+      {
+        "texto": "Arreglo de la carga de remitos",
+        "motivo": "Sigue sin mergear: \"falta revisión de Carla\"",
+        "refs": [
+          "acme-ejemplo/depositos#41"
+        ]
+      },
+      {
+        "texto": "Sesión que ordenó el tablero del backlog",
+        "motivo": "Tarea interna sin entrega: \"reordené las columnas del tablero\"",
+        "refs": [
+          "claude:e1f2a3b4"
+        ]
+      },
+      {
+        "texto": "Sesión de consulta sobre formatos de fecha",
+        "motivo": "Pregunta y respuesta sin artefacto",
+        "refs": [
+          "claude:8c9d0e1f"
+        ]
+      },
+      {
+        "texto": "Sesión que probó una librería de mapas",
+        "motivo": "El cierre dice que se descartó y no quedó nada",
+        "refs": [
+          "claude:2b3c4d5e"
+        ]
+      }
+    ],
+    "faltantes": []
+  },
+  "daily-ayer": {
+    "ventana": {
+      "tipo": "dia_habil_anterior",
+      "desde": "2026-10-07",
+      "hasta": "2026-10-08",
+      "descripcion": "del 2026-10-07 a hoy"
+    },
+    "fuentes": {
+      "github": {
+        "resumen": "2 PRs en 1 repo",
+        "refs": [
+          "acme-ejemplo/rutas-api#209",
+          "acme-ejemplo/rutas-api#210"
+        ]
+      },
+      "sesiones_ia": {
+        "resumen": "3 sesiones",
+        "refs": [
+          "claude:a1b2c3d4",
+          "claude:b2c3d4e5",
+          "claude:c3d4e5f6"
+        ]
+      },
+      "calendario": {
+        "resumen": "2 reuniones",
+        "refs": [
+          "evento:daily",
+          "evento:retro-depositos"
+        ]
+      },
+      "reuniones": {
+        "resumen": "1 resumen del notetaker (retro de Depósitos)",
+        "refs": [
+          "reunion:retro-depositos"
+        ]
+      },
+      "slack": {
+        "resumen": "1 mensaje con un pedido de Beto",
+        "refs": [
+          "slack:C04PEDIDOS/1759845120.000300"
+        ]
+      },
+      "teams": {
+        "resumen": "Sin mensajes en la ventana",
+        "refs": []
+      },
+      "jira": {
+        "resumen": "2 tickets de Rutas asignados a Ana",
+        "refs": [
+          "RUT-39",
+          "RUT-41"
+        ]
+      }
+    },
+    "pasos": {
+      "ventana": "Martes 7 a hoy",
+      "evidencia": "2 PRs, 3 sesiones, 2 eventos, 1 resumen, 1 mensaje, 2 tickets",
+      "agrupar": "2 proyectos, 4 ítems",
+      "pedidos": "1 pedido por Slack y 2 tickets de Jira",
+      "seguimiento-comercial": "Ningún próximo paso comercial vence hoy",
+      "redactar": "Guion de 70 segundos"
+    },
+    "borrador": [
+      "**Hecho**",
+      "",
+      "- **Rutas**: el cálculo de recorridos ahora guarda la ventana horaria de cada cliente. Está mergeado a main, falta desplegarlo (rutas-api#209).",
+      "- **Rutas**: corregí el orden de las paradas cuando dos clientes comparten dirección. Mergeado a main (rutas-api#210).",
+      "- **Depósitos**: en la retro se confirmó que el desfase de stock viene de remitos cargados dos veces (resumen de la retro).",
+      "",
+      "**Pendiente / hoy**",
+      "",
+      "- Desplegar el cálculo con ventanas horarias (RUT-41).",
+      "- Beto pidió por Slack revisar el aviso de paradas fuera de ventana.",
+      "",
+      "**Bloqueos**",
+      "",
+      "- Sin bloqueos."
+    ],
+    "items": [
+      {
+        "texto": "Ventana horaria guardada por cliente, mergeada a main",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#209"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:a1b2c3d4"
+          },
+          {
+            "fuente": "jira",
+            "ref": "RUT-41"
+          }
+        ]
+      },
+      {
+        "texto": "Orden de paradas corregido para clientes con la misma dirección",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#210"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:b2c3d4e5"
+          },
+          {
+            "fuente": "jira",
+            "ref": "RUT-39"
+          }
+        ]
+      },
+      {
+        "texto": "El desfase de stock viene de remitos cargados dos veces",
+        "evidencia": [
+          {
+            "fuente": "reuniones",
+            "ref": "reunion:retro-depositos"
+          }
+        ]
+      },
+      {
+        "texto": "Beto pidió revisar el aviso de paradas fuera de ventana",
+        "evidencia": [
+          {
+            "fuente": "slack",
+            "ref": "slack:C04PEDIDOS/1759845120.000300"
+          }
+        ]
+      }
+    ],
+    "descartados": [
+      {
+        "texto": "Daily del equipo",
+        "motivo": "Reunión recurrente, sin trabajo propio que contar",
+        "refs": [
+          "evento:daily"
+        ]
+      },
+      {
+        "texto": "Retro de Depósitos (evento)",
+        "motivo": "El evento solo prueba la agenda: la reunión se cuenta por su resumen (reunion:retro-depositos)",
+        "refs": [
+          "evento:retro-depositos"
+        ]
+      },
+      {
+        "texto": "Sesión de consulta sobre el formato de las fechas",
+        "motivo": "Pregunta y respuesta sin entrega",
+        "refs": [
+          "claude:c3d4e5f6"
+        ]
+      }
+    ],
+    "faltantes": []
+  },
+  "registro-tareas-ayer": {
+    "ventana": {
+      "tipo": "hoy",
+      "desde": "2026-10-08",
+      "hasta": "2026-10-08",
+      "descripcion": "hoy (2026-10-08)"
+    },
+    "fuentes": {
+      "github": {
+        "resumen": "1 PR con movimiento",
+        "refs": [
+          "acme-ejemplo/rutas-api#210"
+        ]
+      },
+      "sesiones_ia": {
+        "resumen": "2 sesiones",
+        "refs": [
+          "claude:b2c3d4e5",
+          "claude:c3d4e5f6"
+        ]
+      },
+      "calendario": {
+        "resumen": "1 reunión",
+        "refs": [
+          "evento:retro-depositos"
+        ]
+      },
+      "reuniones": {
+        "resumen": "1 resumen del notetaker",
+        "refs": [
+          "reunion:retro-depositos"
+        ]
+      },
+      "slack": {
+        "resumen": "Sin pedidos nuevos",
+        "refs": []
+      },
+      "teams": {
+        "resumen": "Sin mensajes con pedidos",
+        "refs": []
+      },
+      "jira": {
+        "resumen": "1 ticket asignado a Ana",
+        "refs": [
+          "RUT-39"
+        ]
+      }
+    },
+    "pasos": {
+      "ventana": "Hoy, 8 de octubre",
+      "evidencia": "1 PR, 2 sesiones, 1 evento, 1 resumen, 1 ticket",
+      "agrupar": "2 resultados",
+      "pedidos": "Sin pedidos nuevos; 1 ticket de Jira",
+      "redactar": "2 registros"
+    },
+    "borrador": [
+      "| Fecha | Título | Categoría | Estado | Horas | Descripción |",
+      "|---|---|---|---|---|---|",
+      "| 2026-10-08 | Rutas: orden de paradas con clientes en la misma dirección | Desarrollo | Hecha | Sin estimar | Cuando dos clientes comparten dirección, las paradas ahora salen en el orden de su ventana horaria. Mergeado a main (rutas-api#210). |",
+      "| 2026-10-08 | Depósitos: retro del desfase de stock | Investigación | Hecha | Sin estimar | En la retro se confirmó que el desfase viene de remitos cargados dos veces (resumen de la retro). |",
+      "",
+      "**Quedó afuera:** una consulta sobre formatos de fecha, sin entrega."
+    ],
+    "items": [
+      {
+        "texto": "Orden de paradas con clientes en la misma dirección, mergeado",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#210"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:b2c3d4e5"
+          },
+          {
+            "fuente": "jira",
+            "ref": "RUT-39"
+          }
+        ]
+      },
+      {
+        "texto": "Retro de Depósitos: el desfase viene de remitos duplicados",
+        "evidencia": [
+          {
+            "fuente": "reuniones",
+            "ref": "reunion:retro-depositos"
+          },
+          {
+            "fuente": "calendario",
+            "ref": "evento:retro-depositos"
+          }
+        ]
+      }
+    ],
+    "descartados": [
+      {
+        "texto": "Consulta sobre formatos de fecha",
+        "motivo": "Pregunta y respuesta sin artefacto, sin PR y sin decisión documentada",
+        "refs": [
+          "claude:c3d4e5f6"
+        ]
+      }
+    ],
+    "faltantes": []
   }
 }

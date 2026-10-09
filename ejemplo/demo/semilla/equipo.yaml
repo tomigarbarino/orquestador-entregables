@@ -1,0 +1,123 @@
+# Perfil de equipo del orquestador de entregables.
+# Sin datos personales: cada persona lo importa en Perfil y ajusta lo suyo encima.
+version: 1
+equipo: Producto
+origen_tareas:
+  - fuente: slack
+    canales: ["#pedidos-producto"]
+    solo_mios: true
+  - fuente: teams
+    equipos: [Producto Acme]
+    canales: [General]
+  - fuente: reuniones
+  - fuente: jira
+    proyectos: [RUT]
+fuentes:
+  github:
+    activo: true
+    via: gh
+  sesiones_ia:
+    activo: true
+    via: local
+  calendario:
+    activo: true
+    via: mcp
+    servidor: Microsoft 365
+  mail:
+    activo: true
+    via: mcp
+    servidor: Microsoft 365
+  reuniones:
+    activo: true
+    via: mcp
+    notetaker: fathom
+  slack:
+    activo: true
+    via: mcp
+    servidor: Slack
+    canales: ["#pedidos-producto"]
+  teams:
+    activo: true
+    via: mcp
+    servidor: Microsoft 365
+    equipos: [Producto Acme]
+    canales: [General]
+    chats_directos: false
+  jira:
+    activo: true
+    via: mcp
+    servidor: Atlassian
+    proyectos: [RUT, DEP]
+  ollama:
+    activo: true
+    via: local
+entregables:
+  daily:
+    receta: daily
+    activo: true
+    fuentes: [github, sesiones_ia, calendario, reuniones, slack, teams]
+    horario:
+      dias: [lun, mar, mie, jue, vie]
+      hora: "09:00"
+    destino:
+      tipo: borrador
+  registro-tareas:
+    receta: registro-tareas
+    activo: true
+    fuentes: [github, sesiones_ia, calendario, reuniones, slack, teams]
+    horario:
+      dias: [lun, mar, mie, jue, vie]
+      hora: "18:00"
+    destino:
+      tipo: formulario
+      nombre: Tablero de tareas
+      url: https://tareas.acme.example/nueva
+      campos: [fecha, titulo, categoria, estado, horas, descripcion]
+      taxonomia:
+        categoria: [Desarrollo, Investigación, Administrativa, Comercial]
+        estado: [En proceso, Hecha]
+        horas: "Sin estimar, o medias horas de 0,5 a 8"
+  deck-avance:
+    receta: deck-avance
+    activo: true
+    fuentes: [github, sesiones_ia]
+    horario:
+      dias: [jue]
+      hora: "16:00"
+    destino:
+      tipo: doc
+      nombre: Deck semanal de Producto
+      formato: slides
+  reunion-comercial:
+    receta: reunion-comercial
+    activo: true
+    fuentes: [reuniones, calendario]
+    horario:
+      a_pedido: true
+    destino:
+      tipo: formulario
+      nombre: CRM de Acme
+      url: https://crm.acme.example/reuniones
+      campos: [fecha, cliente, participantes, comercial, conclusion]
+  bitacora-reuniones:
+    receta: bitacora-reuniones
+    activo: true
+    fuentes: [reuniones, calendario]
+    horario:
+      dias: [vie]
+      hora: "17:00"
+    destino:
+      tipo: borrador
+modulos:
+  digest_jira:
+    activo: true
+  seguimiento_comercial:
+    activo: false
+  resumen_local:
+    activo: false
+reglas_redaccion:
+  - Frases cortas, en primera persona y sin adjetivos de marketing.
+  - Los arreglos se cuentan por cómo funciona ahora, no por el error.
+  - Sin emojis ni signos de exclamación.
+  - Las fechas se escriben como día y mes (9/10), nunca con el año.
+  - Cada cliente se nombra por su nombre comercial, sin siglas internas.

@@ -47,6 +47,8 @@ export function usePrimerosPasos() {
 }
 
 export function primerosPasosVisibles(s) {
+  // La demo arranca con corridas, borradores y una charla ya hechos: no hay nada que enseñar y la tarjeta taparía el mapa.
+  if (s?.demo && (s.listaCorridas?.length || 0) > 0) return false;
   return s?.ui?.pagina === 'visualizador' && !leer().cerrado;
 }
 

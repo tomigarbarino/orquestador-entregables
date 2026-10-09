@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { useApp, useAccion } from '../estado.jsx';
 import { api } from '../api.js';
+import { DEMO_ESTATICA } from '../demo/estatica.js';
 import { Campo } from '../componentes/Editores.jsx';
 import Boton from '../componentes/Boton.jsx';
 import { Icono, ICONO_FUENTE, ICONO_CONEXION, CircleCheck, Plug, Plus, RefreshCw, TriangleAlert, ChevronDown } from '../componentes/Iconos.jsx';
@@ -165,7 +166,7 @@ function AgregarMcp() {
       acciones.avisar(e.message);
     }
   });
-  const motivo = s.demo ? 'En la demo no se agregan conectores' : !datos.nombre.trim() ? 'Poné un nombre para el conector' : undefined;
+  const motivo = DEMO_ESTATICA ? 'En la demo pública no se pueden agregar conectores: hace falta instalar el orquestador en tu compu' : s.demo ? 'En la demo no se agregan conectores' : !datos.nombre.trim() ? 'Poné un nombre para el conector' : undefined;
   return (
     <div className="tarjeta">
       <h3>Un MCP local</h3>

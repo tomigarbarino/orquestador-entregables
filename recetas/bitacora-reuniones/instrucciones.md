@@ -14,7 +14,7 @@ Bitácora de las reuniones de {{persona.nombre}} ({{persona.equipo}}): qué se h
 ## 2. Evidencia
 
 1. **Calendario**: las reuniones del período, con fecha y hora (convertidas de UTC a {{zona_horaria}}) y los participantes con el nombre del detalle del evento. Nunca se deduce un nombre de una dirección de mail; sin nombre a la vista, va la dirección. Son participantes internos los del dominio de la empresa; los externos no se listan (si hace falta, "con un cliente").
-2. **Reuniones (notetaker)**: el resumen de cada reunión (Fathom o el mail de resumen de {{fuentes.reuniones.remitentes_resumen}}), con su ref (`reunion:<id>` o `mail:<id>`). Emparejá cada resumen con su evento por fecha, hora y título.
+2. **Reuniones (notetaker)**: el resumen de cada reunión (Fathom o el mail de resumen de {{fuentes.reuniones.remitentes_resumen}}), con su ref (`reunion:<recording_id>` de Fathom o `mail:<id>`). Emparejá cada resumen con su evento por fecha, hora y título.
 3. **Decisiones y próximos pasos**: salen solo del resumen. Cada próximo paso lleva responsable y fecha; si el resumen no dice quién o cuándo, escribí "sin responsable" o "sin fecha". No deduzcas ni estimes.
 
 Lo que leas con conectores registralo con `registrar_lectura` (una llamada por fuente y búsqueda: `calendario` y `reuniones`), con todas las refs que leíste, con la forma que indica `como_referenciar`. Nunca envíes ni respondas mensajes: solo lectura.
@@ -27,8 +27,8 @@ Por cada reunión con resumen, en orden cronológico:
 - **Participantes**: internos, con su nombre.
 - **Resumen**: dos o tres líneas, solo lo que dice el resumen.
 - **Decisiones**: lista; si no hubo, "sin decisiones registradas".
-- **Próximos pasos**: cada uno con responsable y fecha (o "sin responsable" / "sin fecha").
-- **Resumen del notetaker**: la ref (`reunion:<id>` o `mail:<id>`) y el link si la fuente lo trae.
+- **Próximos pasos**: cada uno con responsable y fecha (o "sin responsable" / "sin fecha"). Fathom trae el responsable de cada tarea pero no la fecha: si el resumen no la dice, va "sin fecha".
+- **Resumen del notetaker**: la ref (`reunion:<recording_id>` de Fathom o `mail:<id>`) y el link si la fuente lo trae.
 
 Al final, **Sin resumen**: las reuniones agendadas que no tienen resumen, con título, fecha, hora y la respuesta de la persona si se sabe. Sin contenido: no se dice qué se habló ni se supone que ocurrió. Si no hay ninguna, no pongas el bloque.
 

@@ -24,7 +24,8 @@ test('con Fathom conectado, la fuente lo usa aunque Microsoft 365 también esté
   const e = estadoFuentes(config(), detectado(srv('claude.ai Microsoft 365'), srv('claude.ai Fathom')), catalogo).reuniones;
   assert.equal(e.conectada, true);
   assert.equal(e.servidor, 'claude.ai Fathom');
-  assert.ok(e.herramientas.every((h) => h.startsWith('mcp__claude_ai_Fathom__')));
+  // Fathom es entero de lectura: se permite el servidor completo.
+  assert.ok(e.herramientas.includes('mcp__claude_ai_Fathom'));
   assert.ok(!e.detalle.includes('Outlook'));
   assert.match(e.como_referenciar, /^reunion:/);
 });

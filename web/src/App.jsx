@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { hayBorrador, useApp } from './estado.jsx';
 import { rutaHumana } from './textos.js';
+import { DEMO_ESTATICA, URL_REPO } from './demo/estatica.js';
 import Visualizador from './paginas/Visualizador.jsx';
 import Entregables from './paginas/Entregables.jsx';
 import Conectores from './paginas/Conectores.jsx';
@@ -239,7 +240,16 @@ export default function App() {
             Se cortó la conexión con el orquestador. Reintentando…
           </div>
         )}
-        {s.demo && (
+        {DEMO_ESTATICA && (
+          <div className="franja-demo franja-demo-publica" role="note">
+            <Icono de={FlaskConical} />
+            <span>
+              Demo pública con datos ficticios. Para usarlo con tus datos, instalalo en tu compu{' '}
+              <a href={URL_REPO} target="_blank" rel="noopener noreferrer">(github.com/tomigarbarino/orquestador-entregables)</a>
+            </span>
+          </div>
+        )}
+        {s.demo && !DEMO_ESTATICA && (
           <div className="franja-demo">
             <Icono de={FlaskConical} />
             Modo demo: datos ficticios, nada sale de tu compu.

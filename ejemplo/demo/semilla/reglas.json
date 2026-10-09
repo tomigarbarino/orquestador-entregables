@@ -1,0 +1,11 @@
+{
+  "daily": [
+    { "fecha": "2026-10-02", "texto": "Cada bloqueo dice de quién depende: una persona, un acceso o una decisión.", "origen": "chat" }
+  ],
+  "registro-tareas": [
+    { "fecha": "2026-10-05", "texto": "Una reunión solo va al registro si tiene resumen del notetaker; si solo está agendada, va a las reuniones por confirmar.", "origen": "chat" }
+  ],
+  "deck-avance": [
+    { "fecha": "2026-10-07", "texto": "El título de cada slide dice si lo que muestra está en producción, en preview o en investigación.", "origen": "chat" }
+  ]
+}

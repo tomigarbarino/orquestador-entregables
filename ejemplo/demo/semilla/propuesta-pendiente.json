@@ -1,0 +1,6 @@
+{
+  "motivo": "Guion más corto en Daily",
+  "origen": "chat",
+  "cambios": [],
+  "regla": { "receta": "daily", "texto": "Máximo tres ítems por bloque; el resto va en una línea final de \"También\"." }
+}

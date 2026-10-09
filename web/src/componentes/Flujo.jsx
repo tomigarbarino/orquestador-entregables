@@ -34,7 +34,7 @@ const CAMBIO_LEIDO = { agregado: 'se suma con este cambio', quitado: 'se quita c
 
 // Alto máximo del lienzo según la vista. En la vista previa de un cambio el lienzo puede crecer más
 // (la fila de una fuente nueva suma alto) para que la escala no baje de ~0,8.
-const ALTO_MAXIMO = { ancha: 600, angosta: 800, general: 600, mini: 420, diff: 800 };
+const ALTO_MAXIMO = { ancha: 720, angosta: 800, general: 680, mini: 420, diff: 800 };
 const ALTO_MINIMO = 320;
 const MARGEN = 1.08;
 const ALTO_ROTULOS = 32;

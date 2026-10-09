@@ -16,7 +16,7 @@ const PUERTO = Number(process.env.ORQ_CAPTURAS_PUERTO || 4319);
 const URL_BASE = `http://127.0.0.1:${PUERTO}`;
 const SALIDA = path.resolve(process.env.ORQ_CAPTURAS_SALIDA || path.join(RAIZ, 'docs', 'capturas'));
 const ANCHO = Number(process.env.ORQ_CAPTURAS_ANCHO || 1480);
-const ALTO = Number(process.env.ORQ_CAPTURAS_ALTO || 900);
+const ALTO = Number(process.env.ORQ_CAPTURAS_ALTO || 1200);
 const TEMA = process.env.ORQ_CAPTURAS_TEMA === 'dark' ? 'dark' : 'light';
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -83,18 +83,27 @@ try {
 
   await clic(pagina, 'Por entregable');
   await pagina.waitForSelector('.nodo-control');
+  // La demo ya trae corridas terminadas: se espera a que termine la nueva, no a que aparezca un borrador.
+  const ultima = () => pagina.evaluate(async () => (await (await fetch('/api/corridas')).json())[0]);
+  const anterior = (await ultima()).id;
   await clic(pagina, 'Probar ahora');
   await esperar(4200);
   await captura(pagina, '02-visualizador-corriendo');
-  await pagina.waitForFunction(() => document.body.innerText.includes('Borrador listo'), { timeout: 60_000 });
+  for (let i = 0; i < 120; i++) {
+    const c = await ultima();
+    if (c.id !== anterior && c.estado === 'lista') break;
+    await esperar(500);
+  }
+  // El flujo de la daily es alto: se encuadra entero para que no quede cortado.
+  await pagina.locator('::-p-aria(Ver todo el flujo)').click();
+  await esperar(1200);
   await captura(pagina, '03-visualizador-resultado');
   await pagina.evaluate(() => document.querySelector('.principal').scrollTo(0, 10_000));
   await captura(pagina, '04-borrador');
   await pagina.evaluate(() => document.querySelector('.principal').scrollTo(0, 0));
 
-  await pagina.click('#entrada-chat');
-  await pagina.type('#entrada-chat', 'Sumá los tickets de Jira a la daily');
-  await pagina.keyboard.press('Enter');
+  // La charla precargada de la demo trae una propuesta pendiente: se ve en el mapa antes de aplicarla.
+  await clic(pagina, 'Ver en el flujo');
   await pagina.waitForSelector('.banner-propuesta', { timeout: 30_000 });
   await esperar(800);
   await captura(pagina, '05-cambio-propuesto');

@@ -18,7 +18,8 @@
     "escanear": "node scripts/escanear.mjs",
     "capturas": "node scripts/capturas.mjs",
     "test": "node --test test/*.test.mjs",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "build:demo": "node scripts/build-demo.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.20.0",

@@ -37,6 +37,8 @@ const { perfilDeEquipo, sinHeredado } = await import('../lib/equipo.mjs');
 const { generarEntregable } = await import('../lib/asistente.mjs');
 const { ahoraEn } = await import('../lib/horario.mjs');
 
+// La demo arranca con el espacio de ejemplo ya armado (ejemplo/demo/semilla): historial, corridas, reglas y chat.
+if (DEMO) await (await import('../lib/demo.mjs')).sembrarDemo();
 await espacio.asegurarEspacio();
 
 // ---------- Eventos en vivo (SSE) ----------

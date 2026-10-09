@@ -89,9 +89,11 @@ fuentes:
 
   # Reuniones con resumen del notetaker. Elige el proveedor conectado, en este orden:
   # Fathom y, si no está, los mails de resumen en Outlook (filtrados por remitentes_resumen).
-  # VERIFICAR: en claude.ai el conector de Fathom figura como servidor "claude.ai Fathom"; los
-  # nombres de sus herramientas de lectura son una primera suposición. Si en tu cuenta se llaman
-  # distinto, sumá los reales en `herramientas_extra` de la fuente.
+  # Fathom tiene conector oficial en claude.ai (servidor MCP https://api.fathom.ai/mcp; setup en
+  # https://developers.fathom.ai/mcp-docs/claude.md). Su documentación no publica los nombres de las
+  # herramientas y todas son de lectura (la API pública es toda GET salvo webhooks y descargas), así que
+  # con Fathom se permite el servidor completo ("*"). La reunión se referencia por su recording_id;
+  # el número de la URL /calls/... no sirve como id. Los action items traen responsable pero no fecha.
   reuniones:
     nombre: Reuniones (notetaker)
     descripcion: Resúmenes de reuniones con lo que se decidió y las tareas asignadas. Una reunión cuenta solo si tiene resumen.
@@ -102,8 +104,8 @@ fuentes:
     proveedores:
       - nombre: Fathom
         coincide: [fathom]
-        como_referenciar: "reunion:<id de la reunión> (el id que devuelve la búsqueda)"
-        herramientas: [list_meetings, get_meeting_summary, get_meeting_transcript, search_meetings]
+        como_referenciar: "reunion:<recording_id> (el id de grabación que devuelve Fathom; mostrale a la persona el share_url)"
+        herramientas: ["*"]
       - nombre: Outlook (resúmenes por mail)
         coincide: [microsoft 365, microsoft365, m365, outlook, office]
         aviso: Resúmenes por mail de Outlook

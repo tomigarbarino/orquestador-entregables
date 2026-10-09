@@ -1,0 +1,38 @@
+[
+  { "fecha": "2026-09-24 10:02", "mensaje": "Espacio creado", "base": "ejemplo" },
+  { "fecha": "2026-09-24 10:15", "mensaje": "Interfaz: Configuración importada" },
+  {
+    "fecha": "2026-09-24 10:40",
+    "mensaje": "Interfaz: Usar la configuración del equipo (Producto)",
+    "antes": [{ "archivo": "equipo.yaml", "borrar_archivo": true }]
+  },
+  {
+    "fecha": "2026-09-28 16:20",
+    "mensaje": "Chat: Sumar Slack como fuente de pedidos",
+    "propuesta": { "id": "p-1790612400000-sl4k", "origen": "chat", "motivo": "Sumar Slack como fuente de pedidos" },
+    "antes": [{ "archivo": "config.yaml", "borrar": ["fuentes", "slack"] }]
+  },
+  {
+    "fecha": "2026-10-01 11:05",
+    "mensaje": "Interfaz: Activar módulo: Seguimiento de próximos pasos comerciales",
+    "antes": [{ "archivo": "config.yaml", "borrar": ["modulos"] }]
+  },
+  {
+    "fecha": "2026-10-02 09:40",
+    "mensaje": "Chat: Cada bloqueo con su responsable en la daily (regla nueva en daily)",
+    "propuesta": { "id": "p-1790930400000-dl2b", "origen": "chat", "motivo": "Cada bloqueo con su responsable en la daily", "regla": "daily" },
+    "antes": [{ "archivo": "recetas/daily/receta.yaml", "borrar_archivo": true }, { "archivo": "recetas/daily/instrucciones.md", "borrar_archivo": true }]
+  },
+  {
+    "fecha": "2026-10-05 18:15",
+    "mensaje": "Chat: Reuniones al registro solo con resumen (regla nueva en registro-tareas)",
+    "propuesta": { "id": "p-1791224100000-rt9c", "origen": "chat", "motivo": "Reuniones al registro solo con resumen", "regla": "registro-tareas" },
+    "antes": [{ "archivo": "recetas/registro-tareas/receta.yaml", "borrar_archivo": true }, { "archivo": "recetas/registro-tareas/instrucciones.md", "borrar_archivo": true }]
+  },
+  {
+    "fecha": "2026-10-07 16:30",
+    "mensaje": "Chat: Estado de cada slide en su título (regla nueva en deck-avance)",
+    "propuesta": { "id": "p-1791401400000-dk7m", "origen": "chat", "motivo": "Estado de cada slide en su título", "regla": "deck-avance" },
+    "antes": [{ "archivo": "recetas/deck-avance/receta.yaml", "borrar_archivo": true }, { "archivo": "recetas/deck-avance/instrucciones.md", "borrar_archivo": true }]
+  }
+]

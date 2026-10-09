@@ -225,3 +225,5 @@
 .origen-cabecera { display: flex; flex-wrap: wrap; gap: var(--e-3, 12px); align-items: center; justify-content: space-between; }
 .origen-conexion { display: inline-flex; flex-wrap: wrap; gap: var(--e-2, 8px); align-items: center; }
 .etiqueta-equipo { background: var(--acento-suave); color: var(--acento); font-weight: 600; }
+
+.campo-periodo select { max-width: 240px; }

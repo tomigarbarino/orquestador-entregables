@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useApp, useAccion, useBorrador, iguales } from '../estado.jsx';
 import { api } from '../api.js';
 import { textoHorario } from '@lib/horario.mjs';
-import { EditorHorario, EditorDestino, Grupo } from '../componentes/Editores.jsx';
+import { EditorHorario, EditorDestino, Grupo, Campo } from '../componentes/Editores.jsx';
 import Boton from '../componentes/Boton.jsx';
 import AvisosEntregable from '../componentes/AvisosEntregable.jsx';
 import { Icono, ICONO_FUENTE, ICONO_CONEXION, CalendarClock, Send, Plug, Play, Pencil, Plus, Workflow, TriangleAlert } from '../componentes/Iconos.jsx';
@@ -17,6 +17,9 @@ function conexionDe(s, id) {
   if (!est) return 'desconocida';
   return est.conectada ? 'conectada' : 'desconectada';
 }
+
+// Recetas que aceptan opciones.periodo (dia | semana).
+const RECETAS_CON_PERIODO = ['bitacora-reuniones'];
 
 const TEXTO_CHIP = { desconectada: 'falta conectar', apagada: 'no se usa' };
 
@@ -155,7 +158,7 @@ function TarjetaEntregable({ id, entrada, receta }) {
             <div className="banner banner-alerta" role="status">
               <span>
                 Mientras editabas cambió la configuración (por ejemplo, se aplicó un cambio del chat). Al guardar se conservan los dos cambios.
-                {conflictos?.length > 0 && ` En ${conflictos.map((k) => ({ fuentes: 'las fuentes', horario: 'el horario', destino: 'el destino', activo: 'el encendido' }[k] || k)).join(', ')} queda lo tuyo.`}
+                {conflictos?.length > 0 && ` En ${conflictos.map((k) => ({ fuentes: 'las fuentes', opciones: 'el período', horario: 'el horario', destino: 'el destino', activo: 'el encendido' }[k] || k)).join(', ')} queda lo tuyo.`}
               </span>
             </div>
           )}
@@ -166,6 +169,20 @@ function TarjetaEntregable({ id, entrada, receta }) {
               ))}
             </div>
           </Grupo>
+          {RECETAS_CON_PERIODO.includes(entrada.receta) && (
+            <Campo etiqueta="Período" ayuda="Si la armás por día, cuenta las reuniones de hoy; por semana, las de los últimos 7 días." className="campo-periodo">
+              {(p) => (
+                <select
+                  {...p}
+                  value={valor.opciones?.periodo || 'semana'}
+                  onChange={(e) => setValor({ ...valor, opciones: { ...valor.opciones, periodo: e.target.value } })}
+                >
+                  <option value="dia">Por día</option>
+                  <option value="semana">Por semana</option>
+                </select>
+              )}
+            </Campo>
+          )}
           <EditorHorario horario={valor.horario} onChange={(horario) => setValor({ ...valor, horario })} />
           <EditorDestino destino={valor.destino} onChange={(destino) => setValor({ ...valor, destino })} />
           {cambiado && (

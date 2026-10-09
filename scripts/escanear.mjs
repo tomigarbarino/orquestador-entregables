@@ -18,6 +18,7 @@ const HOSTS_PERMITIDOS = [
   'claude.ai', 'claude.com', 'anthropic.com', 'docs.anthropic.com', 'code.claude.com',
   'nodejs.org', 'git-scm.com', 'cli.github.com', 'ollama.com', 'reactflow.dev', 'json-schema.org',
   'registry.npmjs.org', 'www.w3.org', 'localhost', '127.0.0.1', 'orquestador-entregables.local',
+  'fathom.ai', 'developers.fathom.ai', // documentación pública del conector de Fathom
   'github.com/acme-ejemplo', // organización ficticia de los ejemplos y los tests
 ];
 const DOMINIOS_EJEMPLO = /(^|\.)example(\.com|\.org)?$|\.example$|\.invalid$/;

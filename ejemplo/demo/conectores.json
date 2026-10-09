@@ -3,9 +3,13 @@
     "ok": true,
     "servidores": [
       { "nombre": "claude.ai Microsoft 365", "clave": "claude_ai_Microsoft_365", "destino": "https://conector.example/m365", "estado": "conectado", "detalle": "✔ Connected" },
-      { "nombre": "claude.ai Slack", "clave": "claude_ai_Slack", "destino": "https://conector.example/slack", "estado": "requiere_auth", "detalle": "! Needs authentication" }
+      { "nombre": "claude.ai Slack", "clave": "claude_ai_Slack", "destino": "https://conector.example/slack", "estado": "conectado", "detalle": "✔ Connected" },
+      { "nombre": "claude.ai Fathom", "clave": "claude_ai_Fathom", "destino": "https://conector.example/fathom", "estado": "conectado", "detalle": "✔ Connected" },
+      { "nombre": "claude.ai Atlassian", "clave": "claude_ai_Atlassian", "destino": "https://conector.example/atlassian", "estado": "conectado", "detalle": "✔ Connected" }
     ]
   },
   "gh": { "instalado": true, "ok": true, "cuenta": "ana-ejemplo", "cuentas": ["ana-ejemplo"], "detalle": "Sesión de gh: ana-ejemplo" },
-  "ollama": { "ok": false, "modelos": [], "detalle": "Ollama no responde en tu máquina" }
+  "ollama": { "ok": true, "modelos": ["qwen3.5:9b"], "detalle": "Ollama con qwen3.5:9b" },
+  "sesiones_ia": { "ok": true, "claude": true, "codex": true },
+  "registros": { "ok": true }
 }

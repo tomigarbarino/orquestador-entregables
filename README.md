@@ -1,6 +1,6 @@
 # Orquestador de entregables
 
-Una plantilla para que cada equipo deje andando, con Claude, los entregables que arma siempre igual: la daily, el registro de tareas y horas, el deck de avance semanal, las notas de cada reunión comercial y los que sumes vos.
+Una plantilla para que cada equipo deje andando, con Claude, los entregables que arma siempre igual: la daily, el registro de tareas y horas, el deck de avance semanal, las notas de cada reunión comercial, la bitácora de reuniones y los que sumes vos.
 
 Todo se configura, se ve y se ajusta desde una interfaz web local, incluso charlando con Claude. No hace falta editar archivos a mano.
 
@@ -117,13 +117,17 @@ Para ver qué haría el instalador sin cambiar nada: `node scripts/instalar.mjs 
 3. **Conectores** (4 minutos).
    - GitHub: si está en rojo, corré `gh auth login` en una terminal.
    - Calendario, mail o chat: conectalos en [la configuración de conectores de claude.ai](https://claude.ai/settings/connectors) (Microsoft 365, Google, Slack o Atlassian), autorizalos con tu cuenta y tocá **Revisar de nuevo**.
+   - Slack y Teams son fuentes propias: se conectan por separado y cada entregable las suma o las saca cuando quiere.
+   - Reuniones: la fuente lee el resumen de tu notetaker, con Fathom (conectalo en claude.ai) o, si no, con los mails de resumen que te llegan a Outlook (conectá Microsoft 365). Una reunión cuenta solo si tiene resumen; las que no lo tienen quedan aparte, como "sin resumen".
    - Las sesiones de Claude Code y Codex se leen de tu máquina: no hay que conectar nada.
 
-4. **Entregables** (1 minuto). Dejá prendida la daily y elegí sus fuentes.
+4. **De dónde te llegan las tareas** (opcional, en Perfil). Marcá dónde te piden cosas (un canal de Slack, ciertos remitentes de mail, un repo). Con eso, la daily y el registro de tareas suman el paso "Pedidos que me llegaron": qué te pidieron, quién y cuándo, separado en hecho y pendiente.
 
-5. **Probala** (3 minutos). En el **Visualizador**, elegí **Por entregable** → Daily → **Probar ahora**. Mirá cómo avanza nodo por nodo y leé el borrador.
+5. **Entregables** (1 minuto). Dejá prendida la daily y elegí sus fuentes.
 
-6. **Ajustala charlando** (2 minutos). En el chat de la derecha pedí lo que no te cierra ("esto sobra", "que el bloque de pendientes vaya primero"). Mirá la diferencia en el flujo, tocá **Aplicar** y **Probar de nuevo**.
+6. **Probala** (3 minutos). En el **Visualizador**, elegí **Por entregable** → Daily → **Probar ahora**. Mirá cómo avanza nodo por nodo y leé el borrador.
+
+7. **Ajustala charlando** (2 minutos). En el chat de la derecha pedí lo que no te cierra ("esto sobra", "que el bloque de pendientes vaya primero"). Mirá la diferencia en el flujo, tocá **Aplicar** y **Probar de nuevo**.
 
 ## Sumar un entregable propio
 
@@ -146,6 +150,14 @@ Con las skills instaladas, en cualquier sesión de Claude Code podés pedir:
 
 El orquestador avisa qué fuentes faltan, corre la receta, aplica el control de evidencia y te muestra el borrador. Si lo aprobás, recién ahí lo entrega en su destino (Slack, un documento o un formulario), con tu OK. Mientras corre, el visualizador de la interfaz muestra en qué paso está.
 
+## Bitácora de reuniones
+
+Un entregable que arma la bitácora de tus reuniones: por cada una, lo que se habló, lo que se decidió, quién hace qué y el link al resumen. Se arma por día o por semana: en **Entregables → Editar** elegís el **Período** (Por día o Por semana). Una reunión sin resumen no se cuenta: queda aparte, con su fecha y su título, sin inventar qué se habló.
+
+## Perfil de equipo
+
+Si varias personas arman los mismos entregables, pueden compartir una base. En **Perfil** exportás un archivo `equipo.yaml` con lo que el equipo comparte (las fuentes, los entregables con sus horarios y de dónde les llegan las tareas) y sin datos personales: ni tu nombre, ni mails, ni carpetas. Cada integrante lo importa en su espacio y ajusta encima lo suyo. La interfaz marca qué viene del equipo.
+
 ## Rutinas programadas
 
 En **Entregables → Rutinas programadas** ves el plan (qué tarea se crea, qué días y a qué hora) y lo aplicás con un clic. En Windows se crean tareas en el Programador de tareas; en Mac y Linux, líneas en tu crontab. También desde la consola:
@@ -167,7 +179,7 @@ Vienen apagados. Se prenden en **Entregables → Módulos opcionales**:
 ## Cómo está armado
 
 ```
-recetas/             recetas genéricas: daily, registro-tareas, deck-avance, reunion-comercial
+recetas/             recetas genéricas: daily, registro-tareas, deck-avance, reunion-comercial, bitacora-reuniones
 modulos/             vueltas de tuerca opcionales
 esquema/             esquemas de la config y de las recetas (los usan la interfaz y el orquestador)
 conectores/          catálogo de fuentes y sus herramientas de solo lectura
@@ -191,6 +203,7 @@ Comandos útiles:
 | `npm run correr -- daily` | Corre un entregable en modo borrador desde la consola |
 | `npm run programar` | Muestra (o aplica, con `-- --aplicar`) las rutinas |
 | `npm test` | Corre los tests |
+| `npm run smoke` | Prueba de punta a punta con la config de ejemplo (sin tocar tu espacio) |
 | `npm run escanear` | Busca datos personales antes de publicar cambios al repo |
 
 ## Seguridad y privacidad

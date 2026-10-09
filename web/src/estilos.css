@@ -406,6 +406,12 @@ nav { display: flex; flex-direction: column; gap: 2px; }
   font-size: var(--t-s);
   flex: none;
 }
+.franja-demo-publica {
+  background: var(--acento-suave);
+  color: var(--texto);
+  font-weight: 600;
+}
+.franja-demo-publica a { color: inherit; text-decoration: underline; }
 .franja-conexion {
   display: flex;
   gap: var(--e-2);

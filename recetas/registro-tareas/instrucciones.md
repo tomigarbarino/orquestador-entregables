@@ -20,7 +20,7 @@ Fuentes, en este orden de confianza:
 {{lista.proyectos}}
    Contá lo que hace cada PR a partir de su `cuerpo`, no solo del título. Usá `motivo_cierre`, `incluye` y `en_produccion` para el estado.
 4. Calendario, solo para fechas y horarios de reuniones (ver reglas).
-5. Reuniones (notetaker): el resumen de cada reunión del día, de Fathom o del mail de resumen de {{fuentes.reuniones.remitentes_resumen}}. Es la evidencia de que la reunión ocurrió: se cita con su ref (`reunion:<id>` o `mail:<id>`).
+5. Reuniones (notetaker): el resumen de cada reunión del día, de Fathom o del mail de resumen de {{fuentes.reuniones.remitentes_resumen}}. Es la evidencia de que la reunión ocurrió: se cita con su ref (`reunion:<recording_id>` de Fathom o `mail:<id>`).
 6. **Slack** y **Teams**, si las fuentes están activas: solo para confirmar que algo se hizo o que una reunión ocurrió, en los canales configurados ({{fuentes.slack.canales}}) y los equipos ({{fuentes.teams.equipos}}). No deduzcas trabajo de una conversación. Citá los mensajes con la ref que indica `como_referenciar`. Solo lectura: no envíes ni respondas mensajes.
 
 Lo leído con conectores (calendario, reuniones, Slack, Teams) registralo con `registrar_lectura` (fuente `reuniones`, `slack` o `teams`).

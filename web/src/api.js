@@ -1,9 +1,18 @@
+import { DEMO_ESTATICA } from './demo/estatica.js';
+
 // Llamadas a la API local. Los pedidos que cambian algo llevan el encabezado x-orquestador.
 const ENCABEZADOS = { 'content-type': 'application/json', 'x-orquestador': '1' };
 
 export const SIN_CONEXION = 'No hay conexión con el orquestador. Fijate que siga abierta la ventana donde lo arrancaste y recargá la página.';
 
+// Demo pública estática: el backend simulado vive en el navegador y se carga solo en ese build.
+const cargarBackend = () => import('./demo/backend.js');
+
 export async function api(ruta, { metodo = 'GET', cuerpo } = {}) {
+  if (DEMO_ESTATICA) {
+    const { pedir } = await cargarBackend();
+    return pedir(ruta, { metodo, cuerpo });
+  }
   let r;
   try {
     r = await fetch(`/api${ruta}`, {
@@ -29,6 +38,17 @@ export async function api(ruta, { metodo = 'GET', cuerpo } = {}) {
 // Eventos en vivo (SSE). onError/onOpen avisan si se corta o vuelve la conexión.
 // Si el navegador da la conexión por perdida, se vuelve a abrir sola cada pocos segundos.
 export function escucharEventos(manejadores, { onError, onOpen } = {}) {
+  if (DEMO_ESTATICA) {
+    let cerrado = false;
+    let baja = null;
+    cargarBackend().then(({ suscribir }) => {
+      if (!cerrado) baja = suscribir((tipo, datos) => manejadores[tipo]?.(datos));
+    });
+    return () => {
+      cerrado = true;
+      baja?.();
+    };
+  }
   let fuente = null;
   let reintento = null;
   let cerrado = false;
