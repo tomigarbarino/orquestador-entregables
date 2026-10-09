@@ -335,3 +335,45 @@ test('paginarPorTamano reparte la lista en páginas que no pasan el máximo y no
   const grande = [{ texto: 'y'.repeat(6_000) }, { texto: 'z' }];
   assert.deepEqual(f.paginarPorTamano(grande, 5_000).map((p) => p.length), [1, 1]);
 });
+
+test('leerGithub cuenta lo que llegó a producción con una convergencia aunque se haya mergeado antes del período', async () => {
+  const repo = 'acme-ejemplo/app';
+  const base = { title: 'PR', body: '## Cambios\nalgo', isDraft: false, closedAt: null, url: 'https://github.test/x', author: { login: 'ana-ejemplo' } };
+  // #90: convergencia de la rama larga a main dentro del período. #80 llegó con ella. #70 ya estaba en main antes.
+  // #85 llegó antes, con #88 (otro release del período). #60 sigue sin llegar.
+  const ventana = [
+    { ...base, number: 88, state: 'MERGED', baseRefName: 'main', headRefName: 'release', createdAt: '2026-10-06T12:00:00Z', updatedAt: '2026-10-06T13:00:00Z', mergedAt: '2026-10-06T13:00:00Z', mergeCommit: { oid: 'm88' } },
+    { ...base, number: 90, state: 'MERGED', baseRefName: 'main', headRefName: 'larga', createdAt: '2026-10-07T12:00:00Z', updatedAt: '2026-10-07T13:00:00Z', mergedAt: '2026-10-07T13:00:00Z', mergeCommit: { oid: 'm90' } },
+  ];
+  const previo = (n) => ({ ...base, number: n, state: 'MERGED', baseRefName: 'larga', headRefName: `f/${n}`, createdAt: '2026-09-01T12:00:00Z', updatedAt: '2026-09-02T12:00:00Z', mergedAt: '2026-09-02T12:00:00Z', mergeCommit: { oid: `s${n}` } });
+  const previos = [previo(60), previo(70), previo(80), previo(85)];
+  const estado = {
+    'main...s60': 'ahead', 'main...s70': 'behind', 'main...s80': 'behind', 'main...s85': 'behind',
+    'p88...s70': 'behind', 'p88...s80': 'diverged', 'p88...s85': 'diverged',
+    'm88...s80': 'diverged', 'm88...s85': 'behind',
+    'p90...s80': 'diverged', 'm90...s80': 'behind',
+  };
+  const ejecutor = async (cmd, args) => {
+    const ok = (j) => ({ ok: true, stdout: JSON.stringify(j), stderr: '' });
+    if (args[0] === 'repo') return ok({ nameWithOwner: repo });
+    if (args[0] === 'pr' && args[1] === 'list') return ok(args.includes('merged') ? previos : ventana);
+    if (args[0] === 'pr' && args[1] === 'view') return ok({ commits: [] });
+    if (args[0] === 'api' && args[1].includes('/commits/')) return ok({ padre: args[1].endsWith('m88') ? 'p88' : 'p90' });
+    if (args[0] === 'api' && args[1].includes('/compare/')) {
+      const s = estado[args[1].split('/compare/')[1]];
+      return s ? ok({ status: s }) : { ok: false, stdout: '', stderr: 'inesperado' };
+    }
+    return { ok: false, stdout: '', stderr: 'inesperado' };
+  };
+  const cfg = { zona_horaria: ZONA, persona: { github_usuario: 'ana-ejemplo' }, proyectos: [{ nombre: 'Acme', repos: [repo], rama_produccion: 'main' }] };
+  const r = await f.leerGithub({ config: cfg, desde: '2026-10-06', hasta: '2026-10-07', ejecutor });
+  const porNumero = Object.fromEntries(r.repos[0].prs.map((p) => [p.numero, p]));
+  assert.deepEqual(Object.keys(porNumero).map(Number).sort((a, b) => a - b), [80, 85, 88, 90]);
+  assert.equal(porNumero[80].via, 90);
+  assert.equal(porNumero[80].llego_a_produccion_el, '2026-10-07');
+  assert.equal(porNumero[80].en_produccion, true);
+  assert.match(porNumero[80].estado, /antes del período; llegó a producción \(main\) el 2026-10-07 con #90/);
+  assert.equal(porNumero[85].via, 88);
+  assert.deepEqual(porNumero[90].incluye, [80]);
+  assert.deepEqual(porNumero[88].incluye, [85]);
+});
