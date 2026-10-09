@@ -4,6 +4,8 @@ Una plantilla para que cada equipo deje andando, con Claude, los entregables que
 
 **Probá la demo pública, con datos ficticios:** https://orquestador-entregables.vercel.app
 
+**Presentación para el AI Day:** [video de 2 minutos, feature por feature, roadmap y dónde aplica](docs/presentacion.md).
+
 Todo se configura, se ve y se ajusta desde una interfaz web local, incluso charlando con Claude. No hace falta editar archivos a mano.
 
 ![El visualizador: fuentes, orquestador, entregables y destinos, generado desde tu configuración](docs/capturas/01-visualizador-general.png)
