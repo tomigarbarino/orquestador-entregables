@@ -57,6 +57,17 @@ marca:
   design_system: Plantilla de presentaciones de Acme
   notas: Fondo claro, una idea por slide.
 
+# De dónde te llegan las tareas. Si hay algo acá, la daily y el registro de tareas suman el paso
+# "Pedidos que me llegaron" con estas fuentes (cada una tiene que estar en "fuentes").
+# origen_tareas:
+#   - fuente: slack
+#     canales: ["#pedidos-producto"]
+#     solo_mios: true
+#   - fuente: mail
+#     remitentes: ["@acme.example.com"]
+#   - fuente: github
+#     repos: [acme-ejemplo/rutas-api]
+
 fuentes:
   github:
     activo: true

@@ -230,7 +230,8 @@ function Rutinas() {
 export default function Entregables() {
   const { s, acciones } = useApp();
   const entradas = Object.entries(s.config?.entregables || {});
-  const modulos = useMemo(() => s.modulos || [], [s.modulos]);
+  // Los módulos que se activan solos (por ejemplo, según el origen de las tareas) no tienen interruptor.
+  const modulos = useMemo(() => (s.modulos || []).filter((m) => !m.activo_si), [s.modulos]);
   return (
     <div className="pagina">
       <header className="cabecera">

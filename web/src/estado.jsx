@@ -6,7 +6,7 @@ import { entregableDePropuesta, nombreEntregable, plural } from './textos.js';
 
 const Contexto = createContext(null);
 
-export const CAMPOS_PERFIL = ['persona', 'idioma', 'zona_horaria', 'proyectos', 'personas', 'clientes', 'glosario', 'reglas_redaccion', 'marca'];
+export const CAMPOS_PERFIL = ['persona', 'idioma', 'zona_horaria', 'proyectos', 'personas', 'clientes', 'glosario', 'reglas_redaccion', 'marca', 'origen_tareas'];
 
 function chatAbiertoInicial() {
   try {
@@ -414,6 +414,25 @@ export function ProveedorEstado({ children }) {
           const r = await api('/config/importar', { metodo: 'POST', cuerpo: { yaml } });
           d({ tipo: 'espacio', datos: r });
           avisar('Configuración importada.', 'ok');
+          return true;
+        } catch (e) {
+          avisar(e.message);
+          return false;
+        }
+      },
+      async exportarEquipo() {
+        try {
+          return await api('/equipo/exportar');
+        } catch (e) {
+          avisar(e.message);
+          return null;
+        }
+      },
+      async importarEquipo(yaml) {
+        try {
+          const r = await api('/equipo/importar', { metodo: 'POST', cuerpo: { yaml } });
+          d({ tipo: 'espacio', datos: r });
+          avisar('Ahora usás la configuración de tu equipo. Quedó en el historial.', 'ok');
           return true;
         } catch (e) {
           avisar(e.message);

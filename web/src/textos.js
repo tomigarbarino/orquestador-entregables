@@ -211,12 +211,14 @@ const CAMPO_PERFIL = {
   glosario: 'Glosario',
   reglas_redaccion: 'Reglas de redacción',
   marca: 'Marca',
+  origen_tareas: 'De dónde te llegan las tareas',
   version: 'Versión',
 };
 
 export function rutaHumana(ruta, s) {
   const r = String(ruta ?? '').trim();
   if (!r || r === '/' || r === 'config.yaml') return { texto: 'Configuración', pagina: 'perfil' };
+  if (r.startsWith('equipo.yaml')) return { texto: 'Perfil de equipo', pagina: 'perfil' };
   const receta = /^receta\s+([^/\s]+)/.exec(r);
   if (receta) {
     const entregable = entregableDeReceta(receta[1], s);
@@ -246,6 +248,7 @@ export function rutaHumana(ruta, s) {
 export function archivoHumano(archivo, s) {
   const a = String(archivo ?? '');
   if (/(^|\/)config\.ya?ml$/.test(a)) return 'Configuración';
+  if (/(^|\/)equipo\.ya?ml$/.test(a)) return 'Perfil de equipo';
   const m = /^(?:recetas\/)?([^/]+)\/(receta\.ya?ml|instrucciones\.md)$/.exec(a);
   if (m) return `Instrucciones de ${nombreReceta(s, m[1])}`;
   return a;

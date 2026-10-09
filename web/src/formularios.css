@@ -217,3 +217,11 @@
   .tabla-fuentes tr.fila-elegir td { grid-column: 1 / -1; grid-row: auto; padding-left: var(--e-3, 12px); }
   .tabla-fuentes .que-hacer { max-width: none; }
 }
+
+/* ---------- Origen de tareas y perfil de equipo ---------- */
+.origenes { display: flex; flex-direction: column; gap: var(--e-3, 12px); }
+.origen { border: 1px solid var(--borde); border-radius: var(--radio, 8px); padding: var(--e-3, 12px); display: flex; flex-direction: column; gap: var(--e-2, 8px); }
+.origen.marcado { border-color: var(--acento); }
+.origen-cabecera { display: flex; flex-wrap: wrap; gap: var(--e-3, 12px); align-items: center; justify-content: space-between; }
+.origen-conexion { display: inline-flex; flex-wrap: wrap; gap: var(--e-2, 8px); align-items: center; }
+.etiqueta-equipo { background: var(--acento-suave); color: var(--acento); font-weight: 600; }

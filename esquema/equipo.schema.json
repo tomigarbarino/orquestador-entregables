@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://orquestador-entregables.local/esquema/equipo.schema.json",
+  "title": "Perfil de equipo",
+  "description": "equipo.yaml: un subconjunto de la config que se comparte con el equipo. No lleva datos personales: la config de cada persona pisa lo que defina acá.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version"],
+  "properties": {
+    "version": { "const": 1 },
+    "equipo": { "type": "string", "minLength": 1, "description": "Nombre del equipo." },
+    "origen_tareas": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "https://orquestador-entregables.local/esquema/config.schema.json#/definitions/origen_tarea" },
+          { "properties": { "remitentes": { "items": { "pattern": "^[^@]*$|^@[^@ ]+$" } } } }
+        ]
+      }
+    },
+    "fuentes": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+      "additionalProperties": { "$ref": "#/definitions/fuente" }
+    },
+    "entregables": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" },
+      "additionalProperties": { "$ref": "#/definitions/entregable" }
+    },
+    "modulos": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["activo"],
+        "properties": { "activo": { "type": "boolean" } }
+      }
+    },
+    "reglas_redaccion": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "definitions": {
+    "fuente": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["activo", "via"],
+      "properties": {
+        "activo": { "type": "boolean" },
+        "via": { "enum": ["gh", "mcp", "local"] },
+        "servidor": { "type": "string" },
+        "herramientas_extra": { "type": "array", "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" } },
+        "proyectos": { "type": "array", "items": { "type": "string" } },
+        "canales": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "menciones_directas": { "type": "boolean" },
+        "equipos": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "chats_directos": { "type": "boolean" },
+        "notetaker": { "enum": ["fathom", "read_ai", "otro"] }
+      }
+    },
+    "entregable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receta", "activo", "horario", "destino"],
+      "properties": {
+        "receta": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "nombre": { "type": "string" },
+        "activo": { "type": "boolean" },
+        "fuentes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" } },
+        "horario": { "$ref": "https://orquestador-entregables.local/esquema/config.schema.json#/definitions/horario" },
+        "destino": { "$ref": "https://orquestador-entregables.local/esquema/config.schema.json#/definitions/destino" }
+      }
+    }
+  }
+}

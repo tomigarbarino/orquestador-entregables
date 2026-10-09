@@ -4,6 +4,7 @@ import { Campo, Grupo } from '../componentes/Editores.jsx';
 import Boton from '../componentes/Boton.jsx';
 import { Icono, Plus, X, TriangleAlert } from '../componentes/Iconos.jsx';
 import { rutaHumana } from '../textos.js';
+import { SeccionOrigenTareas, TarjetaPerfilEquipo, EtiquetaEquipo } from '../componentes/OrigenTareas.jsx';
 
 const copia = (x) => JSON.parse(JSON.stringify(x ?? null));
 const pick = (obj, claves) => Object.fromEntries(claves.filter((k) => obj?.[k] !== undefined).map((k) => [k, obj[k]]));
@@ -127,6 +128,27 @@ export default function Perfil() {
   const errorCampo = (ruta) => visibles.filter((e) => e.ruta === ruta).map((e) => e.mensaje).join('; ') || undefined;
   const setPersona = (k) => (e) => setC({ ...c, persona: { ...c.persona, [k]: e.target.value || undefined } });
 
+  // Si la persona eligió un origen de tareas cuya fuente no está definida (o está apagada), se suma o se prende.
+  const conFuentesDeOrigen = (config) => {
+    if (JSON.stringify(config.origen_tareas || []) === JSON.stringify(s.config?.origen_tareas || [])) return config;
+    const fuentes = { ...(config.fuentes || {}) };
+    for (const o of config.origen_tareas || []) {
+      const cat = s.catalogo?.fuentes?.[o.fuente];
+      if (!fuentes[o.fuente]) {
+        const via = cat?.via || 'mcp';
+        const proveedor = via === 'mcp' && !cat?.elige_por_orden ? cat?.proveedores?.[0]?.nombre : undefined;
+        fuentes[o.fuente] = { activo: true, via, ...(proveedor ? { servidor: proveedor } : {}), ...(o.fuente === 'reuniones' ? { notetaker: 'fathom' } : {}) };
+      } else if (fuentes[o.fuente].activo === false) fuentes[o.fuente] = { ...fuentes[o.fuente], activo: true };
+    }
+    return { ...config, fuentes };
+  };
+  const setOrigen = (lista) => {
+    const siguiente = { ...c };
+    if (lista.length || s.config?.origen_tareas !== undefined) siguiente.origen_tareas = lista;
+    else delete siguiente.origen_tareas;
+    setC(siguiente);
+  };
+
   const [guardar, guardando] = useAccion(async () => {
     if (errores.length) {
       setMostrarErrores(true);
@@ -138,14 +160,14 @@ export default function Perfil() {
       }, 0);
       return;
     }
-    if (await acciones.guardarConfig({ ...s.config, ...paraGuardar() }, 'Perfil actualizado')) {
+    if (await acciones.guardarConfig(conFuentesDeOrigen({ ...s.config, ...paraGuardar() }), 'Perfil actualizado')) {
       descartar();
       setMostrarErrores(false);
     }
   });
 
-  const nombreCampo = { persona: 'tus datos', idioma: 'el idioma', zona_horaria: 'la zona horaria', proyectos: 'los proyectos', personas: 'las personas', clientes: 'los clientes', glosario: 'el glosario', reglas_redaccion: 'las reglas de redacción', marca: 'la marca' };
-  const sueltos = visibles.filter((e) => !/^\/(persona\/[a-z_]+|idioma|zona_horaria|proyectos|personas|clientes|glosario|marca)/.test(e.ruta));
+  const nombreCampo = { persona: 'tus datos', idioma: 'el idioma', zona_horaria: 'la zona horaria', proyectos: 'los proyectos', origen_tareas: 'de dónde te llegan las tareas', personas: 'las personas', clientes: 'los clientes', glosario: 'el glosario', reglas_redaccion: 'las reglas de redacción', marca: 'la marca' };
+  const sueltos = visibles.filter((e) => !/^\/(persona\/[a-z_]+|idioma|zona_horaria|proyectos|personas|clientes|glosario|marca|origen_tareas)/.test(e.ruta));
 
   return (
     <div className="pagina" ref={formulario}>
@@ -211,7 +233,16 @@ export default function Perfil() {
       </section>
 
       <section className="tarjeta">
-        <h2>Cómo escribís</h2>
+        <h2>¿De dónde te llegan las tareas? <EtiquetaEquipo ruta="/origen_tareas" /></h2>
+        <p className="meta">Marcá dónde te piden cosas. La daily y el registro de tareas suman el paso «Pedidos que me llegaron», que cuenta qué te pidieron, quién y cuándo, y lo separa en hecho y pendiente.</p>
+        <SeccionOrigenTareas items={c.origen_tareas || []} onChange={setOrigen} />
+        {erroresDe(visibles, '/origen_tareas').map((e, i) => (
+          <p key={i} className="error-texto"><Icono de={TriangleAlert} tam={14} />{e.mensaje}</p>
+        ))}
+      </section>
+
+      <section className="tarjeta">
+        <h2>Cómo escribís <EtiquetaEquipo ruta="/reglas_redaccion" /></h2>
         <ListaTextos
           titulo="Reglas de redacción"
           tipo="regla"
@@ -270,6 +301,8 @@ export default function Perfil() {
           </Campo>
         </div>
       </section>
+
+      <TarjetaPerfilEquipo />
 
       {cambiado && (
         <div className="barra-sin-guardar">

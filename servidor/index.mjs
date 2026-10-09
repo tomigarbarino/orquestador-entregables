@@ -33,6 +33,7 @@ const { correrEntregable, cancelarCorrida } = await import('../lib/orquestacion.
 const { estadoAuth } = await import('../lib/claude.mjs');
 const { planRutinas, aplicarRutinas } = await import('../lib/rutinas.mjs');
 const { entregablesDe } = await import('../lib/receta-efectiva.mjs');
+const { perfilDeEquipo, sinHeredado } = await import('../lib/equipo.mjs');
 const { generarEntregable } = await import('../lib/asistente.mjs');
 const { ahoraEn } = await import('../lib/horario.mjs');
 
@@ -72,7 +73,7 @@ function vigilar() {
     firmas.set('propuestas', fp);
     emitir('propuestas', propuestas.listarPropuestas());
   }
-  const fc = [firmaDe(enEspacio('config.yaml')), ...listarArchivosRecetas().map(firmaDe)].join(',');
+  const fc = [firmaDe(enEspacio('config.yaml')), firmaDe(enEspacio('equipo.yaml')), ...listarArchivosRecetas().map(firmaDe)].join(',');
   if (firmas.has('config') && firmas.get('config') !== fc) emitir('espacio', resumenEspacio());
   firmas.set('config', fc);
 }
@@ -106,6 +107,8 @@ function resumenEspacio() {
     demo: DEMO,
     espacio: DEMO ? 'Espacio de demo (temporal)' : rutaVisible(e.espacio),
     config: e.config,
+    configPropia: e.configPropia,
+    equipo: e.equipo,
     configTexto: e.configTexto,
     validacion: e.validacion,
     recetas: Object.fromEntries(Object.entries(e.recetas).map(([id, r]) => [id, { id, origen: r.origen, sobrescribe: r.sobrescribe, receta: r.receta, instrucciones: r.instrucciones, errorYaml: r.errorYaml }])),
@@ -182,7 +185,10 @@ app.post('/api/conectores/mcp', ruta(async (req) => {
 }));
 
 async function guardarConfig(datos, motivo, origen = 'interfaz') {
-  const doc = YAML.stringify(datos, { lineWidth: 0 });
+  // La interfaz trabaja con la config efectiva: lo que solo viene del equipo no se copia al archivo de la persona.
+  const actual = espacio.leerConfig();
+  const propia = actual.equipo.usable ? sinHeredado(datos, actual.equipo.datos, actual.propios) : datos;
+  const doc = YAML.stringify(propia, { lineWidth: 0 });
   const p = propuestas.crearPropuesta({ motivo, origen, cambios: [{ tipo: 'config', yaml: doc }] });
   if (p.estado !== 'pendiente') throw new Error(p.errores.map((e) => `${e.ruta}: ${e.mensaje}`).join('; '));
   await propuestas.aplicarPropuesta(p.id);
@@ -216,6 +222,7 @@ app.post('/api/modulos/:clave', ruta(async (req) => {
   const { config, modulos } = espacio.estadoEspacio();
   const modulo = modulos.find((m) => m.clave === req.params.clave);
   if (!modulo) throw new Error('Módulo desconocido');
+  if (modulo.activo_si) throw new Error('Este módulo se activa solo, según de dónde te llegan las tareas (Perfil)');
   const activo = Boolean(req.body.activo);
   const nueva = JSON.parse(JSON.stringify(config));
   nueva.modulos = { ...(nueva.modulos || {}), [modulo.clave]: { ...(nueva.modulos?.[modulo.clave] || {}), activo } };
@@ -233,6 +240,40 @@ app.post('/api/modulos/:clave', ruta(async (req) => {
     }
   }
   return guardarConfig(nueva, `${activo ? 'Activar' : 'Apagar'} módulo: ${modulo.nombre}`);
+}));
+
+// ---------- Perfil de equipo ----------
+
+const ENCABEZADO_EQUIPO = '# Perfil de equipo del orquestador de entregables.\n# Sin datos personales: cada persona lo importa en Perfil y ajusta lo suyo encima.\n';
+
+// Arma el equipo.yaml con la config efectiva, sin persona, nombres propios, mails ni carpetas.
+app.get('/api/equipo/exportar', ruta(async () => {
+  const { config } = espacio.estadoEspacio();
+  if (!config) throw new Error('Todavía no hay una configuración para exportar');
+  const perfil = perfilDeEquipo(config);
+  const v = espacio.validadores().equipo(perfil);
+  if (!v.ok) throw new Error(`No se pudo armar el perfil de equipo: ${v.errores.map((e) => `${e.ruta}: ${e.mensaje}`).join('; ')}`);
+  return { yaml: `${ENCABEZADO_EQUIPO}${YAML.stringify(perfil, { lineWidth: 0 })}`, nombre: 'equipo.yaml' };
+}));
+
+app.post('/api/equipo/importar', ruta(async (req) => {
+  const texto = String(req.body.yaml || '');
+  let datos;
+  try {
+    datos = YAML.parse(texto);
+  } catch (e) {
+    throw new Error(`El archivo no es YAML válido: ${e.message}`);
+  }
+  if (!datos || typeof datos !== 'object' || Array.isArray(datos)) throw new Error('El archivo está vacío o no es un perfil de equipo');
+  const v = espacio.validadores().equipo(datos);
+  if (!v.ok) throw new Error(`El perfil de equipo no es válido: ${v.errores.map((e) => `${e.ruta}: ${e.mensaje}`).join('; ')}`);
+  const p = propuestas.crearPropuesta({ motivo: req.body.motivo || `Usar la configuración del equipo${datos.equipo ? ` (${datos.equipo})` : ''}`, origen: 'interfaz', cambios: [{ tipo: 'equipo', yaml: texto }] });
+  if (p.estado !== 'pendiente') throw new Error(p.errores.map((e) => `${e.ruta}: ${e.mensaje}`).join('; '));
+  await propuestas.aplicarPropuesta(p.id);
+  await refrescarConectores(false);
+  const r = resumenEspacio();
+  emitir('espacio', r);
+  return r;
 }));
 
 // ---------- Corridas ----------

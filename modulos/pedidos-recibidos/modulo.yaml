@@ -1,0 +1,21 @@
+id: pedidos-recibidos
+clave: pedidos_recibidos
+nombre: Pedidos que me llegaron
+descripcion: Qué le pidieron a la persona, quién y cuándo, separado en hecho y pendiente. Se activa solo cuando la persona elige de dónde le llegan las tareas (origen_tareas en la config).
+tipo: extension
+activo_si: origen_tareas
+fuentes_desde: origen_tareas
+aplica_a:
+  daily:
+    - antes_de: redactar
+      paso:
+        id: pedidos
+        nombre: Pedidos que me llegaron
+        detalle: Qué le pidieron a la persona, quién y cuándo, en las fuentes que eligió, separado en hecho y pendiente y citando el mensaje, el mail, el resumen o el ticket.
+  registro-tareas:
+    - antes_de: redactar
+      paso:
+        id: pedidos
+        nombre: Pedidos que me llegaron
+        detalle: Qué le pidieron a la persona, quién y cuándo, en las fuentes que eligió, separado en hecho y pendiente y citando el mensaje, el mail, el resumen o el ticket.
+instrucciones: instrucciones.md

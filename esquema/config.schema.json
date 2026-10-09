@@ -114,6 +114,11 @@
         "notas": { "type": "string" }
       }
     },
+    "origen_tareas": {
+      "type": "array",
+      "description": "De dónde te llegan las tareas y los pedidos. Cada elemento es una fuente de la config y, si hace falta, dónde mirar en ella.",
+      "items": { "$ref": "#/definitions/origen_tarea" }
+    },
     "fuentes": {
       "type": "object",
       "description": "De dónde salen los datos. La clave es el id de la fuente.",
@@ -150,6 +155,20 @@
     }
   },
   "definitions": {
+    "origen_tarea": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fuente"],
+      "properties": {
+        "fuente": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "Id de una fuente de la config: slack, teams, mail, reuniones, jira o github." },
+        "canales": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Slack o Teams: canales donde llegan pedidos." },
+        "equipos": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Teams: equipos cuyos canales se miran." },
+        "remitentes": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Mail: quién manda los pedidos (en un perfil de equipo, solo dominios como @empresa.com)." },
+        "proyectos": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Jira: claves de proyecto." },
+        "repos": { "type": "array", "items": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" }, "description": "GitHub: repos (dueño/repo) de los issues asignados." },
+        "solo_mios": { "type": "boolean", "description": "Contar solo lo asignado o mencionado a la persona." }
+      }
+    },
     "fuente": {
       "type": "object",
       "additionalProperties": false,

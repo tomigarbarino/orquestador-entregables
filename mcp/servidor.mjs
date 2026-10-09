@@ -313,6 +313,24 @@ registrar('leer_github', CORRIDA, {
   return okCompacto({ ...r, repos: reposPagina, refs, pagina: p.n, paginas: p.total, siguiente: p.siguiente });
 });
 
+registrar('leer_issues_github', CORRIDA, {
+  description: 'Lee los issues de GitHub asignados a la persona (gh issue list --assignee @me) que se crearon, cambiaron o cerraron dentro de la ventana de la corrida, en los repos del origen de tareas (o de sus proyectos). Sirve para el paso de pedidos recibidos. Cada issue se cita con su ref dueño/repo#N, que queda registrada como leída.',
+  inputSchema: {
+    corrida: esquemaCorrida,
+    desde: z.string().optional().describe('YYYY-MM-DD; por defecto, el inicio de la ventana'),
+    hasta: z.string().optional().describe('YYYY-MM-DD; por defecto, el fin de la ventana'),
+    repos: z.array(z.string()).optional().describe('Limitar a estos repos (dueño/repo)'),
+  },
+}, async ({ corrida, desde, hasta, repos }) => {
+  const { config } = configValida();
+  const v = ventanaDeCorrida(corrida);
+  const args = { desde: desde || v.desde, hasta: hasta || v.hasta, repos };
+  const r = await enCache(`issues|${corrida}|${JSON.stringify(args)}`, () => fuentesLocales.leerIssuesGithub({ config, ...args }));
+  // El estado del nodo de GitHub lo reporta quien corre (leer_github ya lo marca para los PRs): acá solo se registra la lectura.
+  corridas.registrarLectura(corrida, 'github', { refs: r.refs, resumen: r.resumen });
+  return okCompacto(r);
+});
+
 registrar('leer_sesiones', CORRIDA, {
   description: 'Lee los hitos (pedido y cierre, partidos por fecha local), pendientes, primer pedido y cierre de las sesiones de Claude Code y Codex de la persona dentro de la ventana. No devuelve transcripts enteros. Si la salida es grande viene por páginas: pedí todas (pagina 2, 3...) con las mismas fechas; solo lo devuelto queda registrado como leído.',
   inputSchema: {
