@@ -1,8 +1,8 @@
 # Orquestador de entregables
 
 Una plantilla para que cada equipo deje andando, con Claude, los entregables que arma siempre igual: la daily, el registro de tareas y horas, el deck de avance semanal, las notas de cada reunión comercial, la bitácora de reuniones y los que sumes vos.
-**Probá la demo pública, con datos ficticios:** https://orquestador-entregables.vercel.app
 
+**Probá la demo pública, con datos ficticios:** https://orquestador-entregables.vercel.app
 
 Todo se configura, se ve y se ajusta desde una interfaz web local, incluso charlando con Claude. No hace falta editar archivos a mano.
 

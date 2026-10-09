@@ -789,7 +789,9 @@ async function responderDemo({ texto, pantalla, onDelta, onPropuesta }) {
   if (/jira/i.test(texto)) {
     const doc = YAML.parseDocument(c.texto);
     doc.setIn(['fuentes', 'jira', 'activo'], true);
-    const actuales = doc.getIn(['entregables', entregable, 'fuentes'])?.toJSON?.() || [];
+    // Las fuentes que hoy usa el entregable: las propias, las del perfil de equipo o las de la receta.
+    const receta = recetas[c.datos.entregables?.[entregable]?.receta || entregable]?.receta;
+    const actuales = c.datos.entregables?.[entregable]?.fuentes || receta?.fuentes?.map((x) => x.id) || [];
     if (!actuales.includes('jira')) doc.setIn(['entregables', entregable, 'fuentes'], [...actuales, 'jira']);
     const p = crearPropuesta({
       motivo: `Sumar los tickets de Jira a ${nombre}`,

@@ -90,3 +90,15 @@ test('reglas aprendidas con fecha en tres recetas, una propuesta pendiente y el 
   for (const pid of citadas) assert.ok(propuestas.leerPropuesta(pid), pid);
   assert.ok(fs.existsSync(rutas.demo));
 });
+
+test('pedir Jira en el chat de la demo suma Jira sin quitar las fuentes que vienen del equipo', async () => {
+  const { responderDemo } = await import('../lib/demo.mjs');
+  const antes = entregablesDe(espacio.leerConfig().datos, espacio.listarRecetas()).find((e) => e.id === 'daily').fuentes;
+  let pid = null;
+  await responderDemo({ texto: 'Sumá los tickets de Jira', pantalla: { entregable: 'daily' }, onDelta: () => {}, onPropuesta: (id) => { pid = id; } });
+  assert.ok(pid, 'propone un cambio');
+  const vista = propuestas.vistaPrevia(pid);
+  const despues = entregablesDe(vista.config, vista.recetas).find((e) => e.id === 'daily').fuentes;
+  assert.deepEqual(despues, [...antes, 'jira']);
+  propuestas.descartarPropuesta(pid);
+});
