@@ -115,7 +115,7 @@ export function EditorDestino({ destino, onChange }) {
     ? null
     : !d.url && !tocada
       ? 'Falta la dirección: pegala completa, con https://'
-      : 'Pegá la dirección completa, por ejemplo https://docs.empresa.com/tablero';
+      : 'Pegá la dirección completa, por ejemplo https://docs.example.com/tablero';
   const idSelect = useId();
   return (
     <Grupo etiqueta="A dónde se entrega">
