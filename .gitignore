@@ -16,3 +16,5 @@ docs/capturas/_tmp/
 
 # Demo pública estática (npm run build:demo)
 dist-demo/
+
+.vercel
