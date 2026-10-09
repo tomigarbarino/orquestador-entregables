@@ -167,7 +167,10 @@ registrar('preparar_corrida', CORRIDA, {
     const ultima = corridas.ultimaCorridaDe(entregable, { aprobada: true });
     const ultimaCorrida = ultima?.inicio ? ahoraEn(config.zona_horaria, new Date(ultima.inicio)).fecha : null;
     const ultimaEntrega = config.entregables?.[entregable]?.opciones?.ultima_entrega || null;
-    ventana = calcularVentana(prep.receta.disparador?.ventana, ahora, ultimaCorrida, ultimaEntrega);
+    // opciones.periodo (bitácora de reuniones): dia es hoy, semana los últimos siete días.
+    const periodo = config.entregables?.[entregable]?.opciones?.periodo;
+    const tipoVentana = { dia: 'hoy', semana: 'ultimos_7_dias' }[periodo] || prep.receta.disparador?.ventana;
+    ventana = calcularVentana(tipoVentana, ahora, ultimaCorrida, ultimaEntrega);
   }
   // Un registro del día que corre antes de su hora de cierre cubre solo parte del día: se avisa.
   const horario = prep.horario;

@@ -16,4 +16,10 @@ aplica_a:
         id: seguimiento-comercial
         nombre: Próximos pasos por vencer
         detalle: Los compromisos comerciales que vencen hoy o ya vencieron.
+  bitacora-reuniones:
+    - despues_de: decisiones
+      paso:
+        id: proximos-pasos-cliente
+        nombre: Proponer al seguimiento
+        detalle: Los próximos pasos con un cliente, con responsable y fecha, se proponen al seguimiento comercial local.
 instrucciones: instrucciones.md
