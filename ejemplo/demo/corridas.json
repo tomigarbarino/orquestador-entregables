@@ -73,6 +73,10 @@
           {
             "fuente": "github",
             "ref": "acme-ejemplo/rutas-web#98"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:3f9a21c0"
           }
         ]
       },
@@ -111,93 +115,131 @@
     "descartados": [
       {
         "texto": "Reunión de planning de Rutas",
-        "motivo": "Solo figura en el calendario: no se deduce trabajo de reuniones agendadas"
+        "motivo": "Solo figura en el calendario: no se deduce trabajo de reuniones agendadas",
+        "refs": [
+          "evento:planning-rutas"
+        ]
+      },
+      {
+        "texto": "Daily del equipo",
+        "motivo": "Reunión recurrente, sin trabajo propio que contar",
+        "refs": [
+          "evento:daily"
+        ]
+      },
+      {
+        "texto": "Demo con Transportes Demo",
+        "motivo": "Agendada para hoy: todavía no ocurrió",
+        "refs": [
+          "evento:demo-cliente"
+        ]
+      },
+      {
+        "texto": "Ajuste de tolerancia en las ventanas horarias",
+        "motivo": "Se abrió hoy después de la daily y sigue en revisión: entra en la próxima",
+        "refs": [
+          "acme-ejemplo/rutas-api#214"
+        ]
+      },
+      {
+        "texto": "Sesión que revirtió un cambio de prueba",
+        "motivo": "El cierre dice que se descartó el cambio y no quedó nada",
+        "refs": [
+          "claude:4d2c1b0a"
+        ]
       }
     ],
     "faltantes": []
   },
   "registro-tareas": {
     "ventana": {
-      "tipo": "ultimos_7_dias",
-      "desde": "2026-10-02",
+      "tipo": "hoy",
+      "desde": "2026-10-09",
       "hasta": "2026-10-09",
-      "descripcion": "últimos siete días"
+      "descripcion": "hoy (2026-10-09)"
     },
     "fuentes": {
       "github": {
-        "resumen": "6 PRs en 3 repos",
+        "resumen": "2 PRs con movimiento hoy",
         "refs": [
-          "acme-ejemplo/rutas-api#212",
-          "acme-ejemplo/rutas-api#214",
           "acme-ejemplo/rutas-web#98",
-          "acme-ejemplo/depositos#41"
+          "acme-ejemplo/rutas-api#214"
         ]
       },
       "sesiones_ia": {
-        "resumen": "9 sesiones",
+        "resumen": "3 sesiones de hoy",
         "refs": [
           "claude:3f9a21c0",
-          "claude:7b2e9d14"
+          "claude:7b2e9d14",
+          "claude:c01d55e2"
         ]
       },
       "calendario": {
-        "resumen": "4 reuniones (2 por confirmar)",
+        "resumen": "1 reunión hoy",
         "refs": [
           "evento:demo-cliente"
         ]
       }
     },
     "pasos": {
-      "ventana": "2 al 9 de octubre",
-      "evidencia": "6 PRs, 9 sesiones, 4 reuniones",
-      "agrupar": "4 resultados",
-      "deduplicar": "1 ya registrado",
-      "redactar": "3 registros nuevos"
+      "ventana": "Hoy, 9 de octubre",
+      "evidencia": "2 PRs, 3 sesiones, 1 reunión",
+      "agrupar": "2 resultados",
+      "redactar": "2 registros"
     },
     "borrador": [
-      "| Fecha | Título | Categoría | Estado | Horas |",
-      "|---|---|---|---|---|",
-      "| 2026-10-08 | Rutas: ventanas horarias por cliente en el cálculo de recorridos | Desarrollo | Hecha | Sin estimar |",
-      "| 2026-10-08 | Depósitos: causa del desfase de stock al cierre | Investigación | Hecha | Sin estimar |",
-      "| 2026-10-09 | Rutas: tiempo estimado por parada (en preview) | Desarrollo | En proceso | Sin estimar |",
+      "| Fecha | Título | Categoría | Estado | Horas | Descripción |",
+      "|---|---|---|---|---|---|",
+      "| 2026-10-09 | Rutas: tiempo estimado por parada en la pantalla de reparto | Desarrollo | En proceso | Sin estimar | La pantalla de reparto muestra cuánto falta para cada parada. Está en preview, falta validarla con operaciones antes de pasarla a producción (rutas-web#98). |",
+      "| 2026-10-09 | Rutas: aviso cuando una parada queda fuera de su ventana horaria | Desarrollo | En proceso | Sin estimar | El cálculo de recorridos va a avisar qué paradas no llegan a tiempo. PR abierto contra main, en revisión (rutas-api#214). |",
       "",
-      "**Por confirmar:** reunión con Transportes Demo del 7/10 (solo figura en el calendario)."
+      "**Quedó afuera:** la demo con Transportes Demo (agendada, sin confirmación de que ocurrió) y una consulta sin entrega."
     ],
     "items": [
       {
-        "texto": "Ventanas horarias en el cálculo de recorridos",
-        "evidencia": [
-          {
-            "fuente": "github",
-            "ref": "acme-ejemplo/rutas-api#212"
-          }
-        ]
-      },
-      {
-        "texto": "Causa del desfase de stock",
-        "evidencia": [
-          {
-            "fuente": "github",
-            "ref": "acme-ejemplo/depositos#41"
-          }
-        ]
-      },
-      {
-        "texto": "Tiempo estimado por parada",
+        "texto": "Tiempo estimado por parada, en preview",
         "evidencia": [
           {
             "fuente": "github",
             "ref": "acme-ejemplo/rutas-web#98"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:3f9a21c0"
+          }
+        ]
+      },
+      {
+        "texto": "Aviso de paradas fuera de ventana, PR en revisión",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#214"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:c01d55e2"
           }
         ]
       }
     ],
     "descartados": [
       {
-        "texto": "Reunión con Transportes Demo",
-        "motivo": "Sin evidencia de que haya ocurrido"
+        "texto": "Demo con Transportes Demo",
+        "motivo": "Solo figura en el calendario: no hay confirmación de que haya ocurrido",
+        "refs": [
+          "evento:demo-cliente"
+        ]
+      },
+      {
+        "texto": "Consulta sobre el formato del tablero",
+        "motivo": "Pregunta y respuesta sin artefacto, sin PR y sin decisión documentada",
+        "refs": [
+          "claude:7b2e9d14"
+        ]
       }
-    ]
+    ],
+    "faltantes": []
   },
   "reunion-comercial": {
     "ventana": {
@@ -223,7 +265,7 @@
     "pasos": {
       "lectura": "Lectura de la persona incluida",
       "evidencia": "Resumen y fecha encontrados",
-      "deduplicar": "No estaba cargada",
+      "candidatas": "1 reunión con el cliente",
       "redactar": "Ficha en tres bloques"
     },
     "borrador": [
@@ -328,7 +370,36 @@
         ]
       }
     ],
-    "descartados": []
+    "descartados": [
+      {
+        "texto": "Investigación del desfase de stock",
+        "motivo": "Sigue sin mergear y no tiene resultado para mostrar en el deck",
+        "refs": [
+          "acme-ejemplo/depositos#41"
+        ]
+      },
+      {
+        "texto": "Sesión de consulta",
+        "motivo": "Pregunta y respuesta sin entrega",
+        "refs": [
+          "claude:3f9a21c0"
+        ]
+      },
+      {
+        "texto": "Demo con Transportes Demo",
+        "motivo": "Reunión agendada, sin resumen de lo que pasó",
+        "refs": [
+          "evento:demo-cliente"
+        ]
+      },
+      {
+        "texto": "Resumen de reunión",
+        "motivo": "Es de una reunión interna, no suma avance de producto",
+        "refs": [
+          "mail:resumen-demo"
+        ]
+      }
+    ]
   },
   "digest-jira": {
     "ventana": {
@@ -384,6 +455,10 @@
           {
             "fuente": "jira",
             "ref": "RUT-41"
+          },
+          {
+            "fuente": "calendario",
+            "ref": "evento:planning-rutas"
           }
         ]
       },
@@ -406,6 +481,19 @@
           {
             "fuente": "calendario",
             "ref": "evento:demo-cliente"
+          }
+        ]
+      },
+      {
+        "texto": "DEP-12 y DEP-15 cambiaron de estado",
+        "evidencia": [
+          {
+            "fuente": "jira",
+            "ref": "DEP-12"
+          },
+          {
+            "fuente": "jira",
+            "ref": "DEP-15"
           }
         ]
       }

@@ -19,23 +19,27 @@ Hacé una pregunta por vez, con un ejemplo concreto, y resumí lo que entendiste
 
 - Por cada parte del entregable, de qué fuente sale: GitHub, sesiones de IA, registros, calendario, mail, chat, Jira o modelo local. Llamá a `estado` para ver cuáles están conectadas y avisá las que falten.
 - Cada fuente va a la receta con un `para` concreto ("PRs mergeados a main en la semana").
+- Las fuentes que se leen con conectores (calendario, mail, chat, Jira) se registran en la corrida con `registrar_lectura`: decilo en el `detalle` del paso que las lee.
 
 ## 3. Reglas de formato y tono
 
 - Largo, tono, qué no decir, cómo nombrar a la gente y a los clientes.
 - Las reglas generales de la persona ya están en `reglas_redaccion` de la config: sumá solo las propias de este entregable, en las instrucciones.
-- Definí el control de evidencia: qué tiene que tener respaldo y qué se descarta.
+- Definí el control de evidencia: qué tiene que tener respaldo y qué se descarta. Escribí reglas que se puedan verificar ("como máximo 200 palabras", no "corto").
+- Toda receta lleva en el control que cada ítem cita su evidencia, que toda ref leída termina en un ítem o en descartados con su motivo y que el estado se dice exacto (nunca "listo" si solo está en una rama).
+- En el YAML, un texto que lleva " #" o ": " va entre comillas simples: si no, se corta (" #" se lee como comentario) o se rompe la receta.
 
 ## 4. Cuándo corre y a dónde va
 
 - Días y hora, o "a pedido".
+- Qué período cubre cada corrida (`disparador.ventana`): `hoy`, `dia_habil_anterior`, `ultimos_7_dias`, `desde_ultima_corrida` o `evento`. Si la persona puede nombrar otro día en el pedido, decilo en las instrucciones.
 - Destino: borrador en el chat, Slack (canal), un documento o un formulario (URL). Recordale que siempre sale como borrador y nada se manda sin su OK.
 
 ## Generar la receta
 
 Con `ver_receta` mirá una receta existente parecida (por ejemplo `daily`) para copiar la estructura. Después llamá a `proponer_cambio` con:
 
-- `recetas`: la receta nueva (`id` en minúsculas con guiones, `receta_yaml` con disparador, fuentes, pasos, control y destino, e `instrucciones` en Markdown).
+- `recetas`: la receta nueva (`id` en minúsculas con guiones, `receta_yaml` con disparador, fuentes, pasos, control y destino, e `instrucciones` en Markdown). Uno de los pasos tiene que tener id `redactar` (ahí se enganchan los módulos), y cada `usa` de un paso nombra fuentes de la receta.
 - `config_yaml`: la config completa con la entrada nueva en `entregables` (receta, activo, fuentes, horario y destino). Conservá el resto igual.
 - `motivo`: "Entregable nuevo: <nombre>".
 

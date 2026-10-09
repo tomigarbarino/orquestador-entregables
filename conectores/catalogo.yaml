@@ -7,6 +7,10 @@
 # Para las fuentes "mcp", el nombre del conector se busca en `claude mcp list`
 # (por el campo `servidor` de tu config o por las palabras de `coincide`). Si tu conector
 # tiene otras herramientas de lectura, sumalas en `herramientas_extra` de la fuente.
+#
+# Lo que se lee por conector se registra en la corrida con registrar_lectura: una ref por
+# cosa leída, con la forma de `como_referenciar`. Sin esa lectura registrada, el control
+# de evidencia no acepta ítems de esa fuente.
 
 fuentes:
   github:
@@ -37,6 +41,7 @@ fuentes:
     nombre: Calendario
     descripcion: Reuniones con fecha, hora y participantes.
     via: mcp
+    como_referenciar: "evento:<id del evento> (el id que devuelve la búsqueda; si no hay id, evento:<fecha>-<asunto corto>)"
     como_conectar: Conectá Microsoft 365 o Google Calendar en claude.ai y autorizalo con tu cuenta.
     proveedores:
       - nombre: Microsoft 365
@@ -50,6 +55,7 @@ fuentes:
     nombre: Mail
     descripcion: Mails, por ejemplo los resúmenes automáticos de reuniones.
     via: mcp
+    como_referenciar: "mail:<id del mail> (el id o el link que devuelve la búsqueda)"
     como_conectar: Conectá Microsoft 365 o Gmail en claude.ai y autorizalo con tu cuenta.
     proveedores:
       - nombre: Microsoft 365
@@ -63,6 +69,7 @@ fuentes:
     nombre: Chat del equipo
     descripcion: Mensajes de Slack o Teams.
     via: mcp
+    como_referenciar: "chat:<id del mensaje o del hilo>"
     como_conectar: Conectá Slack o Microsoft 365 en claude.ai y autorizalo con tu cuenta.
     proveedores:
       - nombre: Slack
@@ -76,6 +83,7 @@ fuentes:
     nombre: Jira
     descripcion: Tickets y sus cambios de estado.
     via: mcp
+    como_referenciar: "la clave del ticket, por ejemplo RUT-41"
     como_conectar: Conectá Atlassian en claude.ai y autorizalo con tu cuenta.
     proveedores:
       - nombre: Atlassian

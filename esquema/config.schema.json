@@ -17,7 +17,13 @@
         "rol": { "type": "string", "description": "Tu rol, por ejemplo 'Líder técnica'." },
         "equipo": { "type": "string", "description": "Tu equipo o área." },
         "empresa": { "type": "string", "description": "Tu empresa." },
-        "github_usuario": { "type": "string", "pattern": "^[A-Za-z0-9-]*$", "description": "Tu usuario de GitHub, para filtrar tus PRs." }
+        "github_usuario": { "type": "string", "pattern": "^[A-Za-z0-9-]*$", "description": "Tu usuario de GitHub, para filtrar tus PRs." },
+        "github_usuarios": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z0-9-]+$" },
+          "description": "Si tenés más de una cuenta de GitHub: todos tus usuarios, para filtrar tus PRs."
+        }
       }
     },
     "idioma": { "type": "string", "minLength": 2, "description": "Idioma de los entregables, por ejemplo es-AR." },
@@ -79,6 +85,19 @@
           "termino": { "type": "string", "minLength": 1 },
           "significa": { "type": "string" },
           "variantes_dictado": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "dias_especiales": {
+      "type": "array",
+      "description": "Días que no son como los demás (feriado, día libre, un día que se carga con otra fecha). Las corridas los tienen en cuenta.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fecha", "nota"],
+        "properties": {
+          "fecha": { "type": "string", "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", "description": "YYYY-MM-DD" },
+          "nota": { "type": "string", "minLength": 1, "description": "Qué tiene de especial ese día, por ejemplo: día libre." }
         }
       }
     },
@@ -216,7 +235,13 @@
         },
         "horario": { "$ref": "#/definitions/horario" },
         "destino": { "$ref": "#/definitions/destino" },
-        "opciones": { "type": "object", "description": "Parámetros propios de la receta." }
+        "opciones": {
+          "type": "object",
+          "description": "Parámetros propios de la receta. ultima_entrega (YYYY-MM-DD): la última vez que se entregó, aunque haya sido fuera del orquestador; la usan las recetas con ventana desde_ultima_corrida.",
+          "properties": {
+            "ultima_entrega": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+          }
+        }
       }
     }
   }
