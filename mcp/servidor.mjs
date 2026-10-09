@@ -39,6 +39,12 @@ const { rutaEspacio } = await import('../lib/rutas.mjs');
 
 await asegurarEspacio();
 
+// Las herramientas de un módulo solo se ofrecen si el módulo está activo: si no, el modelo
+// las ve y las intenta usar aunque la receta no las pida.
+const configInicial = estadoEspacio().config || {};
+const moduloActivo = (clave) => Boolean(configInicial.modulos?.[clave]?.activo);
+const CORRIDA_SI = (clave) => (moduloActivo(clave) ? ['corrida', 'completo'] : ['completo']);
+
 const servidor = new McpServer({ name: 'orquestador-entregables', version: '0.1.0' });
 
 const ok = (datos) => ({ content: [{ type: 'text', text: typeof datos === 'string' ? datos : JSON.stringify(datos, null, 2) }] });
@@ -175,7 +181,12 @@ registrar('reportar_paso', CORRIDA, {
   },
 }, async ({ corrida, nodo, estado, resultado }) => {
   const receta = recetaDeCorrida(corrida);
-  corridas.agregarEvento(corrida, { nodo: corridas.normalizarNodo(nodo, receta), estado, resultado });
+  const normalizado = corridas.normalizarNodo(nodo, receta);
+  const validos = ['disparador', ...receta.fuentes.map((f) => `fuente:${f.id}`), ...receta.pasos.map((p) => `paso:${p.id}`), 'control', 'destino'];
+  if (!validos.includes(normalizado)) {
+    return falla(`"${nodo}" no es un nodo de esta receta. Nodos válidos: ${validos.join(', ')}`);
+  }
+  corridas.agregarEvento(corrida, { nodo: normalizado, estado, resultado });
   return ok('Registrado');
 });
 
@@ -223,7 +234,7 @@ registrar('leer_registros', CORRIDA, {
   return ok(r);
 });
 
-registrar('resumir_local', CORRIDA, {
+registrar('resumir_local', CORRIDA_SI('resumen_local'), {
   description: 'Resume un texto largo con el modelo local (Ollama), sin que salga de la máquina. Solo si el módulo de resumen local está activo.',
   inputSchema: { corrida: esquemaCorrida.optional(), texto: z.string().min(1), instruccion: z.string().optional() },
 }, async ({ corrida, texto, instruccion }) => {
@@ -235,7 +246,7 @@ registrar('resumir_local', CORRIDA, {
   return r.ok ? ok(r) : falla(r.error);
 });
 
-registrar('seguimiento_listar', CORRIDA, {
+registrar('seguimiento_listar', CORRIDA_SI('seguimiento_comercial'), {
   description: 'Lista los próximos pasos comerciales pendientes que vencen hasta una fecha (módulo de seguimiento comercial).',
   inputSchema: { hasta: z.string().optional().describe('YYYY-MM-DD; por defecto, hoy') },
 }, async ({ hasta }) => {
@@ -246,7 +257,7 @@ registrar('seguimiento_listar', CORRIDA, {
   return ok({ hasta: limite, pasos });
 });
 
-registrar('seguimiento_guardar', CORRIDA, {
+registrar('seguimiento_guardar', CORRIDA_SI('seguimiento_comercial'), {
   description: 'Propone los próximos pasos de una reunión comercial (responsable y fecha). Quedan pendientes hasta que la persona aprueba la corrida.',
   inputSchema: {
     corrida: esquemaCorrida,

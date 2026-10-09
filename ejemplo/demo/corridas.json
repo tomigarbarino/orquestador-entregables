@@ -1,10 +1,39 @@
 {
   "daily": {
-    "ventana": { "tipo": "dia_habil_anterior", "desde": "2026-10-08", "hasta": "2026-10-09", "descripcion": "del 2026-10-08 a hoy" },
+    "ventana": {
+      "tipo": "dia_habil_anterior",
+      "desde": "2026-10-08",
+      "hasta": "2026-10-09",
+      "descripcion": "del 2026-10-08 a hoy"
+    },
     "fuentes": {
-      "github": { "resumen": "4 PRs en 2 repos", "refs": ["acme-ejemplo/rutas-api#212", "acme-ejemplo/rutas-api#214", "acme-ejemplo/rutas-web#98", "acme-ejemplo/depositos#41"] },
-      "sesiones_ia": { "resumen": "5 sesiones", "refs": ["claude:3f9a21c0", "claude:7b2e9d14", "claude:c01d55e2", "claude:9e8a7f61", "claude:4d2c1b0a"] },
-      "calendario": { "resumen": "3 reuniones", "refs": ["evento:planning-rutas", "evento:daily", "evento:demo-cliente"] }
+      "github": {
+        "resumen": "4 PRs en 2 repos",
+        "refs": [
+          "acme-ejemplo/rutas-api#212",
+          "acme-ejemplo/rutas-api#214",
+          "acme-ejemplo/rutas-web#98",
+          "acme-ejemplo/depositos#41"
+        ]
+      },
+      "sesiones_ia": {
+        "resumen": "5 sesiones",
+        "refs": [
+          "claude:3f9a21c0",
+          "claude:7b2e9d14",
+          "claude:c01d55e2",
+          "claude:9e8a7f61",
+          "claude:4d2c1b0a"
+        ]
+      },
+      "calendario": {
+        "resumen": "3 reuniones",
+        "refs": [
+          "evento:planning-rutas",
+          "evento:daily",
+          "evento:demo-cliente"
+        ]
+      }
     },
     "pasos": {
       "ventana": "Miércoles 8 a hoy",
@@ -29,25 +58,102 @@
       "- Para probar con datos reales de Transportes Demo necesito el acceso de solo lectura que pidió Beto."
     ],
     "items": [
-      { "texto": "Cálculo de recorridos con ventanas horarias, en producción", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/rutas-api#212" }] },
-      { "texto": "Tiempo estimado por parada, en preview", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/rutas-web#98" }] },
-      { "texto": "Investigación del desfase de stock por remitos duplicados", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/depositos#41" }, { "fuente": "sesiones_ia", "ref": "claude:7b2e9d14" }] },
-      { "texto": "Validar la pantalla de reparto con Beto", "evidencia": [{ "fuente": "sesiones_ia", "ref": "claude:c01d55e2" }] },
-      { "texto": "Falta el acceso de solo lectura a datos de Transportes Demo", "evidencia": [{ "fuente": "sesiones_ia", "ref": "claude:9e8a7f61" }] }
+      {
+        "texto": "Cálculo de recorridos con ventanas horarias, en producción",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#212"
+          }
+        ]
+      },
+      {
+        "texto": "Tiempo estimado por parada, en preview",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-web#98"
+          }
+        ]
+      },
+      {
+        "texto": "Investigación del desfase de stock por remitos duplicados",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/depositos#41"
+          },
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:7b2e9d14"
+          }
+        ]
+      },
+      {
+        "texto": "Validar la pantalla de reparto con Beto",
+        "evidencia": [
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:c01d55e2"
+          }
+        ]
+      },
+      {
+        "texto": "Falta el acceso de solo lectura a datos de Transportes Demo",
+        "evidencia": [
+          {
+            "fuente": "sesiones_ia",
+            "ref": "claude:9e8a7f61"
+          }
+        ]
+      }
     ],
     "descartados": [
-      { "texto": "Reunión de planning de Rutas", "motivo": "Solo figura en el calendario: no se deduce trabajo de reuniones agendadas" }
+      {
+        "texto": "Reunión de planning de Rutas",
+        "motivo": "Solo figura en el calendario: no se deduce trabajo de reuniones agendadas"
+      }
     ],
     "faltantes": []
   },
   "registro-tareas": {
-    "ventana": { "tipo": "ultimos_7_dias", "desde": "2026-10-02", "hasta": "2026-10-09", "descripcion": "últimos siete días" },
-    "fuentes": {
-      "github": { "resumen": "6 PRs en 3 repos", "refs": ["acme-ejemplo/rutas-api#212", "acme-ejemplo/rutas-api#214", "acme-ejemplo/rutas-web#98", "acme-ejemplo/depositos#41"] },
-      "sesiones_ia": { "resumen": "9 sesiones", "refs": ["claude:3f9a21c0", "claude:7b2e9d14"] },
-      "calendario": { "resumen": "4 reuniones (2 por confirmar)", "refs": ["evento:demo-cliente"] }
+    "ventana": {
+      "tipo": "ultimos_7_dias",
+      "desde": "2026-10-02",
+      "hasta": "2026-10-09",
+      "descripcion": "últimos siete días"
     },
-    "pasos": { "ventana": "2 al 9 de octubre", "evidencia": "6 PRs, 9 sesiones, 4 reuniones", "agrupar": "4 resultados", "deduplicar": "1 ya registrado", "redactar": "3 registros nuevos" },
+    "fuentes": {
+      "github": {
+        "resumen": "6 PRs en 3 repos",
+        "refs": [
+          "acme-ejemplo/rutas-api#212",
+          "acme-ejemplo/rutas-api#214",
+          "acme-ejemplo/rutas-web#98",
+          "acme-ejemplo/depositos#41"
+        ]
+      },
+      "sesiones_ia": {
+        "resumen": "9 sesiones",
+        "refs": [
+          "claude:3f9a21c0",
+          "claude:7b2e9d14"
+        ]
+      },
+      "calendario": {
+        "resumen": "4 reuniones (2 por confirmar)",
+        "refs": [
+          "evento:demo-cliente"
+        ]
+      }
+    },
+    "pasos": {
+      "ventana": "2 al 9 de octubre",
+      "evidencia": "6 PRs, 9 sesiones, 4 reuniones",
+      "agrupar": "4 resultados",
+      "deduplicar": "1 ya registrado",
+      "redactar": "3 registros nuevos"
+    },
     "borrador": [
       "| Fecha | Título | Categoría | Estado | Horas |",
       "|---|---|---|---|---|",
@@ -58,19 +164,68 @@
       "**Por confirmar:** reunión con Transportes Demo del 7/10 (solo figura en el calendario)."
     ],
     "items": [
-      { "texto": "Ventanas horarias en el cálculo de recorridos", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/rutas-api#212" }] },
-      { "texto": "Causa del desfase de stock", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/depositos#41" }] },
-      { "texto": "Tiempo estimado por parada", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/rutas-web#98" }] }
+      {
+        "texto": "Ventanas horarias en el cálculo de recorridos",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#212"
+          }
+        ]
+      },
+      {
+        "texto": "Causa del desfase de stock",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/depositos#41"
+          }
+        ]
+      },
+      {
+        "texto": "Tiempo estimado por parada",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-web#98"
+          }
+        ]
+      }
     ],
-    "descartados": [{ "texto": "Reunión con Transportes Demo", "motivo": "Sin evidencia de que haya ocurrido" }]
+    "descartados": [
+      {
+        "texto": "Reunión con Transportes Demo",
+        "motivo": "Sin evidencia de que haya ocurrido"
+      }
+    ]
   },
   "reunion-comercial": {
-    "ventana": { "tipo": "evento", "desde": "2026-10-02", "hasta": "2026-10-09", "descripcion": "la reunión con Transportes Demo" },
-    "fuentes": {
-      "mail": { "resumen": "1 resumen del notetaker", "refs": ["mail:resumen-transportes-demo"] },
-      "calendario": { "resumen": "Reunión del 8/10, 45 min", "refs": ["evento:demo-cliente"] }
+    "ventana": {
+      "tipo": "evento",
+      "desde": "2026-10-02",
+      "hasta": "2026-10-09",
+      "descripcion": "la reunión con Transportes Demo"
     },
-    "pasos": { "lectura": "Lectura de la persona incluida", "evidencia": "Resumen y fecha encontrados", "deduplicar": "No estaba cargada", "redactar": "Ficha en tres bloques" },
+    "fuentes": {
+      "mail": {
+        "resumen": "1 resumen del notetaker",
+        "refs": [
+          "mail:resumen-transportes-demo"
+        ]
+      },
+      "calendario": {
+        "resumen": "Reunión del 8/10, 45 min",
+        "refs": [
+          "evento:demo-cliente"
+        ]
+      }
+    },
+    "pasos": {
+      "lectura": "Lectura de la persona incluida",
+      "evidencia": "Resumen y fecha encontrados",
+      "deduplicar": "No estaba cargada",
+      "redactar": "Ficha en tres bloques"
+    },
     "borrador": [
       "**Fecha:** 2026-10-08 · **Cliente:** Transportes Demo · **Participantes:** Ana Ejemplo · **Comercial:** (sin asignar)",
       "",
@@ -81,19 +236,70 @@
       "**Próximos pasos.** Ana manda la propuesta del piloto ampliado el 15/10. Transportes Demo comparte los datos de un mes de repartos."
     ],
     "items": [
-      { "texto": "Reunión del 8/10 con Transportes Demo", "evidencia": [{ "fuente": "calendario", "ref": "evento:demo-cliente" }] },
-      { "texto": "40 repartos diarios planificados a mano", "evidencia": [{ "fuente": "mail", "ref": "mail:resumen-transportes-demo" }] },
-      { "texto": "Próximos pasos con responsable y fecha", "evidencia": [{ "fuente": "mail", "ref": "mail:resumen-transportes-demo" }] }
+      {
+        "texto": "Reunión del 8/10 con Transportes Demo",
+        "evidencia": [
+          {
+            "fuente": "calendario",
+            "ref": "evento:demo-cliente"
+          }
+        ]
+      },
+      {
+        "texto": "40 repartos diarios planificados a mano",
+        "evidencia": [
+          {
+            "fuente": "mail",
+            "ref": "mail:resumen-transportes-demo"
+          }
+        ]
+      },
+      {
+        "texto": "Próximos pasos con responsable y fecha",
+        "evidencia": [
+          {
+            "fuente": "mail",
+            "ref": "mail:resumen-transportes-demo"
+          }
+        ]
+      }
     ],
     "descartados": []
   },
   "generico": {
-    "ventana": { "tipo": "ultimos_7_dias", "desde": "2026-10-02", "hasta": "2026-10-09", "descripcion": "últimos siete días" },
+    "ventana": {
+      "tipo": "ultimos_7_dias",
+      "desde": "2026-10-02",
+      "hasta": "2026-10-09",
+      "descripcion": "últimos siete días"
+    },
     "fuentes": {
-      "github": { "resumen": "3 PRs en 2 repos", "refs": ["acme-ejemplo/rutas-api#212", "acme-ejemplo/rutas-web#98", "acme-ejemplo/depositos#41"] },
-      "sesiones_ia": { "resumen": "4 sesiones", "refs": ["claude:3f9a21c0"] },
-      "calendario": { "resumen": "2 reuniones", "refs": ["evento:demo-cliente"] },
-      "mail": { "resumen": "1 resumen de reunión", "refs": ["mail:resumen-demo"] }
+      "github": {
+        "resumen": "3 PRs en 2 repos",
+        "refs": [
+          "acme-ejemplo/rutas-api#212",
+          "acme-ejemplo/rutas-web#98",
+          "acme-ejemplo/depositos#41"
+        ]
+      },
+      "sesiones_ia": {
+        "resumen": "4 sesiones",
+        "refs": [
+          "claude:3f9a21c0"
+        ]
+      },
+      "calendario": {
+        "resumen": "2 reuniones",
+        "refs": [
+          "evento:demo-cliente"
+        ]
+      },
+      "mail": {
+        "resumen": "1 resumen de reunión",
+        "refs": [
+          "mail:resumen-demo"
+        ]
+      }
     },
     "pasos": {},
     "borrador": [
@@ -103,8 +309,106 @@
       "- Rutas: tiempo estimado por parada en preview (rutas-web#98)."
     ],
     "items": [
-      { "texto": "Ventanas horarias por cliente", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/rutas-api#212" }] },
-      { "texto": "Tiempo estimado por parada", "evidencia": [{ "fuente": "github", "ref": "acme-ejemplo/rutas-web#98" }] }
+      {
+        "texto": "Ventanas horarias por cliente",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-api#212"
+          }
+        ]
+      },
+      {
+        "texto": "Tiempo estimado por parada",
+        "evidencia": [
+          {
+            "fuente": "github",
+            "ref": "acme-ejemplo/rutas-web#98"
+          }
+        ]
+      }
+    ],
+    "descartados": []
+  },
+  "digest-jira": {
+    "ventana": {
+      "tipo": "dia_habil_anterior",
+      "desde": "2026-10-08",
+      "hasta": "2026-10-09",
+      "descripcion": "del 2026-10-08 a hoy"
+    },
+    "fuentes": {
+      "jira": {
+        "resumen": "5 tickets movidos",
+        "refs": [
+          "RUT-41",
+          "RUT-44",
+          "RUT-47",
+          "DEP-12",
+          "DEP-15"
+        ]
+      },
+      "calendario": {
+        "resumen": "2 reuniones hoy",
+        "refs": [
+          "evento:planning-rutas",
+          "evento:demo-cliente"
+        ]
+      }
+    },
+    "pasos": {
+      "ventana": "Ayer y hoy",
+      "tickets": "5 tickets en 2 proyectos",
+      "reuniones": "2 reuniones",
+      "cruzar": "3 cruces",
+      "redactar": "Digest listo"
+    },
+    "borrador": [
+      "**10:00 · Planning de Rutas**",
+      "",
+      "- RUT-41 pasó a En revisión: ventanas horarias por cliente.",
+      "- RUT-44 se bloqueó: falta el acceso de solo lectura de Transportes Demo.",
+      "",
+      "**15:00 · Demo con Transportes Demo**",
+      "",
+      "- RUT-47 pasó a Hecho: tiempo estimado por parada.",
+      "",
+      "**Sin reunión hoy**",
+      "",
+      "- DEP-12 y DEP-15 (Depósitos) cambiaron de estado."
+    ],
+    "items": [
+      {
+        "texto": "RUT-41 en revisión",
+        "evidencia": [
+          {
+            "fuente": "jira",
+            "ref": "RUT-41"
+          }
+        ]
+      },
+      {
+        "texto": "RUT-44 bloqueado",
+        "evidencia": [
+          {
+            "fuente": "jira",
+            "ref": "RUT-44"
+          }
+        ]
+      },
+      {
+        "texto": "RUT-47 hecho, para la demo",
+        "evidencia": [
+          {
+            "fuente": "jira",
+            "ref": "RUT-47"
+          },
+          {
+            "fuente": "calendario",
+            "ref": "evento:demo-cliente"
+          }
+        ]
+      }
     ],
     "descartados": []
   }
