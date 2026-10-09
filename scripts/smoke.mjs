@@ -39,8 +39,12 @@ for (const m of espacio.listarModulos()) conModulos.modulos = { ...(conModulos.m
 for (const f of ['jira', 'ollama']) if (conModulos.fuentes[f]) conModulos.fuentes[f].activo = true;
 // Con origen de tareas, la daily y el registro de tareas suman el paso "Pedidos que me llegaron".
 const conOrigen = structuredClone(configBase);
-conOrigen.origen_tareas = [{ fuente: 'slack', canales: ['#pedidos-producto'] }, { fuente: 'mail' }, { fuente: 'github' }];
-conOrigen.fuentes.slack.activo = true;
+// Se arma con las fuentes que tenga la config (una config vieja puede no tener slack o teams).
+conOrigen.origen_tareas = ['slack', 'teams', 'chat', 'mail', 'reuniones', 'github']
+  .filter((f) => conOrigen.fuentes?.[f])
+  .slice(0, 3)
+  .map((f) => (f === 'slack' ? { fuente: f, canales: ['#pedidos-producto'] } : { fuente: f }));
+for (const o of conOrigen.origen_tareas) conOrigen.fuentes[o.fuente].activo = true;
 
 function chequear(nombre, fn, fila) {
   try {
