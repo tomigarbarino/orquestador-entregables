@@ -10,8 +10,8 @@ disparador:
     - cargá la llamada comercial
     - notas de la reunión con
 fuentes:
-  - id: mail
-    para: Resumen automático de la reunión (notetaker) y la invitación del comercial
+  - id: reuniones
+    para: Resumen de la reunión del notetaker (Fathom o el mail de resumen)
     requerida: true
   - id: calendario
     para: Fecha real de la reunión, participantes con su nombre (del detalle del evento) y la respuesta de la persona
@@ -26,8 +26,8 @@ pasos:
     detalle: Qué quiere realmente el cliente, qué oportunidad ve y cómo lo venderían. Manda sobre el resumen automático. En una corrida desatendida no hay lectura y el paso queda omitido.
   - id: evidencia
     nombre: Buscar resumen y fecha
-    detalle: Resumen del notetaker en el mail y fecha real, participantes y respuesta de la persona en el detalle del evento del calendario. Cada búsqueda se registra con registrar_lectura, con todos los ids que devolvió, la consulta y el total.
-    usa: [mail, calendario, slack, teams]
+    detalle: Resumen del notetaker (fuente reuniones) y fecha real, participantes y respuesta de la persona en el detalle del evento del calendario. Cada búsqueda se registra con registrar_lectura, con todos los ids que devolvió, la consulta y el total.
+    usa: [reuniones, calendario, slack, teams]
   - id: candidatas
     nombre: Revisar las reuniones candidatas
     detalle: Para cada evento de la ventana, las dos condiciones por separado (participantes externos, o un comercial de la lista de personas presente) y si hay resumen. Cada una va a ficha, a "posible, confirmá" o a descartados con su motivo.

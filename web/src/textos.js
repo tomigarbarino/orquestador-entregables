@@ -32,8 +32,8 @@ function capitalizar(t) {
   return x ? x[0].toUpperCase() + x.slice(1) : x;
 }
 
-// Nombres humanos de las fuentes de chat, por si el catálogo todavía no llegó a la interfaz.
-export const NOMBRE_FUENTE = { slack: 'Slack', teams: 'Microsoft Teams', chat: 'Chat del equipo' };
+// Nombres humanos de las fuentes, por si el catálogo todavía no llegó a la interfaz.
+export const NOMBRE_FUENTE = { slack: 'Slack', teams: 'Microsoft Teams', chat: 'Chat del equipo', reuniones: 'Reuniones (notetaker)' };
 
 export function nombreFuente(s, id) {
   if (!id) return '';

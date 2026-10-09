@@ -21,7 +21,9 @@ fuentes:
     para: PRs de la persona en el día, con su cuerpo, rama de destino, motivo de cierre y si ya llegaron a producción
     requerida: true
   - id: calendario
-    para: Reuniones del día, solo con evidencia de que ocurrieron
+    para: Reuniones del día; el evento solo no prueba que ocurrieron
+  - id: reuniones
+    para: Resúmenes del notetaker (Fathom o mails de resumen) de las reuniones del día, con lo que se decidió y las tareas asignadas a la persona
   - id: slack
     para: Confirmaciones de trabajo hecho o de reuniones que ocurrieron, en los canales de Slack configurados; nunca para deducir trabajo
   - id: teams
@@ -33,7 +35,7 @@ pasos:
   - id: evidencia
     nombre: Juntar evidencia
     detalle: De las sesiones se usan los hitos de ese día y los pendientes; de los PRs, el cuerpo, el motivo de cierre, lo que incluyen y si ya están en producción. Se piden todas las páginas. Lo leído con conectores se registra con registrar_lectura.
-    usa: [registros, sesiones_ia, github, calendario, slack, teams]
+    usa: [registros, sesiones_ia, github, calendario, reuniones, slack, teams]
   - id: agrupar
     nombre: Agrupar por resultado
     detalle: Varios PR o sesiones de la misma cosa son un solo registro del día. El proyecto sale del repo o del tema que nombra el pedido, no de la carpeta desde la que corrió la sesión; si no es de un proyecto configurado, la iniciativa es "Otros" (el tema va en el título) o va a descartados.
@@ -46,7 +48,7 @@ control:
   - Toda ref leída (PR, sesión, registro, evento) termina en un registro o en descartados, con su ref tal como vino y un motivo que cita lo que dice la fuente. En el borrador, cada cosa de "Lo que quedó afuera" lleva su ref.
   - Solo entran tareas laborales del día de la ventana; lo de otros días no se registra.
   - No se inventan horas. Sin base, queda "sin estimar".
-  - No se infiere trabajo de reuniones agendadas ni de planes recurrentes. Una reunión sin confirmar no es un registro de la tabla; va en "Reuniones por confirmar" como ítem con la ref del evento, no a descartados. Si la persona confirmó un horario, manda sobre el calendario.
+  - Una reunión cuenta solo con el resumen del notetaker, citado con su ref (reunion:<id> o mail:<id>); tampoco se infiere trabajo de planes recurrentes. Una reunión sin resumen no es un registro de la tabla; va en "Reuniones por confirmar" como ítem con la ref del evento, no a descartados. Las tareas asignadas a la persona en un resumen se listan como pedidos, con su responsable y fecha si los tienen. Si la persona confirmó un horario, manda sobre el calendario.
   - Se distingue analizado, especificado, implementado (local), en una rama, mergeado (y a qué rama), desplegado y verificado en producción. Cada registro dice dónde quedó lo hecho. Si el PR dice en_produccion, está en producción aunque se haya mergeado a otra rama.
   - Si una sesión construyó algo (un repo, tests que pasan, corridas reales, un deploy), eso es lo principal de su registro y va primero; lo definido o especificado va después y separado.
   - 'Un PR cerrado sin mergear cuyo código entró por otro PR se cuenta como "ya integrado en <rama> por #N", nunca como obsoleto.'

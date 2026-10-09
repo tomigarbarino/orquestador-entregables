@@ -21,7 +21,9 @@ fuentes:
   - id: registros
     para: Registros de trabajo fechados, si los llevás
   - id: calendario
-    para: Solo para confirmar fechas; nunca para deducir trabajo
+    para: Solo para confirmar fechas; un evento no prueba que la reunión ocurrió
+  - id: reuniones
+    para: Resúmenes del notetaker (Fathom o mails de resumen) de las reuniones de la ventana, con lo que se decidió y las tareas asignadas a la persona
   - id: slack
     para: Bloqueos o pedidos en los canales de Slack configurados y en los mensajes que mencionan a la persona
   - id: teams
@@ -33,7 +35,7 @@ pasos:
   - id: evidencia
     nombre: Juntar evidencia
     detalle: Leer cada fuente activa, en el orden de la lista, sin barrer historiales enteros y pidiendo todas las páginas. De las sesiones se usan los hitos de la ventana y los pendientes; de los PRs, el cuerpo, el motivo de cierre, lo que incluyen y si ya están en producción. Lo leído con conectores se registra con registrar_lectura.
-    usa: [github, sesiones_ia, registros, calendario, slack, teams]
+    usa: [github, sesiones_ia, registros, calendario, reuniones, slack, teams]
   - id: agrupar
     nombre: Agrupar por proyecto
     detalle: Agrupar por proyecto y por resultado, no PR por PR. El proyecto sale del repo o del tema que nombra el pedido, no de la carpeta desde la que corrió la sesión. Si el repo no es de un proyecto configurado, va a "Otros" o a descartados. Una sesión con varios hitos de la ventana aporta cada hito con entrega, no solo el primero.
@@ -57,7 +59,7 @@ control:
   - Cada línea de Bloqueos dice qué frena y de quién depende (una persona, un acceso, una decisión). Un riesgo conocido que se aceptó al publicar no es un bloqueo; va como "Riesgo:" con la decisión que falta, si la hay.
   - Pendientes, bloqueos y riesgos en lenguaje llano, sin jerga técnica (merge, PR, rama, deploy, smoke test, flags, buckets, migraciones, consolas); se dice qué cambia para quien usa el producto o qué falta decidir.
   - El guion, sin notas, tiene como máximo 200 palabras. Lo abierto o en curso va solo en Pendiente, nunca también en Hecho (tampoco entre paréntesis). El borrador lleva solo los tres bloques; las notas de proceso van en faltantes.
-  - No se deduce trabajo de reuniones agendadas ni se rellenan horas.
+  - Una reunión cuenta solo con el resumen del notetaker y se cita el resumen (ref reunion:<id> o mail:<id>); sin resumen no va a Hecho. Se cuenta con lo que se decidió. Las tareas asignadas a la persona en un resumen van a Pendiente como pedidos, con su responsable y fecha si los tienen. No se rellenan horas.
   - Si falta evidencia de algún día, se dice en una línea en vez de rellenar.
 destino:
   por_defecto: borrador

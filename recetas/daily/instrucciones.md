@@ -29,11 +29,12 @@ En este orden, y sin barrer historiales enteros:
    - Si el cierre de una sesión es sobre todo un prompt o una especificación, es "pedido redactado", no implementación.
    - Si un PR a la rama de producción tiene una sesión ligada con deploy y prueba de humo, el estado es "desplegado y verificado en producción" y esa sesión es la evidencia.
 3. **Registros de trabajo**, si la fuente está activa. Excluí los que digan que no se reportan.
-4. **Calendario**: solo para confirmar fechas. No deduzcas trabajo de reuniones agendadas.
-5. **Slack**, si la fuente está activa: bloqueos o pedidos concretos en los canales configurados ({{fuentes.slack.canales}}) y, si `menciones_directas` está en true, en los mensajes que mencionan a la persona. Solo la ventana; leé el hilo si el mensaje lo abre.
-6. **Teams**, si la fuente está activa: bloqueos o pedidos concretos en los equipos ({{fuentes.teams.equipos}}) y canales ({{fuentes.teams.canales}}) configurados y, si `chats_directos` está en true, en los chats directos de la persona.
+4. **Calendario**: solo para confirmar fechas. Un evento no prueba que la reunión ocurrió.
+5. **Reuniones (notetaker)**: una reunión cuenta solo si tiene resumen del notetaker (Fathom o el mail de resumen de {{fuentes.reuniones.remitentes_resumen}}), y se cita el resumen con su ref (`reunion:<id>` o `mail:<id>`). Se cuenta con lo que se decidió ("Participé de X; se decidió Y"), sin inventar nada que el resumen no diga. Sin resumen, no va a Hecho. Las tareas que el resumen asigna a {{persona.nombre}} van a Pendiente como pedidos, con su responsable y su fecha si los tienen.
+6. **Slack**, si la fuente está activa: bloqueos o pedidos concretos en los canales configurados ({{fuentes.slack.canales}}) y, si `menciones_directas` está en true, en los mensajes que mencionan a la persona. Solo la ventana; leé el hilo si el mensaje lo abre.
+7. **Teams**, si la fuente está activa: bloqueos o pedidos concretos en los equipos ({{fuentes.teams.equipos}}) y canales ({{fuentes.teams.canales}}) configurados y, si `chats_directos` está en true, en los chats directos de la persona.
 
-Lo que leas con conectores (calendario, Slack, Teams) registralo con `registrar_lectura` (una llamada por fuente y búsqueda: `slack` o `teams`), con todas las refs que leíste, con la forma que indica `como_referenciar`. Los mensajes que uses como evidencia se citan con esa ref. Nunca envíes ni respondas mensajes: solo lectura.
+Lo que leas con conectores (calendario, reuniones, Slack, Teams) registralo con `registrar_lectura` (una llamada por fuente y búsqueda: `reuniones`, `slack` o `teams`), con todas las refs que leíste, con la forma que indica `como_referenciar`. Los mensajes que uses como evidencia se citan con esa ref. Nunca envíes ni respondas mensajes: solo lectura.
 
 Convertí las fechas de UTC a {{zona_horaria}} antes de asignar el día.
 

@@ -66,9 +66,9 @@ test('qué toca ahora y la semana', () => {
 test('el grafo por entregable sigue disparador → fuentes → pasos → control → destino', () => {
   const recetas = espacio.listarRecetas();
   const modulos = espacio.listarModulos();
-  const g = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos, estadoFuentes: { github: { conectada: true }, sesiones_ia: { conectada: true }, calendario: { conectada: false } } });
+  const g = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos, estadoFuentes: { github: { conectada: true }, sesiones_ia: { conectada: true }, calendario: { conectada: false }, reuniones: { conectada: false }, slack: { conectada: false }, teams: { conectada: false } } });
   const ids = g.nodes.map((n) => n.id);
-  assert.deepEqual(ids, ['disparador', 'fuente:github', 'fuente:sesiones_ia', 'fuente:calendario', 'paso:ventana', 'paso:evidencia', 'paso:agrupar', 'paso:redactar', 'control', 'destino']);
+  assert.deepEqual(ids, ['disparador', 'fuente:github', 'fuente:sesiones_ia', 'fuente:calendario', 'fuente:reuniones', 'fuente:slack', 'fuente:teams', 'paso:ventana', 'paso:evidencia', 'paso:agrupar', 'paso:redactar', 'control', 'destino']);
   assert.equal(g.nodes.find((n) => n.id === 'fuente:github').data.conexion, 'conectada');
   assert.equal(g.nodes.find((n) => n.id === 'fuente:calendario').data.conexion, 'desconectada');
   assert.ok(g.edges.some((e) => e.source === 'paso:redactar' && e.target === 'control'));
@@ -104,7 +104,7 @@ test('el diff marca nodos agregados, quitados y modificados', () => {
   const despues = grafoEntregable({ entregableId: 'daily', config: cambiada, recetas: recetasCambiadas, modulos });
   const d = diffGrafos(antes, despues);
   assert.deepEqual(d.resumen.agregados, ['jira']);
-  assert.deepEqual(d.resumen.quitados, ['calendario']);
+  assert.deepEqual(d.resumen.quitados, ['calendario', 'reuniones', 'slack', 'teams']);
   assert.ok(d.resumen.modificados.includes('Control de evidencia'));
 });
 
@@ -154,7 +154,7 @@ test('la daily entra en las dos disposiciones y sus datos son legibles', () => {
   const modulos = espacio.listarModulos();
   const ancha = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos });
   const cajaAncha = cajaDe(ancha);
-  assert.ok(cajaAncha.ancho <= 640 && cajaAncha.alto <= 580, `ancha: ${cajaAncha.ancho}x${cajaAncha.alto}`);
+  assert.ok(cajaAncha.ancho <= 640 && cajaAncha.alto <= 1020, `ancha: ${cajaAncha.ancho}x${cajaAncha.alto}`);
   const angosta = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos, disposicion: 'angosta' });
   assert.ok(cajaDe(angosta).ancho <= 420, `angosta: ${cajaDe(angosta).ancho}`);
   assert.deepEqual(angosta.nodes.map((n) => n.id), ancha.nodes.map((n) => n.id));
@@ -206,7 +206,7 @@ test('el diff de Jira y Calendario conserva el orden, no superpone y alinea el c
     const despues = grafoEntregable({ entregableId: 'daily', config: cambiada, recetas, modulos, disposicion });
     const d = diffGrafos(antes, despues);
     const fuentes = d.nodes.filter((n) => n.data.tipo === 'fuente').map((n) => n.id);
-    assert.deepEqual(fuentes, ['fuente:github', 'fuente:sesiones_ia', 'fuente:calendario', 'fuente:jira']);
+    assert.deepEqual(fuentes, ['fuente:github', 'fuente:sesiones_ia', 'fuente:calendario', 'fuente:reuniones', 'fuente:slack', 'fuente:teams', 'fuente:jira']);
     assert.equal(d.nodes.find((n) => n.id === 'fuente:calendario').data.cambio, 'quitado');
     sinSuperposicion(d, `diff ${disposicion}`);
     const pasos = d.nodes.filter((n) => n.data.tipo === 'paso');

@@ -171,7 +171,7 @@
         "remitentes_resumen": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "Para mail: remitentes de los resúmenes automáticos de reuniones."
+          "description": "Para mail y reuniones: remitentes de los resúmenes automáticos de reuniones (el camino por Outlook filtra por ellos)."
         },
         "canales": {
           "type": "array",
@@ -185,6 +185,7 @@
           "description": "Para teams: equipos cuyos canales se leen."
         },
         "chats_directos": { "type": "boolean", "description": "Para teams: leer también tus chats directos y grupales." },
+        "notetaker": { "enum": ["fathom", "read_ai", "otro"], "description": "Para reuniones: la herramienta que resume tus reuniones." },
         "notas": { "type": "string" }
       }
     },

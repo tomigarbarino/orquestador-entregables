@@ -19,8 +19,11 @@ Fuentes, en este orden de confianza:
 3. PRs de GitHub de la persona en los repos de sus proyectos:
 {{lista.proyectos}}
    Contá lo que hace cada PR a partir de su `cuerpo`, no solo del título. Usá `motivo_cierre`, `incluye` y `en_produccion` para el estado.
-4. Calendario, solo para reuniones (ver reglas). Lo leído con el conector registralo con `registrar_lectura`.
-5. **Slack** y **Teams**, si las fuentes están activas: solo para confirmar que algo se hizo o que una reunión ocurrió, en los canales configurados ({{fuentes.slack.canales}}) y los equipos ({{fuentes.teams.equipos}}). No deduzcas trabajo de una conversación. Registrá cada lectura con `registrar_lectura` (fuente `slack` o `teams`) y citá los mensajes con la ref que indica `como_referenciar`. Solo lectura: no envíes ni respondas mensajes.
+4. Calendario, solo para fechas y horarios de reuniones (ver reglas).
+5. Reuniones (notetaker): el resumen de cada reunión del día, de Fathom o del mail de resumen de {{fuentes.reuniones.remitentes_resumen}}. Es la evidencia de que la reunión ocurrió: se cita con su ref (`reunion:<id>` o `mail:<id>`).
+6. **Slack** y **Teams**, si las fuentes están activas: solo para confirmar que algo se hizo o que una reunión ocurrió, en los canales configurados ({{fuentes.slack.canales}}) y los equipos ({{fuentes.teams.equipos}}). No deduzcas trabajo de una conversación. Citá los mensajes con la ref que indica `como_referenciar`. Solo lectura: no envíes ni respondas mensajes.
+
+Lo leído con conectores (calendario, reuniones, Slack, Teams) registralo con `registrar_lectura` (fuente `reuniones`, `slack` o `teams`).
 
 Reglas:
 
@@ -40,7 +43,7 @@ Reglas:
 ## Reglas que no se negocian
 
 - **No inventes horas.** Sin una base explícita, el registro va "sin estimar". Nunca derives horas humanas del tiempo de una sesión de IA.
-- **No infieras trabajo de reuniones agendadas.** Una reunión se registra solo si hay evidencia de que ocurrió. Si solo está en el calendario, listala como "reunión por confirmar". Si la persona confirmó un horario (en una sesión o un registro), manda sobre el del calendario.
+- **Una reunión cuenta solo con resumen del notetaker.** Se registra con lo que se decidió y se cita el resumen. Si solo está en el calendario (sin resumen), listala como "reunión por confirmar" y no la registres. Las tareas que el resumen asigna a {{persona.nombre}} van como pedidos, con su responsable y fecha si los tienen. Si la persona confirmó un horario (en una sesión o un registro), manda sobre el del calendario.
 - **Convertí UTC a {{zona_horaria}}** antes de asignar el día. Un PR mergeado a las 00:29 UTC puede ser del día anterior.
 - **Distinguí siempre** analizado, implementado, mergeado (y a qué rama), desplegado y verificado en producción. Nombrá lo que no se probó. Si un PR a la rama de producción tiene una sesión ligada con deploy y prueba de humo, es "desplegado y verificado en producción" y esa sesión se cita.
 - **PR cerrado sin mergear**: si el `motivo_cierre` dice que el código entró por otro PR, es "ya integrado en <rama> por #N", nunca "obsoleto".
