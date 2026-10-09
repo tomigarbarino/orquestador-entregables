@@ -24,9 +24,11 @@ pasos:
     detalle: Movimientos del día hábil anterior y reuniones de hoy.
   - id: tickets
     nombre: Tickets que se movieron
+    detalle: Lo leído se registra con registrar_lectura, con la clave de cada ticket como ref.
     usa: [jira]
   - id: reuniones
     nombre: Reuniones de hoy
+    detalle: Lo leído se registra con registrar_lectura, con el id de cada evento como ref.
     usa: [calendario]
   - id: cruzar
     nombre: Cruzar tickets con reuniones
@@ -37,6 +39,7 @@ control:
   - Cada ticket mencionado tiene su clave (por ejemplo PROY-123).
   - Un cruce entre reunión y ticket se justifica (participante en común o tema del título); si es una suposición, se dice.
   - No se deduce el contenido de una reunión que todavía no ocurrió.
+  - Todo ticket o evento leído termina en el digest o en descartados, con su ref y su motivo.
 destino:
   por_defecto: borrador
   formato: "Por cada reunión de hoy: hora, título y los tickets relacionados con su cambio. Al final, tickets movidos que no se cruzan con ninguna reunión."

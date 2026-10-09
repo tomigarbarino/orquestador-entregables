@@ -13,19 +13,19 @@ disparador:
     - presentación de avances
 fuentes:
   - id: github
-    para: PRs mergeados a la rama de producción (entró) y PRs abiertos o en integración (por pasar)
+    para: PRs mergeados a la rama de producción (entró), lo que incluye cada release y los PRs abiertos o en integración (por pasar), con su cuerpo, sus riesgos y lo que dejan afuera
     requerida: true
   - id: sesiones_ia
-    para: Contexto de cada feature (qué problema resolvía y cómo se validó)
+    para: Contexto de cada feature (qué problema resolvía y cómo se validó), a partir de los hitos y pendientes de cada sesión
   - id: registros
     para: Resultados y números de investigaciones
 pasos:
   - id: periodo
     nombre: Definir el período
-    detalle: Desde el último deck hasta hoy. Si no hay registro del anterior, los últimos siete días.
+    detalle: Desde el último deck hasta hoy. El último deck es el más nuevo entre la última corrida aprobada y la fecha de última entrega de la config (opciones.ultima_entrega), aunque se haya armado fuera del orquestador. Si se usa el respaldo de siete días, se avisa en la primera línea del borrador y se pide confirmar la fecha de inicio.
   - id: evidencia
     nombre: Qué entró y qué falta
-    detalle: Contar en GitHub, no de memoria, lo que llegó a producción y lo que quedó pendiente.
+    detalle: Contar en GitHub, no de memoria, lo que llegó a producción (incluido lo mergeado antes a otra rama que llegó en el período) y lo que quedó pendiente. Cada release se abre en los PRs que incluye o, si no hay, en las features de su cuerpo. Se piden todas las páginas de cada lectura.
     usa: [github, sesiones_ia, registros]
   - id: guion
     nombre: Guion slide por slide
@@ -34,11 +34,26 @@ pasos:
     nombre: Armar el deck
     detalle: Con el design system de la persona. En modo borrador alcanza el guion completo.
 control:
-  - Cada feature del deck tiene un PR o una sesión que la respalde.
-  - Lo que está en una rama de integración se muestra como pendiente, no como entregado.
-  - Las hipótesis se rotulan como hipótesis.
+  - Cada feature del deck tiene un PR o una sesión que la respalde, y todas sus refs están entre lo leído.
+  - Toda ref leída termina en una slide o en descartados, con su ref tal como vino y un motivo que cita lo que dice la fuente. Un rango de PRs agrupado en una slide nombra cada PR que cuenta; los que no cuenta van a descartados. Si un PR habilita lo que cuenta una slide, es parte de su evidencia, no un descarte.
+  - Lo que está en una rama de integración se muestra como pendiente, no como entregado. Si el PR dice en_produccion, se cuenta como entregado aunque se haya mergeado a otra rama.
+  - Lo que el deck anterior dejó como pendiente y llegó a producción en el período se cuenta.
+  - Un release o una convergencia a la rama de producción se cuenta feature por feature con lo que incluye; si no incluye PRs a la vista, las features salen de su cuerpo (lo que entra, migraciones, funciones). Algo que llegó entero ese día no se cuenta como un retoque. Sus riesgos conocidos van a las notas.
+  - "La fecha de \"en producción desde\" es la del merge a la rama de producción (el release), no la del merge a la rama de integración."
+  - 'Un PR cerrado sin mergear cuyo código entró por otro PR se cuenta como "ya integrado en <rama> por #N", nunca como obsoleto.'
+  - Si la base de un PR abierto no es la rama de producción, el estado nombra la rama ("PR abierto contra <rama>; no va directo a producción"). Si una fuente dice que esa rama se retiró, las notas dicen que hay que apuntarlo a la rama de producción antes de que pueda llegar.
+  - Por pasar es solo un PR abierto o algo mergeado a una rama de integración. Un cambio local, sin PR, no tiene slide propia; va en las notas de otra slide como "en curso, local" o a descartados.
+  - El título y el mensaje de algo pendiente usan futuro o "por pasar" y no contradicen el estado. Nada de "ya", "ahora", "completa", "arreglado" ni "se corrigió" si no llegó a la rama de producción.
+  - Algo que llegó apagado (detrás de una variable o una configuración) es "en producción, apagado hasta configurarlo" mientras ninguna fuente confirme que se activó; el mensaje no lo cuenta como funcionando.
+  - Cada arreglo se cuenta por cómo funciona ahora y sale del cuerpo del PR, no del título. Ninguna frase de un arreglo arranca por el error ("corrige que...", "ya no pasa...").
+  - Si un PR o un release declara riesgos, pendientes o vulnerabilidades abiertas (también una sección de lo no incluido), la slide dice qué quedó abierto; nunca "ya están cerrados" sin aclararlo. Una clave expuesta que no se rotó sigue siendo un riesgo abierto.
+  - Un tema por slide. Un hallazgo de seguridad no va en una slide de otro tema, y una vulnerabilidad abierta se nombra sin detalles que sirvan para explotarla.
+  - Los números (cantidades, porcentajes, fechas) se copian de la fuente. Si dos fuentes del período se contradicen, manda la más nueva y ninguna slide repite la vieja.
+  - Cada slide tiene los cinco campos del formato (título, mensaje en una línea, evidencia visual, estado y notas para decir).
+  - Las hipótesis se rotulan como hipótesis; lo medido lleva su fuente.
+  - "Al terminar, cada slide figura en una sola lista de evidencia visual, y \"verificado\" es solo lo que una fuente dice que se probó en QA o en producción (que pasen los tests no es una prueba en QA)."
   - Nada de datos de clientes, candidatos o usuarios sin tapar.
 destino:
   por_defecto: doc
-  formato: "Guion slide por slide (título, mensaje en una línea, evidencia visual y notas para decir). Al aprobarlo, el deck en el design system configurado."
+  formato: "Guion slide por slide (título, mensaje en una línea, evidencia visual, estado y notas para decir). Al aprobarlo, el deck en el design system configurado."
 reglas: []

@@ -14,10 +14,10 @@ disparador:
     - qué hicimos ayer
 fuentes:
   - id: github
-    para: PRs mergeados y abiertos en la ventana, en los repos de cada proyecto
+    para: PRs mergeados, abiertos y cerrados en la ventana, en los repos de cada proyecto, con su cuerpo, a qué rama fueron y si ya llegaron a producción
     requerida: true
   - id: sesiones_ia
-    para: Pedidos y cierres de las sesiones de Claude Code y Codex (no los transcripts enteros)
+    para: Hitos (pedido y cierre de cada día) y pendientes de las sesiones de Claude Code y Codex, no los transcripts enteros
   - id: registros
     para: Registros de trabajo fechados, si los llevás
   - id: calendario
@@ -27,23 +27,37 @@ fuentes:
 pasos:
   - id: ventana
     nombre: Definir la ventana
-    detalle: El día hábil anterior más lo que ya se hizo hoy. Un lunes incluye el viernes y lo registrado el fin de semana, con su fecha real.
+    detalle: El día hábil anterior más lo que ya se hizo hoy. Un lunes incluye el viernes y lo registrado el fin de semana, con su fecha real. Si la persona nombra un día, ese día. Respetá los días especiales de la config.
   - id: evidencia
     nombre: Juntar evidencia
-    detalle: Leer cada fuente activa, en el orden de la lista, sin barrer historiales enteros.
+    detalle: Leer cada fuente activa, en el orden de la lista, sin barrer historiales enteros y pidiendo todas las páginas. De las sesiones se usan los hitos de la ventana y los pendientes; de los PRs, el cuerpo, el motivo de cierre, lo que incluyen y si ya están en producción. Lo leído con conectores se registra con registrar_lectura.
     usa: [github, sesiones_ia, registros, calendario, chat]
   - id: agrupar
     nombre: Agrupar por proyecto
-    detalle: Agrupar por proyecto y por resultado, no PR por PR.
+    detalle: Agrupar por proyecto y por resultado, no PR por PR. El proyecto sale del repo o del tema que nombra el pedido, no de la carpeta desde la que corrió la sesión. Si el repo no es de un proyecto configurado, va a "Otros" o a descartados. Una sesión con varios hitos de la ventana aporta cada hito con entrega, no solo el primero.
   - id: redactar
     nombre: Redactar el guion
-    detalle: Primera persona, para decir en 60 a 90 segundos, en tres bloques.
+    detalle: Primera persona, en tres bloques y con un máximo de 200 palabras sin contar notas. Lo abierto o en curso va solo en Pendiente. Pendientes y bloqueos en lenguaje llano.
 control:
-  - Cada ítem del guion cita al menos una evidencia (PR, sesión, registro o mensaje).
-  - Se dice el estado exacto de cada cosa (en producción, mergeado, en preview, local, investigación o pendiente). Nunca "listo" si solo está en una rama.
+  - Cada ítem del guion cita al menos una evidencia (PR, sesión, registro o mensaje), y todas sus refs tienen que estar entre lo leído.
+  - La ref de cada ítem es la sesión o el PR donde se produjo lo que se afirma, no una consulta posterior, y su pedido, su cierre o su título nombra lo afirmado. Si el cierre de una sesión es sobre todo un prompt o una especificación, cuenta como "pedido redactado", no como implementación. Antes de descartar una sesión del mismo proyecto que un ítem aceptado, verificá que no sea la que lo respalda.
+  - Toda ref leída (PR, sesión, registro, evento, mensaje) termina en un ítem o en descartados, con su ref tal como vino y un motivo que cita entre comillas lo que dice la fuente (pedido, cierre, título o motivo de cierre). Una razón editorial (largo, alcance, proyecto no configurado) va además de la cita, no en su lugar.
+  - Cada hito con entrega de la ventana termina en el guion o en descartados con su motivo, aunque su sesión ya respalde otro ítem.
+  - Se dice el estado exacto de cada cosa (en producción, mergeado a qué rama, en preview, local, investigación o pendiente). Nunca "listo" si solo está en una rama. Si el PR dice en_produccion, se dice "en producción" aunque se haya mergeado a otra rama.
+  - Cada documento, presentación o informe lleva su estado (local, privado, compartido o presentado). Algo no está "cerrado" ni "terminado" si su fuente nombra pasos que faltan (una decisión, una reunión, la respuesta de alguien); se dice qué se hizo y qué falta.
+  - 'Un PR cerrado sin mergear se cuenta según su motivo de cierre. Si su código entró por otro PR, va como "ya integrado en <rama> por #N", nunca como obsoleto ni descartado sin motivo.'
+  - Un release o una convergencia a la rama de producción se cuenta por lo que llevó a producción, feature por feature, con lo que incluye; si no incluye PRs a la vista, las features salen de su cuerpo. El título del PR no alcanza ("convergí la línea X" no dice qué llegó).
+  - Un PR a la rama de producción con deploy y prueba de humo en su sesión se cuenta como "desplegado y verificado en producción", citando esa sesión. Si el cierre nombra pendientes o vino recortado, no se escribe "sin pendientes", se dice "sin dato". Algo que responde no está "en producción" si la sesión dice que falta configurarlo.
+  - Un ítem cuyo cierre dice que no quedó nada (revertido, borrado, cerrado sin cambios) va a descartados, no a Hecho. Si la persona pidió borrar u ocultar lo hecho, no se cuenta.
+  - Cada arreglo se cuenta por cómo funciona ahora y sale del cuerpo del PR, no del título.
+  - No se nombra un PR, ticket o documento que no esté entre lo leído. Lo que una fuente dice que "va en otro PR" o "se hará después" es pendiente ("falta hacer el arreglo"), no algo en curso.
+  - Los pendientes de las sesiones de la ventana (falta, queda, riesgo, bloqueo) aparecen en Pendiente o en Bloqueos y riesgos, o en descartados con motivo.
+  - Cada línea de Bloqueos dice qué frena y de quién depende (una persona, un acceso, una decisión). Un riesgo conocido que se aceptó al publicar no es un bloqueo; va como "Riesgo:" con la decisión que falta, si la hay.
+  - Pendientes, bloqueos y riesgos en lenguaje llano, sin jerga técnica (merge, PR, rama, deploy, smoke test, flags, buckets, migraciones, consolas); se dice qué cambia para quien usa el producto o qué falta decidir.
+  - El guion, sin notas, tiene como máximo 200 palabras. Lo abierto o en curso va solo en Pendiente, nunca también en Hecho (tampoco entre paréntesis). El borrador lleva solo los tres bloques; las notas de proceso van en faltantes.
   - No se deduce trabajo de reuniones agendadas ni se rellenan horas.
   - Si falta evidencia de algún día, se dice en una línea en vez de rellenar.
 destino:
   por_defecto: borrador
-  formato: "Guion en tres bloques: Hecho (agrupado por proyecto), Pendiente / hoy, Bloqueos (qué frena y de quién depende)."
+  formato: "Guion en tres bloques, de 200 palabras como máximo: Hecho (agrupado por proyecto), Pendiente / hoy, Bloqueos y riesgos (qué frena y de quién depende)."
 reglas: []

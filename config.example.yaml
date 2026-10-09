@@ -12,6 +12,8 @@ persona:
   equipo: Producto
   empresa: Acme Logística
   github_usuario: ana-ejemplo
+  # Si tenés más de una cuenta de GitHub, listalas todas:
+  # github_usuarios: [ana-ejemplo, ana-ejemplo-trabajo]
 
 idioma: es-AR
 zona_horaria: America/Argentina/Buenos_Aires
@@ -40,6 +42,11 @@ glosario:
   - termino: Rutas
     significa: el planificador de recorridos
     variantes_dictado: [rutaz, rutas app]
+
+# Días que no son como los demás: las corridas los tienen en cuenta al fechar.
+dias_especiales:
+  - fecha: "2026-10-12"
+    nota: Feriado, no se trabaja.
 
 reglas_redaccion:
   - Frases cortas, en primera persona y sin adjetivos de marketing.
@@ -121,6 +128,10 @@ entregables:
     horario:
       dias: [jue]
       hora: "16:00"
+    opciones:
+      # La última vez que se entregó el deck, aunque haya sido fuera del orquestador.
+      # El período arranca en la más nueva entre esta fecha y la última corrida aprobada.
+      ultima_entrega: "2026-10-01"
     destino:
       tipo: doc
       nombre: Deck semanal de Producto

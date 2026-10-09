@@ -1,50 +1,61 @@
 id: registro-tareas
 nombre: Registro de tareas y horas
-descripcion: Registro retrospectivo del trabajo del día en el tablero o formulario de tareas, con fechas reales, estados exactos y horas solo si hay base.
+descripcion: Registro de las tareas laborales del día en el tablero o formulario de tareas, con estados exactos y horas solo si hay base.
 version: 1
 disparador:
   tipo: horario
   por_defecto:
     dias: [lun, mar, mie, jue, vie]
     hora: "18:00"
-  ventana: ultimos_7_dias
+  ventana: hoy
   frases:
     - cargá las tareas de hoy
     - registro de tareas
     - completá las horas del día
 fuentes:
   - id: registros
-    para: Registros de trabajo fechados (la fuente más confiable)
+    para: Registros de trabajo fechados en el día (la fuente más confiable)
   - id: sesiones_ia
-    para: Sesiones de Claude Code y Codex con entrega concreta
+    para: Hitos del día (pedido y cierre) y pendientes de las sesiones de Claude Code y Codex con entrega concreta
   - id: github
-    para: PRs de la persona, con fecha de merge y rama de destino
+    para: PRs de la persona en el día, con su cuerpo, rama de destino, motivo de cierre y si ya llegaron a producción
     requerida: true
   - id: calendario
-    para: Reuniones, solo con evidencia de que ocurrieron
+    para: Reuniones del día, solo con evidencia de que ocurrieron
 pasos:
   - id: ventana
-    nombre: Definir la ventana
-    detalle: Los hitos completos de hoy más lo no registrado de los siete días anteriores, con su fecha original.
+    nombre: Definir el día
+    detalle: Hoy, o el día que nombre la persona en el pedido. Solo tareas laborales de ese día. Respetá los días especiales de la config. Si la corrida es antes de la hora de cierre, el registro es parcial y se avisa.
   - id: evidencia
     nombre: Juntar evidencia
+    detalle: De las sesiones se usan los hitos de ese día y los pendientes; de los PRs, el cuerpo, el motivo de cierre, lo que incluyen y si ya están en producción. Se piden todas las páginas. Lo leído con conectores se registra con registrar_lectura.
     usa: [registros, sesiones_ia, github, calendario]
   - id: agrupar
     nombre: Agrupar por resultado
-    detalle: Varios PR o sesiones de la misma cosa son un solo registro.
-  - id: deduplicar
-    nombre: Deduplicar contra lo ya registrado
-    detalle: Comparar con los recibos de corridas anteriores por fecha y título.
+    detalle: Varios PR o sesiones de la misma cosa son un solo registro del día. El proyecto sale del repo o del tema que nombra el pedido, no de la carpeta desde la que corrió la sesión; si no es de un proyecto configurado, la iniciativa es "Otros" (el tema va en el título) o va a descartados.
   - id: redactar
     nombre: Redactar cada registro
-    detalle: Título, fecha, categoría, estado, horas y descripción en el formato del destino.
+    detalle: Un registro por resultado, con todos los campos del destino, en primera persona de la persona y con lo principal primero.
 control:
-  - Cada registro cita su evidencia (registro, sesión, PR o evento confirmado).
+  - Cada registro cita su evidencia (registro, sesión, PR o evento confirmado), y todas sus refs tienen que estar entre lo leído.
+  - La ref de cada registro es la sesión o el PR donde se hizo lo que se afirma, no una consulta posterior. Una consulta de pregunta y respuesta sin artefacto, sin PR y sin decisión documentada no es un registro. Si el cierre de una sesión es sobre todo un prompt o una especificación, cuenta como "especifiqué", no como implementación.
+  - Toda ref leída (PR, sesión, registro, evento) termina en un registro o en descartados, con su ref tal como vino y un motivo que cita lo que dice la fuente. En el borrador, cada cosa de "Lo que quedó afuera" lleva su ref.
+  - Solo entran tareas laborales del día de la ventana; lo de otros días no se registra.
   - No se inventan horas. Sin base, queda "sin estimar".
-  - No se infiere trabajo de reuniones agendadas ni de planes recurrentes; las reuniones sin confirmar quedan como pendientes de confirmar.
-  - Se distingue analizado, implementado, mergeado, desplegado y verificado en producción.
-  - No se borran ni se fusionan registros existentes; los duplicados se avisan.
+  - No se infiere trabajo de reuniones agendadas ni de planes recurrentes. Una reunión sin confirmar no es un registro de la tabla; va en "Reuniones por confirmar" como ítem con la ref del evento, no a descartados. Si la persona confirmó un horario, manda sobre el calendario.
+  - Se distingue analizado, especificado, implementado (local), en una rama, mergeado (y a qué rama), desplegado y verificado en producción. Cada registro dice dónde quedó lo hecho. Si el PR dice en_produccion, está en producción aunque se haya mergeado a otra rama.
+  - Si una sesión construyó algo (un repo, tests que pasan, corridas reales, un deploy), eso es lo principal de su registro y va primero; lo definido o especificado va después y separado.
+  - 'Un PR cerrado sin mergear cuyo código entró por otro PR se cuenta como "ya integrado en <rama> por #N", nunca como obsoleto.'
+  - Un release a la rama de producción se cuenta con lo que incluye, y su sesión ligada con deploy y prueba de humo lo hace "desplegado y verificado en producción". Si el cierre nombra pendientes o vino recortado, no se escribe "próximos pasos ninguno".
+  - Los próximos pasos salen del último hito del día de cada sesión (el más nuevo antes de la hora de la corrida), no de uno intermedio.
+  - Nombres y cantidades (tickets, registros, archivos, pasos) se copian del cierre de la sesión, no se reconstruyen.
+  - Un ítem cuyo cierre dice que no quedó nada (revertido, borrado, cerrado sin cambios) va a descartados. Si la persona pidió borrar u ocultar lo hecho, no se cuenta.
+  - El título y la descripción de algo pendiente no dicen "arreglado", "ya" ni "completo" si no llegó a la rama de producción. Cada arreglo se cuenta por cómo funciona ahora, a partir del cuerpo del PR.
+  - La descripción está en primera persona de la persona y no nombra al asistente ni a la persona en tercera persona. Lo que hizo otra persona se atribuye a esa persona, con el nombre de la lista de personas.
+  - La iniciativa es un proyecto configurado u "Otros"; no se inventan iniciativas.
+  - Próximos pasos en lenguaje llano, sin jerga técnica ni rutas internas.
+  - El estado usa solo los valores del destino; el estado técnico exacto va en la descripción.
 destino:
   por_defecto: formulario
-  formato: "Tabla con un registro por fila: fecha, título, categoría, estado, horas y descripción. Al final, lo que quedó afuera y por qué."
+  formato: "Tabla con un registro por fila y una columna por cada campo del destino (por ejemplo fecha, título, categoría, estado, iniciativa, etapa, horas y descripción). Al final, las reuniones por confirmar y lo que quedó afuera (con su ref) y por qué."
 reglas: []
