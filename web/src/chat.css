@@ -1,23 +1,316 @@
-/* Chat con Claude. Los tokens (colores, radios, sombras) están en estilos.css. */
+/* Chat con Claude y Primeros pasos. Los tokens (colores, radios, sombras, espaciado) están en
+   estilos.css; acá solo se usan variables, con un respaldo por si el token todavía no existe. */
 
-/* Chat */
-.chat { border-left: 1px solid var(--borde); background: var(--superficie); display: flex; flex-direction: column; height: 100vh; }
-.chat-cabecera { display: flex; justify-content: space-between; gap: 8px; padding: 14px; border-bottom: 1px solid var(--borde); }
-.chat-mensajes { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-.chat-vacio { color: var(--texto-2); display: flex; flex-direction: column; gap: 6px; }
-.sugerencia { text-align: left; border: 1px dashed var(--borde); background: transparent; border-radius: 8px; padding: 7px 10px; font: inherit; color: var(--texto); cursor: pointer; }
-.sugerencia:hover { border-color: var(--acento); }
-.mensaje { border-radius: 10px; padding: 8px 11px; line-height: 1.45; }
-.mensaje p { margin: 4px 0; }
-.mensaje-persona { background: var(--acento-suave); align-self: flex-end; max-width: 90%; }
+/* Panel */
+.chat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+  border-left: 1px solid var(--borde);
+  background: var(--superficie);
+}
+.chat-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e-2, 8px);
+  padding: var(--e-4, 16px);
+  border-bottom: 1px solid var(--borde);
+}
+.chat-cabecera > div:first-child { display: flex; flex-direction: column; gap: var(--e-1, 4px); min-width: 0; }
+.chat-cabecera h2 { margin: 0; font-size: var(--t-l, 17px); font-weight: 600; line-height: 1.3; }
+.chat-bajada { margin: 0; font-size: var(--t-s, 13px); color: var(--texto-2); line-height: 1.45; }
+.chat-cabecera-acciones { display: flex; flex-wrap: nowrap; gap: var(--e-1, 4px); flex-shrink: 0; }
+
+/* Mensajes */
+.chat-cuerpo { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.chat-mensajes {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: var(--e-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3, 12px);
+}
+.mensaje {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  border-radius: var(--radio-2, 10px);
+  padding: var(--e-2, 8px) var(--e-3, 12px);
+  line-height: 1.5;
+  color: var(--texto);
+}
+.mensaje p { margin: var(--e-1, 4px) 0; }
+.mensaje > :first-child { margin-top: 0; }
+.mensaje ul, .mensaje ol { margin: var(--e-1, 4px) 0; padding-left: 20px; }
+.mensaje pre {
+  overflow-x: auto;
+  max-width: 100%;
+  margin: var(--e-2, 8px) 0;
+  padding: var(--e-2, 8px) var(--e-3, 12px);
+  font-family: var(--fuente-mono, ui-monospace, Consolas, monospace);
+  font-size: var(--t-xs, 12px);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-1, 6px);
+}
+.mensaje pre code { background: transparent; padding: 0; white-space: pre; word-break: normal; }
+.mensaje code { word-break: break-word; }
+.mensaje table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: var(--t-s, 13px); }
+.mensaje th, .mensaje td { border: 1px solid var(--borde); padding: var(--e-1, 4px) var(--e-2, 8px); text-align: left; }
+.mensaje-persona { align-self: flex-end; max-width: 90%; background: var(--acento-suave); }
 .mensaje-claude { background: var(--superficie-2); }
-.mensaje-contexto { font-size: 11px; color: var(--texto-2); }
-.herramientas { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
-.tarjeta-propuesta { border: 1px solid var(--ambar); border-radius: 8px; padding: 8px 10px; margin-top: 8px; background: var(--superficie); display: flex; flex-direction: column; gap: 6px; }
-.tarjeta-propuesta.estado-aplicada { border-color: var(--verde); }
-.tarjeta-propuesta.estado-descartada, .tarjeta-propuesta.estado-invalida { border-color: var(--borde); opacity: 0.8; }
-.tarjeta-titulo { font-weight: 650; }
-.regla-nueva { font-size: 12px; color: var(--ambar); }
-.chat-entrada { border-top: 1px solid var(--borde); padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
-.chat-abrir { position: fixed; right: 16px; bottom: 16px; z-index: 40; border: 0; background: var(--acento); color: white; padding: 10px 16px; border-radius: 20px; font: inherit; font-weight: 600; cursor: pointer; box-shadow: var(--sombra); }
+.mensaje-contexto,
+.chat-contexto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-1, 4px);
+  font-size: var(--t-xs, 12px);
+  color: var(--texto-2);
+}
+.mensaje-contexto { margin-bottom: var(--e-1, 4px); }
+.chip-contexto {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-1, 4px);
+  max-width: 100%;
+  padding: 1px var(--e-2, 8px);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-pildora, 999px);
+  background: var(--superficie);
+  color: var(--texto-2);
+  font-size: var(--t-xs, 12px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.herramientas { display: flex; gap: var(--e-1, 4px); flex-wrap: wrap; margin-top: var(--e-1, 4px); }
+.herramientas .chip {
+  font-size: var(--t-xs, 12px);
+  color: var(--texto-2);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-pildora, 999px);
+  padding: 1px var(--e-2, 8px);
+}
+.chat-pensando { display: inline-flex; align-items: center; gap: var(--e-2, 8px); color: var(--texto-2); margin: 0; }
 
+/* Ir al último mensaje (cuando la persona está leyendo más arriba) */
+.chat-ir-final {
+  position: absolute;
+  left: 50%;
+  bottom: var(--e-3, 12px);
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-1, 4px);
+  min-height: 32px;
+  padding: var(--e-1, 4px) var(--e-3, 12px);
+  border: 1px solid var(--borde-control, var(--borde));
+  border-radius: var(--radio-pildora, 999px);
+  background: var(--superficie);
+  color: var(--texto);
+  font: inherit;
+  font-size: var(--t-s, 13px);
+  box-shadow: var(--sombra-flota, var(--sombra));
+  cursor: pointer;
+}
+.chat-ir-final:hover { background: var(--superficie-2); }
+
+/* Vacío */
+.chat-vacio { display: flex; flex-direction: column; gap: var(--e-3, 12px); color: var(--texto-2); }
+.chat-vacio p { margin: 0; }
+.chat-vacio .boton { align-self: flex-start; }
+.sugerencias { display: flex; flex-direction: column; gap: var(--e-2, 8px); }
+.sugerencia {
+  text-align: left;
+  min-height: 36px;
+  padding: var(--e-2, 8px) var(--e-3, 12px);
+  border: 1px solid var(--borde-control, var(--borde));
+  border-radius: var(--radio-1, 6px);
+  background: transparent;
+  color: var(--texto);
+  font: inherit;
+  font-size: var(--t-s, 13px);
+  cursor: pointer;
+}
+.sugerencia:hover { background: var(--superficie-2); }
+.sugerencia:focus-visible { outline: 2px solid var(--foco, var(--acento)); outline-offset: 2px; }
+
+/* Propuesta: mismo lenguaje que el banner del mapa (resaltador) */
+.tarjeta-propuesta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2, 8px);
+  margin-top: var(--e-2, 8px);
+  padding: var(--e-3, 12px);
+  background: var(--cambio-suave, var(--superficie));
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--cambio-borde, var(--borde));
+  border-radius: var(--radio-2, 10px);
+  color: var(--texto);
+  overflow-wrap: anywhere;
+}
+.tarjeta-propuesta.estado-aplicada { background: var(--superficie); border-left-color: var(--exito, var(--borde)); }
+.tarjeta-propuesta.estado-descartada,
+.tarjeta-propuesta.estado-invalida { background: var(--superficie); border-left: 1px dashed var(--borde-control, var(--borde)); border-style: dashed; }
+.tarjeta-propuesta-titulo { display: flex; align-items: flex-start; gap: var(--e-2, 8px); font-weight: 600; margin: 0; font-size: var(--t-m, 15px); }
+.tarjeta-propuesta-titulo .icono { flex-shrink: 0; margin-top: 3px; }
+.tarjeta-propuesta.estado-pendiente .tarjeta-propuesta-titulo .icono { color: var(--cambio-texto, var(--texto)); }
+.propuesta-archivos { margin: 0; padding-left: 20px; font-size: var(--t-s, 13px); color: var(--texto-2); }
+.regla-nueva { margin: 0; font-size: var(--t-s, 13px); color: var(--cambio-texto, var(--texto)); }
+.tarjeta-propuesta.estado-aplicada .regla-nueva,
+.tarjeta-propuesta.estado-descartada .regla-nueva,
+.tarjeta-propuesta.estado-invalida .regla-nueva { color: var(--texto-2); }
+.propuesta-estado { display: inline-flex; align-items: center; gap: var(--e-1, 4px); font-size: var(--t-s, 13px); font-weight: 600; }
+.propuesta-estado.ok { color: var(--exito, var(--texto)); }
+.tarjeta-propuesta .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2, 8px); }
+.tarjeta-propuesta .acciones .empuje { margin-left: auto; }
+.tarjeta-propuesta ul.errores-propuesta { margin: 0; padding-left: 20px; color: var(--error, var(--texto)); font-size: var(--t-s, 13px); }
+
+/* Entrada */
+.chat-entrada {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2, 8px);
+  padding: var(--e-3, 12px) var(--e-4, 16px) var(--e-4, 16px);
+  border-top: 1px solid var(--borde);
+}
+.chat-caja { position: relative; display: flex; flex-direction: column; }
+.chat-caja textarea {
+  width: 100%;
+  min-height: 84px;
+  resize: vertical;
+  padding: var(--e-2, 8px) var(--e-3, 12px) 44px;
+  font: inherit;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--borde-control, var(--borde));
+  border-radius: var(--radio-1, 6px);
+}
+.chat-caja .chat-enviar { position: absolute; right: var(--e-2, 8px); bottom: var(--e-2, 8px); }
+.chat-caja .chat-enviar.boton-con-motivo { position: absolute; }
+.chat-ayuda { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e-2, 8px); font-size: var(--t-xs, 12px); color: var(--texto-2); }
+.chat-ayuda .error-texto { margin: 0; color: var(--error, var(--texto)); }
+
+/* Con el chat cerrado, el contenido deja lugar abajo para que el botón flotante no tape nada. */
+body:has(.chat-abrir) .principal { padding-bottom: 72px; }
+.chat-contexto-nota { color: var(--texto-2); }
+
+/* Botón flotante para abrir el chat */
+.chat-abrir {
+  position: fixed;
+  right: var(--e-4, 16px);
+  bottom: var(--e-4, 16px);
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2, 8px);
+  height: 40px;
+  padding: 0 var(--e-4, 16px);
+  border: 0;
+  border-radius: var(--radio-pildora, 999px);
+  background: var(--acento);
+  color: var(--sobre-acento, var(--superficie));
+  font: inherit;
+  font-weight: 600;
+  box-shadow: var(--sombra-flota, var(--sombra));
+  cursor: pointer;
+}
+.chat-abrir:hover { background: var(--acento-hover, var(--acento)); }
+.chat-abrir:focus-visible { outline: 2px solid var(--foco, var(--acento)); outline-offset: 2px; }
+
+/* Pantallas angostas: el chat se abre encima del contenido */
+@media (max-width: 900px) {
+  .chat {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(380px, 100%);
+    height: 100%;
+    z-index: 60;
+    box-shadow: var(--sombra-flota, var(--sombra));
+  }
+}
+
+/* Primeros pasos */
+.primeros-pasos {
+  container-type: inline-size;
+  position: relative;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-2, 10px);
+  color: var(--texto);
+}
+.primeros-pasos-completo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2, 8px);
+  max-height: 140px;
+  padding: var(--e-3, 12px) var(--e-4, 16px);
+}
+.primeros-pasos-cabecera { display: flex; align-items: center; justify-content: space-between; gap: var(--e-2, 8px); }
+.primeros-pasos h2 { margin: 0; font-size: var(--t-l, 17px); font-weight: 600; line-height: 1.3; }
+.primeros-pasos-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-4, 16px);
+}
+.primeros-pasos-completo h2 { padding-right: 40px; }
+.primeros-pasos .pp-cerrar.boton { flex-shrink: 0; }
+.primeros-pasos-completo .pp-cerrar.boton { position: absolute; top: var(--e-2, 8px); right: var(--e-2, 8px); }
+.paso-inicial { flex: 1 1 0; }
+.paso-inicial.actual { flex: 2.4 1 0; }
+.paso-inicial { display: flex; flex-direction: column; gap: var(--e-2, 8px); min-width: 0; }
+.paso-inicial-texto { display: flex; gap: var(--e-2, 8px); align-items: flex-start; font-size: var(--t-s, 13px); line-height: 1.4; color: var(--texto-2); margin: 0; }
+.paso-inicial.actual .paso-inicial-texto { color: var(--texto); }
+.paso-numero {
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--borde-control, var(--borde));
+  font-size: var(--t-xs, 12px);
+  font-weight: 600;
+  color: var(--texto-2);
+}
+.paso-inicial.actual .paso-numero { border-color: var(--acento); color: var(--acento); }
+.paso-inicial.hecho .paso-numero { border-color: var(--exito, var(--borde)); color: var(--exito, var(--texto)); }
+.paso-hecho { display: inline-flex; align-items: center; gap: var(--e-1, 4px); font-size: var(--t-s, 13px); font-weight: 600; color: var(--exito, var(--texto)); }
+.paso-inicial .boton { align-self: flex-start; }
+
+.primeros-pasos-compacto {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2, 8px);
+  min-height: 44px;
+  max-height: 56px;
+  padding: var(--e-1, 4px) var(--e-2, 8px) var(--e-1, 4px) var(--e-3, 12px);
+  font-size: var(--t-s, 13px);
+}
+.primeros-pasos-compacto .pp-linea {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  line-height: 1.35;
+  color: var(--texto-2);
+}
+.primeros-pasos-compacto .pp-linea.primeros-pasos-listo { display: flex; }
+.primeros-pasos-compacto .pp-linea b { color: var(--texto); font-weight: 600; }
+.primeros-pasos-compacto .boton { flex-shrink: 0; white-space: nowrap; }
+.primeros-pasos-listo { display: flex; align-items: center; gap: var(--e-2, 8px); }

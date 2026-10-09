@@ -1,158 +1,308 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useApp } from '../estado.jsx';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useApp, useAccion } from '../estado.jsx';
 import { api } from '../api.js';
 import { grafoGeneral, grafoEntregable, aplicarCorrida, diffGrafos } from '@lib/grafo.mjs';
 import { entregablesDe } from '@lib/receta-efectiva.mjs';
+import { nombreEntregable, duracionEstimada, rutaHumana } from '../textos.js';
 import Flujo from '../componentes/Flujo.jsx';
 import Semana from '../componentes/Semana.jsx';
 import PanelNodo from '../componentes/PanelNodo.jsx';
 import Salida from '../componentes/Salida.jsx';
-import Diferencias from '../componentes/Diferencias.jsx';
+import Diferencias, { ResumenCambios, entregableAfectado } from '../componentes/Diferencias.jsx';
+import Boton from '../componentes/Boton.jsx';
+import Vacio from '../componentes/Vacio.jsx';
+import PrimerosPasos, { primerosPasosVisibles } from '../componentes/PrimerosPasos.jsx';
+import AvisosEntregable from '../componentes/AvisosEntregable.jsx';
+import { Icono, Highlighter, LoaderCircle, Play, CircleCheck, TriangleAlert, Workflow, ChevronDown } from '../componentes/Iconos.jsx';
 
-// Qué entregable toca una propuesta: el de la receta que cambia o el de la config que cambia.
-function entregableAfectado(vista, configActual) {
-  const p = vista.propuesta;
-  const cfg = vista.config || {};
-  const porReceta = (rid) => Object.entries(cfg.entregables || {}).find(([, e]) => e.receta === rid)?.[0];
-  if (p.regla?.receta) return porReceta(p.regla.receta) || null;
-  const receta = p.cambios.find((c) => c.tipo === 'receta');
-  if (receta) return porReceta(receta.id) || null;
-  for (const [id, e] of Object.entries(cfg.entregables || {})) {
-    if (JSON.stringify(e) !== JSON.stringify(configActual?.entregables?.[id])) return id;
-  }
-  return null;
-}
+// Ancho del lienzo por debajo del cual el flujo pasa a dos columnas.
+const ANCHO_ANGOSTO = 640;
 
 export default function Visualizador() {
   const { s, acciones } = useApp();
   const [vistaPropuesta, setVistaPropuesta] = useState(null);
   const [verTexto, setVerTexto] = useState(false);
   const [recienAplicada, setRecienAplicada] = useState(null);
+  const [anchoLienzo, setAnchoLienzo] = useState(0);
+  const cuerpo = useRef(null);
+  const bannerPropuesta = useRef(null);
 
   const entregables = useMemo(() => entregablesDe(s.config, s.recetas, s.modulos), [s.config, s.recetas, s.modulos]);
   const nombresFuentes = useMemo(() => Object.fromEntries(Object.entries(s.catalogo?.fuentes || {}).map(([id, f]) => [id, f.nombre])), [s.catalogo]);
   const vista = s.ui.vista;
   const eid = s.ui.entregable || entregables[0]?.id;
+  const nombre = nombreEntregable(s, eid);
   const idCorrida = eid ? s.ui.corridaPorEntregable[eid] : null;
   const corrida = idCorrida ? s.corridas[idCorrida] : null;
   const corriendo = corrida?.meta?.estado === 'en_curso';
+  const iniciando = Boolean(eid && s.ui.iniciando?.[eid]);
+  const disposicion = anchoLienzo && anchoLienzo < ANCHO_ANGOSTO ? 'angosta' : 'ancha';
+
+  useLayoutEffect(() => {
+    const el = cuerpo.current;
+    if (!el) return undefined;
+    setAnchoLienzo(el.clientWidth);
+    const obs = new ResizeObserver(([e]) => setAnchoLienzo(Math.round(e.contentRect.width)));
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
     if (idCorrida && !s.corridas[idCorrida]) acciones.cargarCorrida(idCorrida);
-  }, [idCorrida]);
+  }, [idCorrida]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Cuando la prueba que se estaba mirando termina con el borrador listo, el mapa queda a la vista
+  // con sus resultados y un aviso arriba lleva a la hoja (sin mover la página ni el foco solo). Si se
+  // ven los Primeros pasos, el aviso no hace falta: ellos ya ofrecen «Ver el borrador».
+  const [recienLista, setRecienLista] = useState(null);
+  const estadoCorrida = corrida?.meta?.estado;
+  const previoCorrida = useRef({ id: idCorrida, estado: estadoCorrida });
+  useEffect(() => {
+    const previo = previoCorrida.current;
+    previoCorrida.current = { id: idCorrida, estado: estadoCorrida };
+    if (previo.id === idCorrida && previo.estado === 'en_curso' && estadoCorrida === 'lista') setRecienLista(idCorrida);
+    else if (recienLista && recienLista !== idCorrida) setRecienLista(null);
+  }, [idCorrida, estadoCorrida]); // eslint-disable-line react-hooks/exhaustive-deps
+  const verBorrador = () => {
+    const hoja = document.querySelector('.visualizador .borrador');
+    if (!hoja) return;
+    const reducido = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    hoja.scrollIntoView({ block: 'start', behavior: reducido ? 'auto' : 'smooth' });
+    hoja.focus({ preventScroll: true });
+  };
 
   const enFoco = s.ui.propuestaEnFoco;
   useEffect(() => {
+    setVerTexto(false);
     if (!enFoco) {
       setVistaPropuesta(null);
       return;
     }
+    let vigente = true;
     api(`/propuestas/${enFoco}/vista`).then((v) => {
+      if (!vigente) return;
       setVistaPropuesta(v);
-      const afectado = entregableAfectado(v, s.config);
-      if (afectado) acciones.ui({ vista: 'entregable', entregable: afectado, nodo: null });
+      const afectado = entregableAfectado(v, s);
+      // El panel de un nodo se cierra: la diferencia tiene que quedar a la vista.
+      if (afectado && (s.ui.vista !== 'entregable' || s.ui.entregable !== afectado)) acciones.ui({ vista: 'entregable', entregable: afectado, nodo: null });
+      else if (s.ui.nodo) acciones.ui({ nodo: null });
     }).catch((e) => acciones.avisar(e.message));
-  }, [enFoco]);
+    return () => {
+      vigente = false;
+    };
+  }, [enFoco]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const parametros = { config: s.config, recetas: s.recetas, modulos: s.modulos, estadoFuentes: s.fuentes, nombresFuentes };
-  let grafo = vista === 'general' ? grafoGeneral(parametros) : grafoEntregable({ ...parametros, entregableId: eid });
-  let resumen = null;
-  if (vistaPropuesta?.config) {
-    const propuestos = { ...parametros, config: vistaPropuesta.config, recetas: vistaPropuesta.recetas };
-    const nuevo = vista === 'general' ? grafoGeneral(propuestos) : grafoEntregable({ ...propuestos, entregableId: eid });
-    const diff = diffGrafos(grafo, nuevo);
-    grafo = diff;
-    resumen = diff.resumen;
-  } else if (vista === 'entregable' && corrida) {
-    grafo = aplicarCorrida(grafo, corrida.nodos);
-  }
-
-  const enCurso = corriendo ? Object.entries(corrida.nodos || {}).filter(([, v]) => v.estado === 'en_curso').map(([k]) => grafo.nodes.find((n) => n.id === k)?.data?.titulo).filter(Boolean) : [];
   const propuesta = vistaPropuesta?.propuesta;
+  const conPropuesta = Boolean(vistaPropuesta?.config && propuesta);
 
-  const aplicar = async () => {
-    if (await acciones.aplicarPropuesta(propuesta.id)) setRecienAplicada(eid);
+  const grafo = useMemo(() => {
+    const parametros = { config: s.config, recetas: s.recetas, modulos: s.modulos, estadoFuentes: s.fuentes, nombresFuentes };
+    const armar = (p) => (vista === 'general' ? grafoGeneral({ ...p, disposicion }) : grafoEntregable({ ...p, entregableId: eid, disposicion }));
+    const actual = armar(parametros);
+    if (conPropuesta) {
+      return diffGrafos(actual, armar({ ...parametros, config: vistaPropuesta.config, recetas: vistaPropuesta.recetas }));
+    }
+    if (vista === 'entregable' && corrida) return aplicarCorrida(actual, corrida.nodos, { enCurso: corriendo });
+    return actual;
+  }, [s.config, s.recetas, s.modulos, s.fuentes, nombresFuentes, vista, eid, disposicion, conPropuesta, vistaPropuesta, corrida, corriendo]);
+
+  const resumen = conPropuesta ? grafo.resumen : null;
+
+  // Cuando llega una propuesta, el banner y el mapa con la diferencia quedan a la vista. Va antes de
+  // pintar (y sin animación) para que el mapa encuadre el cambio en la parte que se ve.
+  const idPropuesta = conPropuesta ? propuesta.id : null;
+  useLayoutEffect(() => {
+    const banner = bannerPropuesta.current;
+    const principal = banner?.closest('.principal');
+    if (!idPropuesta || !banner || !principal) return;
+    // Solo se desplaza .principal (scrollIntoView movería también la ventana).
+    principal.scrollTop += banner.getBoundingClientRect().top - principal.getBoundingClientRect().top - 16;
+  }, [idPropuesta]);
+  const enCursoNodos = corriendo
+    ? Object.entries(corrida.nodos || {}).filter(([, v]) => v.estado === 'en_curso').map(([k]) => grafo.nodes.find((n) => n.id === k)?.data?.titulo).filter(Boolean)
+    : [];
+  const destino = grafo.nodes?.find((n) => n.id === 'destino')?.data?.destino || entregables.find((e) => e.id === eid)?.destino;
+
+  // Las acciones del banner lo hacen desaparecer: el foco va a «Probar ahora» (el paso siguiente)
+  // o, si no está, al título de la página. Nunca queda en <body>.
+  const enfocarDespues = (preferirProbar) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const probarBoton = preferirProbar && document.querySelector('.visualizador .cabecera .boton.primario:not([aria-disabled="true"])');
+      if (probarBoton) probarBoton.focus();
+      else acciones.enfocarTitulo();
+    }));
+  };
+  const [aplicar, aplicando] = useAccion(async () => {
+    if (await acciones.aplicarPropuesta(propuesta.id)) {
+      setRecienAplicada(eid);
+      enfocarDespues(true);
+    }
+  });
+  const dejarParaDespues = () => {
+    acciones.ui({ propuestaEnFoco: null });
+    enfocarDespues(false);
+  };
+  const descartar = async () => {
+    if (await acciones.descartarPropuesta(propuesta.id)) enfocarDespues(false);
   };
 
+  const probar = () => {
+    setRecienAplicada(null);
+    acciones.probar(eid);
+  };
+
+  let motivoProbar;
+  if (propuesta && propuesta.estado === 'pendiente') motivoProbar = 'Aplicá o descartá el cambio antes de probar';
+  else if (s.validacion && !s.validacion.ok) motivoProbar = 'Hay errores en la configuración';
+
+  const nodoAbierto = s.ui.nodo ? grafo.nodes?.find((n) => n.id === s.ui.nodo.id) || s.ui.nodo : null;
+
+  const alNodo = (n) => {
+    if (!n) {
+      acciones.ui({ nodo: null });
+      return;
+    }
+    if (vista === 'general' && n.data.tipo === 'entregable') acciones.verEntregable(n.data.entregable);
+    else acciones.ui({ nodo: n });
+  };
+
+  const errores = vistaPropuesta?.errores || [];
+  const puedeAplicar = propuesta?.estado === 'pendiente' && !errores.length;
+
   return (
-    <div className="pagina">
+    <div className="pagina visualizador">
       <header className="cabecera">
-        <div>
-          <h1>Visualizador</h1>
-          <p className="bajada">Se genera desde tu config y tus recetas. Tocá un nodo para ver su configuración o cambiarlo charlando.</p>
+        <div className="cabecera-textos">
+          {vista === 'entregable' && nombre && <p className="miga">Inicio <span aria-hidden="true">›</span></p>}
+          <h1 tabIndex={-1}>{vista === 'entregable' && nombre ? nombre : 'Inicio'}</h1>
+          <p className="bajada">
+            {vista === 'general'
+              ? 'Este es el mapa de lo que Claude arma por vos: de dónde lee, qué entrega y cuándo. Se arma solo con lo que configuraste. Tocá un entregable para ver su flujo y probarlo.'
+              : `Así se arma ${nombre}, paso por paso. Tocá un nodo (o llegá con Tab y apretá Enter) para ver el detalle o pedir un cambio.`}
+          </p>
         </div>
         <div className="acciones">
-          <div className="segmentado">
-            <button className={vista === 'general' ? 'activo' : ''} onClick={() => acciones.ui({ vista: 'general', nodo: null })}>General</button>
-            <button className={vista === 'entregable' ? 'activo' : ''} onClick={() => acciones.ui({ vista: 'entregable', entregable: eid, nodo: null })}>Por entregable</button>
+          <div className="segmentado" role="group" aria-label="Vista">
+            <button type="button" aria-pressed={vista === 'general'} className={vista === 'general' ? 'activo' : ''} onClick={() => acciones.ui({ vista: 'general', nodo: null })}>General</button>
+            <button type="button" aria-pressed={vista === 'entregable'} className={vista === 'entregable' ? 'activo' : ''} onClick={() => acciones.ui({ vista: 'entregable', entregable: eid, nodo: null })}>Por entregable</button>
           </div>
           {vista === 'entregable' && (
-            <select value={eid || ''} onChange={(e) => acciones.ui({ entregable: e.target.value, nodo: null })}>
+            <select aria-label="Entregable" value={eid || ''} onChange={(e) => acciones.ui({ entregable: e.target.value, nodo: null })}>
               {entregables.map((e) => <option key={e.id} value={e.id}>{e.nombre}{e.activo ? '' : ' (apagado)'}</option>)}
             </select>
           )}
           {vista === 'entregable' && (
-            <button className="boton primario" disabled={corriendo || !s.validacion?.ok || Boolean(propuesta)} onClick={() => { setRecienAplicada(null); acciones.probar(eid); }}>
-              {corriendo ? 'Corriendo…' : 'Probar ahora'}
-            </button>
+            <Boton
+              variante="primario"
+              icono={Play}
+              motivo={motivoProbar}
+              enCurso={iniciando || corriendo}
+              textoEnCurso={iniciando ? 'Iniciando…' : 'Probando…'}
+              onClick={probar}
+            >
+              Probar ahora
+            </Boton>
           )}
         </div>
       </header>
 
+      <PrimerosPasos compacto={vista === 'entregable'} />
+      {vista === 'entregable' && eid && <AvisosEntregable id={eid} />}
+
       {propuesta && (
-        <div className="banner banner-propuesta">
-          <div>
-            <b>Vista previa del cambio:</b> {propuesta.motivo}
-            <div className="resumen-cambios">
-              {resumen?.agregados.length > 0 && <span className="chip chip-cambio-agregado">+ {resumen.agregados.join(', ')}</span>}
-              {resumen?.quitados.length > 0 && <span className="chip chip-cambio-quitado">− {resumen.quitados.join(', ')}</span>}
-              {resumen?.modificados.length > 0 && <span className="chip chip-cambio-modificado">~ {resumen.modificados.join(', ')}</span>}
-              {resumen && !resumen.agregados.length && !resumen.quitados.length && !resumen.modificados.length && <span className="tenue">El flujo no cambia: cambian las instrucciones.</span>}
-            </div>
-            {vistaPropuesta.errores?.length > 0 && <div className="error-texto">No se puede aplicar: {vistaPropuesta.errores.map((e) => `${e.ruta}: ${e.mensaje}`).join('; ')}</div>}
+        <div className="banner banner-propuesta" ref={bannerPropuesta}>
+          <div className="propuesta-texto">
+            <p className="propuesta-titulo">
+              <Icono de={Highlighter} />
+              <span>
+                <b>Cambio propuesto por Claude{vista === 'entregable' && nombre ? ` para ${nombre}` : ''}:</b> {propuesta.motivo}
+              </span>
+            </p>
+            <ResumenCambios resumen={resumen} />
+            {errores.length > 0 && (
+              <p className="error-texto">
+                <Icono de={TriangleAlert} />
+                No se puede aplicar: {errores.map((e) => `${rutaHumana(e.ruta, s).texto}: ${e.mensaje}`).join('; ')}
+              </p>
+            )}
+            {propuesta.estado !== 'pendiente' && <p className="meta">Esta propuesta ya no está pendiente.</p>}
           </div>
-          <div className="acciones">
-            <button className="boton chico" onClick={() => setVerTexto(!verTexto)}>{verTexto ? 'Ocultar' : 'Ver'} texto</button>
-            <button className="boton chico" onClick={() => acciones.descartarPropuesta(propuesta.id)}>Descartar</button>
-            <button className="boton chico" onClick={() => acciones.ui({ propuestaEnFoco: null })}>Cerrar</button>
-            {propuesta.estado === 'pendiente' && <button className="boton primario chico" onClick={aplicar}>Aplicar</button>}
+          <div className="propuesta-acciones">
+            {puedeAplicar && (
+              <Boton variante="primario" enCurso={aplicando} textoEnCurso="Aplicando…" onClick={aplicar}>Aplicar el cambio</Boton>
+            )}
+            <button type="button" className="boton" aria-expanded={verTexto} aria-controls="diferencias-propuesta" onClick={() => setVerTexto(!verTexto)}>
+              <Icono de={ChevronDown} className={verTexto ? 'rotado' : undefined} />
+              Ver qué cambia en las instrucciones
+            </button>
+            <button type="button" className="boton texto" onClick={dejarParaDespues}>Dejar para después</button>
+            {propuesta.estado === 'pendiente' && (
+              <button type="button" className="boton peligro propuesta-descartar" onClick={descartar}>Descartar propuesta</button>
+            )}
           </div>
         </div>
       )}
-      {propuesta && verTexto && <Diferencias diffs={propuesta.diffs} />}
+      {propuesta && verTexto && <div id="diferencias-propuesta"><Diferencias diffs={propuesta.diffs} /></div>}
 
       {recienAplicada && !propuesta && !corriendo && (
         <div className="banner banner-ok">
-          Cambio aplicado.
-          <button className="boton primario chico" onClick={() => { setRecienAplicada(null); acciones.probar(recienAplicada); }}>Probar de nuevo</button>
+          <Icono de={CircleCheck} />
+          <span>Cambio aplicado. Probá de nuevo para ver cómo queda el borrador.</span>
+        </div>
+      )}
+
+      {recienLista === idCorrida && estadoCorrida === 'lista' && !propuesta && !recienAplicada && !primerosPasosVisibles(s) && (
+        <div className="banner banner-ok banner-borrador-listo">
+          <Icono de={CircleCheck} />
+          <span>Borrador listo: está debajo del flujo. No se mandó nada.</span>
+          <button type="button" className="boton chico" onClick={verBorrador}>Ver el borrador</button>
         </div>
       )}
 
       {corriendo && !propuesta && (
         <div className="estado-corrida">
-          <span className="girando" /> Corriendo en modo borrador{enCurso.length ? `: ${enCurso.join(', ')}` : '…'}
+          <Icono de={LoaderCircle} className="icono-gira" />
+          <span>
+            Probando en modo borrador{enCursoNodos.length ? `: ${enCursoNodos.join(', ')}` : ''}… <span className="meta">{duracionEstimada(s)}</span>
+          </span>
         </div>
       )}
 
-      <div className="visualizador-cuerpo">
-        <Flujo
-          clave={`${vista}-${eid}-${propuesta?.id || ''}`}
-          grafo={grafo}
-          alto={vista === 'general' ? 520 : 480}
-          onNodo={(n) => {
-            if (vista === 'general' && n.data.tipo === 'entregable') acciones.ui({ vista: 'entregable', entregable: n.data.entregable, nodo: null });
-            else acciones.ui({ nodo: n });
-          }}
-        />
-        {s.ui.nodo && <PanelNodo nodo={s.ui.nodo} entregable={vista === 'entregable' ? eid : null} />}
+      <div className="visualizador-cuerpo" ref={cuerpo}>
+        {grafo.error ? (
+          <div className="lienzo lienzo-vacio">
+            <Vacio
+              icono={Workflow}
+              titulo="No se pudo armar este flujo"
+              accion={<button type="button" className="boton" onClick={() => acciones.ir('entregables')}>Ir a Entregables</button>}
+            >
+              Revisá este entregable en Entregables: puede que le falten las instrucciones.
+            </Vacio>
+          </div>
+        ) : (
+          <Flujo
+            clave={`${vista}-${vista === 'entregable' ? eid : ''}`}
+            grafo={grafo}
+            seleccionado={nodoAbierto?.id}
+            etiqueta={vista === 'general' ? 'Mapa general' : `Flujo de ${nombre}`}
+            onNodo={alNodo}
+          >
+            {nodoAbierto && <PanelNodo nodo={nodoAbierto} entregable={vista === 'entregable' ? eid : null} />}
+          </Flujo>
+        )}
       </div>
 
       {vista === 'general' && (
-        <Semana entregables={entregables} hoy={s.ahora?.dia} onEntregable={(id) => acciones.ui({ vista: 'entregable', entregable: id, nodo: null })} />
+        <Semana entregables={entregables} hoy={s.ahora?.dia} onEntregable={(id) => acciones.verEntregable(id)} />
       )}
-      {vista === 'entregable' && corrida && !propuesta && <Salida corrida={corrida} />}
-      {vista === 'entregable' && !corrida && !propuesta && (
-        <p className="tenue centro">Todavía no corriste este entregable. "Probar ahora" lo arma en modo borrador: nada se manda a ningún lado.</p>
+      {vista === 'entregable' && !propuesta && (
+        <Salida corrida={corrida} destino={destino} entregable={eid} onProbar={motivoProbar ? undefined : probar} probando={iniciando} />
+      )}
+      {vista === 'entregable' && propuesta && corrida && (
+        <details className="borrador-anterior">
+          <summary>Borrador anterior (antes del cambio)</summary>
+          <Salida corrida={corrida} destino={destino} entregable={eid} />
+        </details>
       )}
     </div>
   );

@@ -12,7 +12,7 @@ process.env.ORQ_ESPACIO = dirPrueba;
 const { RAIZ } = await import('../lib/rutas.mjs');
 const espacio = await import('../lib/espacio.mjs');
 const { calcularVentana, tocaAhora, ahoraEn, textoHorario, semana } = await import('../lib/horario.mjs');
-const { grafoGeneral, grafoEntregable, diffGrafos, aplicarCorrida } = await import('../lib/grafo.mjs');
+const { grafoGeneral, grafoEntregable, diffGrafos, aplicarCorrida, MEDIDAS, cajaDe } = await import('../lib/grafo.mjs');
 const { entregablesDe, recetaEfectiva } = await import('../lib/receta-efectiva.mjs');
 const { generarEntregable, configConEntregable } = await import('../lib/asistente.mjs');
 const { parsearMcpList, parsearGhStatus, estadoFuentes } = await import('../lib/conectores.mjs');
@@ -106,6 +106,151 @@ test('el diff marca nodos agregados, quitados y modificados', () => {
   assert.deepEqual(d.resumen.agregados, ['jira']);
   assert.deepEqual(d.resumen.quitados, ['calendario']);
   assert.ok(d.resumen.modificados.includes('Control de evidencia'));
+});
+
+// Ningún par de nodos se toca: entre dos cajas queda al menos 16 px en x o en y.
+function sinSuperposicion(g, contexto) {
+  const m = g.medidas || MEDIDAS.entregable;
+  for (let i = 0; i < g.nodes.length; i++) {
+    for (let j = i + 1; j < g.nodes.length; j++) {
+      const a = g.nodes[i].position;
+      const b = g.nodes[j].position;
+      const ok = Math.abs(a.x - b.x) >= m.ancho + 16 || Math.abs(a.y - b.y) >= m.alto + 16;
+      assert.ok(ok, `${contexto}: ${g.nodes[i].id} y ${g.nodes[j].id} se tocan`);
+    }
+  }
+}
+
+test('la vista general agrupa las fuentes apagadas, no tiene destinos y trae rótulos', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  const g = grafoGeneral({ config: ejemplo, recetas, modulos });
+  const apagadas = Object.entries(ejemplo.fuentes).filter(([, f]) => f.activo === false).map(([id]) => id);
+  assert.ok(apagadas.length > 0);
+  const grupo = g.nodes.find((n) => n.id === 'fuentes-apagadas');
+  assert.equal(grupo.data.tipo, 'fuente');
+  assert.deepEqual(grupo.data.agrupadas.map((x) => x.id), apagadas);
+  assert.equal(grupo.data.titulo, `${apagadas.length} fuentes sin usar`);
+  for (const id of apagadas) assert.ok(!g.nodes.some((n) => n.id === `fuente:${id}`), `${id} no va suelta`);
+  assert.ok(!g.nodes.some((n) => n.id.startsWith('destino:')));
+  assert.equal(g.nodes.find((n) => n.id === 'orquestador').data.titulo, 'Claude');
+  const daily = g.nodes.find((n) => n.id === 'entregable:daily');
+  assert.equal(daily.data.horarioTexto, 'Lun a vie, 09:00');
+  assert.ok(daily.data.destino);
+  assert.deepEqual(g.rotulos.map((r) => r.texto), ['Lee de', 'Claude arma', 'Entregables']);
+  sinSuperposicion(g, 'general');
+  // Prender Jira la suma, pero el grupo de apagadas no figura como cambio.
+  const conJira = structuredClone(ejemplo);
+  conJira.fuentes.jira.activo = true;
+  const d = diffGrafos(g, grafoGeneral({ config: conJira, recetas, modulos }));
+  assert.deepEqual(d.resumen.agregados, ['jira']);
+  assert.ok(!d.resumen.modificados.some((t) => /sin usar/.test(t)));
+  assert.ok(!d.nodes.find((n) => n.id === 'fuentes-apagadas').data.cambio);
+  sinSuperposicion(d, 'diff general');
+});
+
+test('la daily entra en las dos disposiciones y sus datos son legibles', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  const ancha = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos });
+  const cajaAncha = cajaDe(ancha);
+  assert.ok(cajaAncha.ancho <= 640 && cajaAncha.alto <= 580, `ancha: ${cajaAncha.ancho}x${cajaAncha.alto}`);
+  const angosta = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos, disposicion: 'angosta' });
+  assert.ok(cajaDe(angosta).ancho <= 420, `angosta: ${cajaDe(angosta).ancho}`);
+  assert.deepEqual(angosta.nodes.map((n) => n.id), ancha.nodes.map((n) => n.id));
+  for (const g of [ancha, angosta]) {
+    sinSuperposicion(g, g.armado.disposicion);
+    assert.ok(g.edges.some((e) => e.source === 'disparador' && e.target === 'paso:ventana'));
+    assert.ok(!g.edges.some((e) => e.source === 'disparador' && e.target.startsWith('fuente:')));
+  }
+  // El control queda alineado al fondo de la columna de pasos.
+  const y = (id) => ancha.nodes.find((n) => n.id === id).position.y;
+  const pasos = ancha.nodes.filter((n) => n.data.tipo === 'paso');
+  assert.equal(y('control'), pasos.at(-2).position.y);
+  assert.equal(y('destino'), pasos.at(-1).position.y);
+  assert.equal(ancha.nodes.find((n) => n.id === 'destino').data.destino.tipo, 'borrador');
+  assert.equal(ancha.nodes.find((n) => n.id === 'disparador').data.titulo, 'Lun a vie, 09:00');
+  assert.equal(ancha.nodes.find((n) => n.id === 'disparador').data.subtitulo, 'Desde el día hábil anterior');
+  assert.equal(ancha.nodes.find((n) => n.id === 'control').data.titulo, 'Control de evidencia');
+});
+
+test('fuentes apagadas o sin definir, y nodos en espera durante la prueba', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  const config = structuredClone(ejemplo);
+  config.fuentes.calendario.activo = false;
+  config.entregables.daily.fuentes = ['github', 'calendario', 'no_definida'];
+  const g = grafoEntregable({ entregableId: 'daily', config, recetas, modulos, estadoFuentes: { github: { conectada: true } } });
+  const cal = g.nodes.find((n) => n.id === 'fuente:calendario').data;
+  assert.equal(cal.conexion, 'apagada');
+  assert.equal(cal.detalleConexion, 'Apagada en Conectores: no se usa');
+  const nd = g.nodes.find((n) => n.id === 'fuente:no_definida').data;
+  assert.equal(nd.conexion, 'desconectada');
+  assert.equal(nd.detalleConexion, 'No está en tu configuración');
+  const estados = { disparador: { estado: 'ok' }, 'fuente:github': { estado: 'en_curso' } };
+  const enCurso = aplicarCorrida(g, estados, { enCurso: true });
+  assert.equal(enCurso.nodes.find((n) => n.id === 'fuente:github').data.corrida.estado, 'en_curso');
+  assert.equal(enCurso.nodes.find((n) => n.id === 'control').data.corrida.estado, 'espera');
+  const terminada = aplicarCorrida(g, estados);
+  assert.equal(terminada.nodes.find((n) => n.id === 'control').data.corrida, undefined);
+});
+
+test('el diff de Jira y Calendario conserva el orden, no superpone y alinea el control', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  const cambiada = structuredClone(ejemplo);
+  cambiada.fuentes.jira.activo = true;
+  cambiada.entregables.daily.fuentes = ['github', 'sesiones_ia', 'jira'];
+  for (const disposicion of ['ancha', 'angosta']) {
+    const antes = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos, disposicion });
+    const despues = grafoEntregable({ entregableId: 'daily', config: cambiada, recetas, modulos, disposicion });
+    const d = diffGrafos(antes, despues);
+    const fuentes = d.nodes.filter((n) => n.data.tipo === 'fuente').map((n) => n.id);
+    assert.deepEqual(fuentes, ['fuente:github', 'fuente:sesiones_ia', 'fuente:calendario', 'fuente:jira']);
+    assert.equal(d.nodes.find((n) => n.id === 'fuente:calendario').data.cambio, 'quitado');
+    sinSuperposicion(d, `diff ${disposicion}`);
+    const pasos = d.nodes.filter((n) => n.data.tipo === 'paso');
+    const control = d.nodes.find((n) => n.id === 'control').position;
+    if (disposicion === 'ancha') assert.equal(control.y, pasos.at(-2).position.y);
+    else assert.ok(control.y > pasos.at(-1).position.y);
+    assert.ok(d.edges.some((e) => e.source === 'fuente:calendario' && e.data?.cambio === 'quitado'));
+  }
+});
+
+test('una fuente que ningún paso declara llega al paso que junta las demás', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  const conJira = structuredClone(ejemplo);
+  conJira.fuentes.jira.activo = true;
+  conJira.entregables.daily.fuentes = [...(conJira.entregables.daily.fuentes || ['github', 'sesiones_ia', 'calendario']), 'jira'];
+  const g = grafoEntregable({ entregableId: 'daily', config: conJira, recetas, modulos });
+  const destinoDe = (fuente) => g.edges.find((e) => e.source === `fuente:${fuente}`)?.target;
+  assert.ok(destinoDe('jira'), 'Jira tiene arista');
+  assert.equal(destinoDe('jira'), destinoDe('calendario'));
+  assert.notEqual(destinoDe('jira'), 'paso:ventana');
+});
+
+test('la vista general junta las aristas de cada lado en un único bus', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  for (const disposicion of ['ancha', 'angosta']) {
+    const g = grafoGeneral({ config: ejemplo, recetas, modulos, disposicion });
+    const buses = (pred) => new Set(g.edges.filter(pred).map((e) => e.data.bus));
+    assert.equal(buses((e) => e.target === 'orquestador').size, 1, `${disposicion}: entrada`);
+    assert.equal(buses((e) => e.source === 'orquestador').size, 1, `${disposicion}: salida`);
+    const m = g.medidas;
+    const xEntrada = [...buses((e) => e.target === 'orquestador')][0];
+    assert.ok(xEntrada > m.ancho && xEntrada < m.columna, `${disposicion}: el bus va en el hueco`);
+  }
+});
+
+test('el grafo sigue sin superponerse después de pintar una prueba', () => {
+  const recetas = espacio.listarRecetas();
+  const modulos = espacio.listarModulos();
+  const g = grafoEntregable({ entregableId: 'daily', config: ejemplo, recetas, modulos });
+  const pintado = aplicarCorrida(g, { control: { estado: 'ok', resultado: '3 con evidencia' } });
+  sinSuperposicion(pintado, 'daily pintada');
+  assert.deepEqual(pintado.nodes.map((n) => n.position), g.nodes.map((n) => n.position));
 });
 
 test('el asistente genera una receta válida y su entrada en la config', () => {
