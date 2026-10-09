@@ -32,9 +32,11 @@ function capitalizar(t) {
   return x ? x[0].toUpperCase() + x.slice(1) : x;
 }
 
+const NOMBRE_FUENTE = { reuniones: 'Reuniones (notetaker)' };
+
 export function nombreFuente(s, id) {
   if (!id) return '';
-  return s?.fuentes?.[id]?.nombre || s?.catalogo?.fuentes?.[id]?.nombre || capitalizar(String(id).replace(/_/g, ' '));
+  return s?.fuentes?.[id]?.nombre || s?.catalogo?.fuentes?.[id]?.nombre || NOMBRE_FUENTE[id] || capitalizar(String(id).replace(/_/g, ' '));
 }
 
 function listaEntregables(s) {

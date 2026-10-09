@@ -288,7 +288,7 @@ test('MCP: preparar_corrida, registrar_lectura y guardar_borrador con el control
     const mal = await llamar('guardar_borrador', borrador);
     assert.equal(mal.error, true);
     assert.match(mal.texto, /sin estado final/);
-    for (const nodo of ['fuente:github', 'fuente:sesiones_ia', ...j.pasos.map((p) => p.nodo)]) {
+    for (const nodo of ['fuente:github', 'fuente:sesiones_ia', 'fuente:reuniones', ...j.pasos.map((p) => p.nodo)]) {
       await llamar('reportar_paso', { corrida, nodo, estado: nodo.startsWith('fuente:') ? 'omitido' : 'ok' });
     }
     const bien = await llamar('guardar_borrador', { ...borrador, descartados: [{ texto: 'Nada más', motivo: 'sin más lecturas', ref: 'evento:planning' }] });

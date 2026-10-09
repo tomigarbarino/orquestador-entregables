@@ -29,10 +29,11 @@ En este orden, y sin barrer historiales enteros:
    - Si el cierre de una sesión es sobre todo un prompt o una especificación, es "pedido redactado", no implementación.
    - Si un PR a la rama de producción tiene una sesión ligada con deploy y prueba de humo, el estado es "desplegado y verificado en producción" y esa sesión es la evidencia.
 3. **Registros de trabajo**, si la fuente está activa. Excluí los que digan que no se reportan.
-4. **Calendario**: solo para confirmar fechas. No deduzcas trabajo de reuniones agendadas.
-5. **Chat**: bloqueos o pedidos concretos que mencionen a la persona.
+4. **Calendario**: solo para confirmar fechas. Un evento no prueba que la reunión ocurrió.
+5. **Reuniones (notetaker)**: una reunión cuenta solo si tiene resumen del notetaker (Fathom o el mail de resumen de {{fuentes.reuniones.remitentes_resumen}}), y se cita el resumen con su ref (`reunion:<id>` o `mail:<id>`). Se cuenta con lo que se decidió ("Participé de X; se decidió Y"), sin inventar nada que el resumen no diga. Sin resumen, no va a Hecho. Las tareas que el resumen asigna a {{persona.nombre}} van a Pendiente como pedidos, con su responsable y su fecha si los tienen.
+6. **Chat**: bloqueos o pedidos concretos que mencionen a la persona.
 
-Lo que leas con conectores (calendario, chat) registralo con `registrar_lectura`, con las refs que leíste.
+Lo que leas con conectores (calendario, reuniones, chat) registralo con `registrar_lectura`, con las refs que leíste.
 
 Convertí las fechas de UTC a {{zona_horaria}} antes de asignar el día.
 

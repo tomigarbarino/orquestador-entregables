@@ -79,6 +79,12 @@ fuentes:
     via: mcp
     servidor: Microsoft 365
     remitentes_resumen: [resumenes@notetaker.example.com]
+  reuniones:
+    activo: true
+    via: mcp
+    # Lee del conector de Fathom si está conectado; si no, de los mails de resumen en Outlook.
+    notetaker: fathom
+    remitentes_resumen: [no-reply@notetaker.example.com, resumenes@notetaker.example.com]
   chat:
     activo: false
     via: mcp
@@ -97,7 +103,7 @@ entregables:
   daily:
     receta: daily
     activo: true
-    fuentes: [github, sesiones_ia, calendario]
+    fuentes: [github, sesiones_ia, calendario, reuniones]
     horario:
       dias: [lun, mar, mie, jue, vie]
       hora: "09:00"
@@ -107,7 +113,7 @@ entregables:
   registro-tareas:
     receta: registro-tareas
     activo: true
-    fuentes: [github, sesiones_ia, calendario]
+    fuentes: [github, sesiones_ia, calendario, reuniones]
     horario:
       dias: [lun, mar, mie, jue, vie]
       hora: "18:00"
@@ -140,7 +146,7 @@ entregables:
   reunion-comercial:
     receta: reunion-comercial
     activo: false
-    fuentes: [mail, calendario]
+    fuentes: [reuniones, calendario]
     horario:
       a_pedido: true
     destino:

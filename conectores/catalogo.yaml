@@ -65,6 +65,29 @@ fuentes:
         coincide: [gmail]
         herramientas: [search_gmail_messages, read_gmail_message, read_gmail_thread, read_gmail_profile]
 
+  # Reuniones con resumen del notetaker. Elige el proveedor conectado, en este orden:
+  # Fathom y, si no está, los mails de resumen en Outlook (filtrados por remitentes_resumen).
+  # VERIFICAR: en claude.ai el conector de Fathom figura como servidor "claude.ai Fathom"; los
+  # nombres de sus herramientas de lectura son una primera suposición. Si en tu cuenta se llaman
+  # distinto, sumá los reales en `herramientas_extra` de la fuente.
+  reuniones:
+    nombre: Reuniones (notetaker)
+    descripcion: Resúmenes de reuniones con lo que se decidió y las tareas asignadas. Una reunión cuenta solo si tiene resumen.
+    via: mcp
+    elige_por_orden: true
+    como_referenciar: "reunion:<id de la reunión> (Fathom) o mail:<id del mail> (resumen por Outlook)"
+    como_conectar: Conectá Fathom en claude.ai o, si no, Microsoft 365 para leer los mails de resumen de tu notetaker.
+    proveedores:
+      - nombre: Fathom
+        coincide: [fathom]
+        como_referenciar: "reunion:<id de la reunión> (el id que devuelve la búsqueda)"
+        herramientas: [list_meetings, get_meeting_summary, get_meeting_transcript, search_meetings]
+      - nombre: Outlook (resúmenes por mail)
+        coincide: [microsoft 365, microsoft365, m365, outlook, office]
+        aviso: Resúmenes por mail de Outlook
+        como_referenciar: "mail:<id del mail de resumen> (el id o el link que devuelve la búsqueda)"
+        herramientas: [outlook_email_search, read_resource]
+
   chat:
     nombre: Chat del equipo
     descripcion: Mensajes de Slack o Teams.

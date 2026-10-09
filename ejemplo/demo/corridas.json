@@ -33,11 +33,17 @@
           "evento:daily",
           "evento:demo-cliente"
         ]
+      },
+      "reuniones": {
+        "resumen": "1 resumen del notetaker (planning de Rutas)",
+        "refs": [
+          "mail:resumen-planning-rutas"
+        ]
       }
     },
     "pasos": {
       "ventana": "Miércoles 8 a hoy",
-      "evidencia": "4 PRs, 5 sesiones, 3 reuniones",
+      "evidencia": "4 PRs, 5 sesiones, 3 eventos, 1 resumen de reunión",
       "agrupar": "2 proyectos, 6 ítems",
       "redactar": "Guion de 80 segundos"
     },
@@ -47,11 +53,13 @@
       "- **Rutas**: el cálculo de recorridos ahora respeta las ventanas horarias de cada cliente. Está mergeado a main y desplegado (rutas-api#212).",
       "- **Rutas**: la pantalla de reparto muestra el tiempo estimado por parada. Está en preview, falta validarla con operaciones (rutas-web#98).",
       "- **Depósitos**: investigué por qué el conteo de stock se desfasa al cierre; el origen es la carga duplicada de remitos. Quedó documentado (depositos#41, sin mergear).",
+      "- **Rutas**: participé del planning; se decidió priorizar las ventanas horarias antes que el tiempo por parada (resumen del planning).",
       "",
       "**Pendiente / hoy**",
       "",
       "- Validar con Beto la pantalla de reparto antes de pasarla a main.",
       "- Corregir la carga de remitos en Depósitos.",
+      "- Pedido del planning: pasarle a Beto la lista de clientes con ventana horaria, para el 2026-10-14.",
       "",
       "**Bloqueos**",
       "",
@@ -94,6 +102,15 @@
         ]
       },
       {
+        "texto": "Participé del planning de Rutas; se decidió priorizar las ventanas horarias antes que el tiempo por parada. Pedido: pasarle a Beto la lista de clientes con ventana horaria, para el 2026-10-14.",
+        "evidencia": [
+          {
+            "fuente": "reuniones",
+            "ref": "mail:resumen-planning-rutas"
+          }
+        ]
+      },
+      {
         "texto": "Validar la pantalla de reparto con Beto",
         "evidencia": [
           {
@@ -115,7 +132,7 @@
     "descartados": [
       {
         "texto": "Reunión de planning de Rutas",
-        "motivo": "Solo figura en el calendario: no se deduce trabajo de reuniones agendadas",
+        "motivo": "El evento solo prueba la agenda: la reunión se cuenta por su resumen (mail:resumen-planning-rutas)",
         "refs": [
           "evento:planning-rutas"
         ]
@@ -179,11 +196,15 @@
         "refs": [
           "evento:demo-cliente"
         ]
+      },
+      "reuniones": {
+        "resumen": "Sin resúmenes de reuniones de hoy",
+        "refs": []
       }
     },
     "pasos": {
       "ventana": "Hoy, 9 de octubre",
-      "evidencia": "2 PRs, 3 sesiones, 1 reunión",
+      "evidencia": "2 PRs, 3 sesiones, 1 evento, sin resúmenes de reuniones",
       "agrupar": "2 resultados",
       "redactar": "2 registros"
     },
@@ -249,7 +270,7 @@
       "descripcion": "la reunión con Transportes Demo"
     },
     "fuentes": {
-      "mail": {
+      "reuniones": {
         "resumen": "1 resumen del notetaker",
         "refs": [
           "mail:resumen-transportes-demo"
@@ -291,7 +312,7 @@
         "texto": "40 repartos diarios planificados a mano",
         "evidencia": [
           {
-            "fuente": "mail",
+            "fuente": "reuniones",
             "ref": "mail:resumen-transportes-demo"
           }
         ]
@@ -300,7 +321,7 @@
         "texto": "Próximos pasos con responsable y fecha",
         "evidencia": [
           {
-            "fuente": "mail",
+            "fuente": "reuniones",
             "ref": "mail:resumen-transportes-demo"
           }
         ]
