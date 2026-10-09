@@ -25,7 +25,7 @@ const ejemplo = YAML.parse(fs.readFileSync(path.join(RAIZ, 'config.example.yaml'
 test('la config de ejemplo y todas las recetas son válidas', () => {
   const e = espacio.estadoEspacio();
   assert.equal(e.validacion.ok, true, JSON.stringify(e.validacion.errores));
-  assert.deepEqual(Object.keys(e.recetas).sort(), ['daily', 'deck-avance', 'digest-jira', 'registro-tareas', 'reunion-comercial']);
+  assert.deepEqual(Object.keys(e.recetas).sort(), ['bitacora-reuniones', 'daily', 'deck-avance', 'digest-jira', 'registro-tareas', 'reunion-comercial']);
 });
 
 test('la validación encuentra errores de esquema y de referencias', () => {

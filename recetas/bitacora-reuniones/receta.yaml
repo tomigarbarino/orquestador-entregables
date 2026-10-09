@@ -1,0 +1,51 @@
+id: bitacora-reuniones
+nombre: Bitácora de reuniones
+descripcion: Bitácora por día o por semana de las reuniones del equipo, con lo que se habló, lo que se decidió, quién hace qué y el link al resumen del notetaker.
+version: 1
+disparador:
+  tipo: horario
+  por_defecto:
+    dias: [vie]
+    hora: "17:00"
+  ventana: ultimos_7_dias
+  frases:
+    - armá la bitácora de reuniones
+    - bitácora de la semana
+    - qué reuniones tuvimos y qué se decidió
+fuentes:
+  - id: reuniones
+    para: Resúmenes del notetaker (Fathom o mails de resumen) de las reuniones del período, con lo que se decidió y las tareas asignadas
+    requerida: true
+  - id: calendario
+    para: Las reuniones agendadas del período, con fecha, hora y participantes con su nombre (del detalle del evento)
+pasos:
+  - id: ventana
+    nombre: Definir el período
+    detalle: Según opciones.periodo, "dia" es hoy y "semana" son los últimos siete días (por defecto, la semana). Si la persona nombra un día o un rango, ese.
+  - id: reuniones
+    nombre: Listar las reuniones
+    detalle: Las reuniones del calendario dentro del período, con fecha y hora en la zona de la persona y los participantes internos con su nombre. Se registra la lectura con todos los eventos que devolvió la búsqueda.
+    usa: [calendario]
+  - id: resumenes
+    nombre: Buscar los resúmenes
+    detalle: El resumen del notetaker de cada reunión (Fathom o el mail de resumen), con su ref reunion:<id> o mail:<id>. Una reunión sin resumen no se cuenta; queda aparte como "sin resumen". Se registra la lectura con todas las refs.
+    usa: [reuniones]
+  - id: decisiones
+    nombre: Extraer decisiones y próximos pasos
+    detalle: De cada resumen, solo lo que dice (qué se decidió y qué se hará), con responsable y fecha. Si falta el responsable o la fecha, se dice.
+  - id: redactar
+    nombre: Redactar la bitácora
+    detalle: Una entrada por reunión con resumen (fecha y hora, participantes internos, resumen en dos o tres líneas, decisiones, próximos pasos y link al resumen), y aparte las reuniones sin resumen.
+control:
+  - Cada reunión de la bitácora cita su resumen del notetaker (ref reunion:<id> o mail:<id>) y la ref tiene que estar entre lo leído. Sin resumen no hay entrada; la reunión va aparte como "sin resumen".
+  - Las reuniones agendadas sin resumen van aparte, con su fecha, hora y título del calendario y la respuesta de la persona si se sabe, y nunca se inventa su contenido (ni qué se habló, ni decisiones, ni participantes que no figuran en el evento).
+  - Decisiones y próximos pasos salen solo del resumen. Cada próximo paso dice responsable y fecha; si el resumen no los dice, se escribe "sin responsable" o "sin fecha", sin deducirlos.
+  - La fecha y la hora son las del calendario o las del resumen, convertidas a la zona de la persona; no se rellenan horas. Los participantes son los internos, con el nombre del detalle del evento; nunca se deduce un nombre de un mail.
+  - El resumen de cada reunión tiene dos o tres líneas y no agrega nada que el resumen del notetaker no diga.
+  - Toda ref leída (evento, resumen) termina en una entrada, en "sin resumen" o en descartados, con su ref tal como vino y un motivo que cita entre comillas lo que dice la fuente (por ejemplo un evento que no es una reunión o ya se cuenta por su resumen). Se registran todos los ids de cada búsqueda, no una selección.
+  - Todas las reuniones del período están en la bitácora o en descartados; el período es el que indica la ventana y los conteos coinciden con lo registrado.
+  - Si falta una fuente (sin calendario o sin notetaker), se dice en faltantes en vez de rellenar.
+destino:
+  por_defecto: borrador
+  formato: "Bitácora del período: una entrada por reunión con fecha y hora, participantes internos, resumen en dos o tres líneas, decisiones, próximos pasos (responsable y fecha) y link al resumen. Al final, las reuniones sin resumen."
+reglas: []

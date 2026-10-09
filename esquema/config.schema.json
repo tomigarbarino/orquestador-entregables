@@ -269,9 +269,10 @@
         "destino": { "$ref": "#/definitions/destino" },
         "opciones": {
           "type": "object",
-          "description": "Parámetros propios de la receta. ultima_entrega (YYYY-MM-DD): la última vez que se entregó, aunque haya sido fuera del orquestador; la usan las recetas con ventana desde_ultima_corrida.",
+          "description": "Parámetros propios de la receta. ultima_entrega (YYYY-MM-DD): la última vez que se entregó, aunque haya sido fuera del orquestador; la usan las recetas con ventana desde_ultima_corrida. periodo (dia | semana): el período que cubre la bitácora de reuniones; dia es hoy y semana los últimos siete días.",
           "properties": {
-            "ultima_entrega": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+            "ultima_entrega": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+            "periodo": { "enum": ["dia", "semana"] }
           }
         }
       }

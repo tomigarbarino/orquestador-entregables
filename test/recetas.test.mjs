@@ -124,7 +124,7 @@ for (const [nombre, config] of VARIANTES) {
   }
 }
 
-for (const id of ['daily', 'registro-tareas', 'deck-avance', 'reunion-comercial', 'digest-jira']) {
+for (const id of ['daily', 'registro-tareas', 'deck-avance', 'reunion-comercial', 'bitacora-reuniones', 'digest-jira']) {
   test(`corrida demo de ${id}: pasa el control de evidencia y deja el borrador`, async () => {
     const config = conTodosLosModulos(ejemplo);
     const prep = espacio.prepararReceta(config, id);
@@ -137,5 +137,24 @@ for (const id of ['daily', 'registro-tareas', 'deck-avance', 'reunion-comercial'
     assert.equal(c.nodos.destino.estado, 'ok');
   });
 }
+
+test('bitácora de reuniones: apagada, semanal, con reuniones requerida y enganche del seguimiento', () => {
+  const e = ejemplo.entregables['bitacora-reuniones'];
+  assert.equal(e.activo, false);
+  assert.equal(e.opciones.periodo, 'semana');
+  assert.equal(e.destino.tipo, 'borrador');
+  assert.deepEqual(e.horario, { dias: ['vie'], hora: '17:00' });
+  const r = recetas['bitacora-reuniones'].receta;
+  assert.deepEqual(r.pasos.map((p) => p.id), ['ventana', 'reuniones', 'resumenes', 'decisiones', 'redactar']);
+  assert.equal(r.fuentes.find((f) => f.id === 'reuniones').requerida, true);
+  assert.ok(r.fuentes.some((f) => f.id === 'calendario'));
+  assert.match(recetas['bitacora-reuniones'].instrucciones, /registrar_lectura/);
+  assert.match(r.control.join(' '), /sin resumen/);
+  const g = grafoEntregable({ entregableId: 'bitacora-reuniones', config: conTodosLosModulos(ejemplo), recetas, modulos, estadoFuentes: {} });
+  const pasos = g.nodes.filter((n) => n.data.tipo === 'paso').map((n) => n.id);
+  assert.ok(pasos.indexOf('paso:proximos-pasos-cliente') === pasos.indexOf('paso:decisiones') + 1, 'el seguimiento se engancha después de decisiones');
+  const sin = grafoEntregable({ entregableId: 'bitacora-reuniones', config: ejemplo, recetas, modulos, estadoFuentes: {} });
+  assert.ok(!sin.nodes.some((n) => n.id === 'paso:proximos-pasos-cliente'), 'sin el módulo no hay paso de seguimiento');
+});
 
 test.after(() => fs.rmSync(dirPrueba, { recursive: true, force: true }));

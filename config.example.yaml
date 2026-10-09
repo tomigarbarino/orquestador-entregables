@@ -175,6 +175,19 @@ entregables:
       url: https://crm.acme.example/reuniones
       campos: [fecha, cliente, participantes, comercial, conclusion]
 
+  bitacora-reuniones:
+    receta: bitacora-reuniones
+    activo: false
+    fuentes: [reuniones, calendario]
+    horario:
+      dias: [vie]
+      hora: "17:00"
+    opciones:
+      # dia: las reuniones de hoy; semana: los últimos siete días.
+      periodo: semana
+    destino:
+      tipo: borrador
+
 modulos:
   digest_jira:
     activo: false

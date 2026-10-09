@@ -329,6 +329,106 @@
     ],
     "descartados": []
   },
+  "bitacora-reuniones": {
+    "ventana": {
+      "tipo": "ultimos_7_dias",
+      "desde": "2026-10-02",
+      "hasta": "2026-10-09",
+      "descripcion": "del 2026-10-02 a hoy (2026-10-09)"
+    },
+    "fuentes": {
+      "calendario": {
+        "resumen": "4 eventos",
+        "refs": [
+          "evento:planning-rutas",
+          "evento:retro-depositos",
+          "evento:sync-proveedor",
+          "evento:almuerzo-equipo"
+        ]
+      },
+      "reuniones": {
+        "resumen": "2 resúmenes del notetaker",
+        "refs": [
+          "mail:resumen-planning-rutas",
+          "reunion:retro-depositos"
+        ]
+      }
+    },
+    "pasos": {
+      "ventana": "Últimos 7 días: del 2 al 9 de octubre",
+      "reuniones": "4 eventos, 3 reuniones",
+      "resumenes": "2 resúmenes, 1 reunión sin resumen",
+      "decisiones": "2 decisiones, 4 próximos pasos",
+      "redactar": "Bitácora con 2 reuniones y 1 sin resumen"
+    },
+    "borrador": [
+      "**Bitácora de reuniones · 2 al 9 de octubre de 2026**",
+      "",
+      "**Planning de Rutas** · mié 7/10, 10:00",
+      "- Participantes: Ana Ejemplo, Beto Ejemplo.",
+      "- Resumen: se repasó el orden de trabajo de Rutas para las próximas dos semanas. Se acordó empezar por las ventanas horarias de cada cliente y dejar el tiempo por parada para después.",
+      "- Decisiones: priorizar las ventanas horarias antes que el tiempo por parada.",
+      "- Próximos pasos: pasar la lista de clientes con ventana horaria (Ana, 14/10); validar la pantalla de reparto (Beto, sin fecha).",
+      "- Resumen del notetaker: mail:resumen-planning-rutas",
+      "",
+      "**Retro de Depósitos** · jue 8/10, 15:00",
+      "- Participantes: Ana Ejemplo.",
+      "- Resumen: se revisó el desfase de stock al cierre y se confirmó que viene de remitos cargados dos veces.",
+      "- Decisiones: bloquear la carga de un remito repetido.",
+      "- Próximos pasos: corregir la carga de remitos (sin responsable, 16/10); avisar a Transportes Demo del cambio (Ana, sin fecha).",
+      "- Resumen del notetaker: reunion:retro-depositos",
+      "",
+      "**Sin resumen**",
+      "",
+      "- Sync con proveedor · vie 9/10, 11:00 (agendada; no hay resumen del notetaker, así que no se cuenta qué se habló)."
+    ],
+    "items": [
+      {
+        "texto": "Planning de Rutas, 7/10: decisiones y próximos pasos",
+        "evidencia": [
+          {
+            "fuente": "reuniones",
+            "ref": "mail:resumen-planning-rutas"
+          },
+          {
+            "fuente": "calendario",
+            "ref": "evento:planning-rutas"
+          }
+        ]
+      },
+      {
+        "texto": "Retro de Depósitos, 8/10: decisiones y próximos pasos",
+        "evidencia": [
+          {
+            "fuente": "reuniones",
+            "ref": "reunion:retro-depositos"
+          },
+          {
+            "fuente": "calendario",
+            "ref": "evento:retro-depositos"
+          }
+        ]
+      },
+      {
+        "texto": "Sync con proveedor, 9/10: agendada, sin resumen",
+        "evidencia": [
+          {
+            "fuente": "calendario",
+            "ref": "evento:sync-proveedor"
+          }
+        ]
+      }
+    ],
+    "descartados": [
+      {
+        "texto": "Almuerzo de equipo",
+        "motivo": "No es una reunión de trabajo: el evento se llama \"Almuerzo de equipo\" y no tiene resumen",
+        "refs": [
+          "evento:almuerzo-equipo"
+        ]
+      }
+    ]
+  },
   "generico": {
     "ventana": {
       "tipo": "ultimos_7_dias",
