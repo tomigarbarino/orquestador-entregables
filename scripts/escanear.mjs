@@ -22,7 +22,7 @@ const HOSTS_PERMITIDOS = [
   'github.com/acme-ejemplo', // organización ficticia de los ejemplos y los tests
   'orquestador-entregables.vercel.app', // demo pública de este repo
 ];
-const DOMINIOS_EJEMPLO = /(^|\.)example(\.com|\.org)?$|\.example$|\.invalid$/;
+const DOMINIOS_EJEMPLO = /(^|\.)example(\.com|\.org)?$|\.example$|\.invalid$|\.test$/;
 const PALABRAS_GENERICAS = new Set(['producto', 'equipo', 'desarrollo', 'investigación', 'comercial', 'daily', 'main', 'develop', 'jira', 'slack', 'github', 'ejemplo', 'datos', 'proyecto', 'agentes']);
 
 const PATRONES = [
