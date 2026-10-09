@@ -1,0 +1,15 @@
+id: resumen-local
+clave: resumen_local
+nombre: Resumen con modelo local
+descripcion: Antes de redactar, un modelo que corre en tu máquina (Ollama) resume lo más voluminoso, sin que esos datos salgan de la computadora.
+tipo: extension
+fuentes: [ollama]
+aplica_a:
+  "*":
+    - antes_de: redactar
+      paso:
+        id: resumen-local
+        nombre: Resumir con el modelo local
+        detalle: Los textos largos (transcripts, hilos, mails) pasan por el modelo local antes de redactar.
+        usa: [ollama]
+instrucciones: instrucciones.md

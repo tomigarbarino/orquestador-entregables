@@ -1,0 +1,44 @@
+id: deck-avance
+nombre: Deck de avance semanal
+descripcion: Presentación semanal con lo que llegó a producción, lo que está por pasar y lo que sigue, un tema por slide y con evidencia real.
+version: 1
+disparador:
+  tipo: horario
+  por_defecto:
+    dias: [jue]
+    hora: "16:00"
+  ventana: desde_ultima_corrida
+  frases:
+    - armá el deck de la semana
+    - presentación de avances
+fuentes:
+  - id: github
+    para: PRs mergeados a la rama de producción (entró) y PRs abiertos o en integración (por pasar)
+    requerida: true
+  - id: sesiones_ia
+    para: Contexto de cada feature (qué problema resolvía y cómo se validó)
+  - id: registros
+    para: Resultados y números de investigaciones
+pasos:
+  - id: periodo
+    nombre: Definir el período
+    detalle: Desde el último deck hasta hoy. Si no hay registro del anterior, los últimos siete días.
+  - id: evidencia
+    nombre: Qué entró y qué falta
+    detalle: Contar en GitHub, no de memoria, lo que llegó a producción y lo que quedó pendiente.
+    usa: [github, sesiones_ia, registros]
+  - id: guion
+    nombre: Guion slide por slide
+    detalle: Un tema por slide, sin slide de agenda ni de resumen. Por cada feature entregada, qué evidencia visual va.
+  - id: redactar
+    nombre: Armar el deck
+    detalle: Con el design system de la persona. En modo borrador alcanza el guion completo.
+control:
+  - Cada feature del deck tiene un PR o una sesión que la respalde.
+  - Lo que está en una rama de integración se muestra como pendiente, no como entregado.
+  - Las hipótesis se rotulan como hipótesis.
+  - Nada de datos de clientes, candidatos o usuarios sin tapar.
+destino:
+  por_defecto: doc
+  formato: "Guion slide por slide (título, mensaje en una línea, evidencia visual y notas para decir). Al aprobarlo, el deck en el design system configurado."
+reglas: []

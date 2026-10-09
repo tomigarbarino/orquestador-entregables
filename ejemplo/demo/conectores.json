@@ -1,0 +1,11 @@
+{
+  "mcp": {
+    "ok": true,
+    "servidores": [
+      { "nombre": "claude.ai Microsoft 365", "clave": "claude_ai_Microsoft_365", "destino": "https://conector.example/m365", "estado": "conectado", "detalle": "✔ Connected" },
+      { "nombre": "claude.ai Slack", "clave": "claude_ai_Slack", "destino": "https://conector.example/slack", "estado": "requiere_auth", "detalle": "! Needs authentication" }
+    ]
+  },
+  "gh": { "instalado": true, "ok": true, "cuenta": "ana-ejemplo", "cuentas": ["ana-ejemplo"], "detalle": "Sesión de gh: ana-ejemplo" },
+  "ollama": { "ok": false, "modelos": [], "detalle": "Ollama no responde en tu máquina" }
+}

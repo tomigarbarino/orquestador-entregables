@@ -1,0 +1,15 @@
+# Dependencias
+node_modules/
+
+# Tu espacio personal: configuración real, recetas propias, corridas, chat e historial.
+# Nunca se sube al repo.
+mi-espacio/
+config.yaml
+mis-recetas/
+
+# Varios
+*.log
+.DS_Store
+Thumbs.db
+.vite/
+docs/capturas/_tmp/

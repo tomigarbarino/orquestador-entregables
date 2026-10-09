@@ -1,0 +1,14 @@
+id: digest-jira
+clave: digest_jira
+nombre: Digest de Jira con calendario
+descripcion: Un entregable nuevo que cruza los tickets que se movieron con las reuniones del día.
+tipo: entregable
+entregable_por_defecto:
+  receta: digest-jira
+  activo: true
+  fuentes: [jira, calendario]
+  horario:
+    dias: [lun, mar, mie, jue, vie]
+    hora: "08:30"
+  destino:
+    tipo: borrador

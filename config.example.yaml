@@ -1,0 +1,151 @@
+# Configuración de ejemplo: una persona y una empresa ficticias.
+#
+# No hace falta editar este archivo a mano: la interfaz (npm start) crea tu propia
+# configuración en mi-espacio/config.yaml a partir de este ejemplo y la edita por vos.
+# mi-espacio/ está en el .gitignore: tu configuración nunca se sube al repo.
+
+version: 1
+
+persona:
+  nombre: Ana Ejemplo
+  rol: Líder de producto
+  equipo: Producto
+  empresa: Acme Logística
+  github_usuario: ana-ejemplo
+
+idioma: es-AR
+zona_horaria: America/Argentina/Buenos_Aires
+
+proyectos:
+  - nombre: Rutas
+    descripcion: Planificador de recorridos de reparto
+    repos: [acme-ejemplo/rutas-api, acme-ejemplo/rutas-web]
+    rama_produccion: main
+  - nombre: Depósitos
+    descripcion: Control de stock en depósitos
+    repos: [acme-ejemplo/depositos]
+    rama_produccion: main
+
+personas:
+  - nombre: Beto Ejemplo
+    alias: Beto
+    rol: Gerente de operaciones
+    nota: Decir "Beto", nunca "el gerente".
+
+clientes:
+  - nombre: Transportes Demo
+    nota: Cliente piloto de Rutas.
+
+glosario:
+  - termino: Rutas
+    significa: el planificador de recorridos
+    variantes_dictado: [rutaz, rutas app]
+
+reglas_redaccion:
+  - Frases cortas, en primera persona y sin adjetivos de marketing.
+  - Los arreglos se cuentan por cómo funciona ahora, no por el error.
+  - Sin emojis ni signos de exclamación.
+
+marca:
+  design_system: Plantilla de presentaciones de Acme
+  notas: Fondo claro, una idea por slide.
+
+fuentes:
+  github:
+    activo: true
+    via: gh
+  sesiones_ia:
+    activo: true
+    via: local
+    claude: true
+    codex: false
+  registros:
+    activo: false
+    via: local
+    carpeta: ~/registros-de-trabajo
+  calendario:
+    activo: true
+    via: mcp
+    servidor: Microsoft 365
+  mail:
+    activo: true
+    via: mcp
+    servidor: Microsoft 365
+    remitentes_resumen: [resumenes@notetaker.example.com]
+  chat:
+    activo: false
+    via: mcp
+    servidor: Slack
+  jira:
+    activo: false
+    via: mcp
+    servidor: Atlassian
+    proyectos: [RUT]
+  ollama:
+    activo: false
+    via: local
+    modelo: qwen3.5:9b
+
+entregables:
+  daily:
+    receta: daily
+    activo: true
+    fuentes: [github, sesiones_ia, calendario]
+    horario:
+      dias: [lun, mar, mie, jue, vie]
+      hora: "09:00"
+    destino:
+      tipo: borrador
+
+  registro-tareas:
+    receta: registro-tareas
+    activo: true
+    fuentes: [github, sesiones_ia, calendario]
+    horario:
+      dias: [lun, mar, mie, jue, vie]
+      hora: "18:00"
+    destino:
+      tipo: formulario
+      nombre: Tablero de tareas
+      url: https://tareas.acme.example/nueva
+      campos: [fecha, titulo, categoria, estado, horas, descripcion]
+      taxonomia:
+        categoria: [Desarrollo, Investigación, Administrativa, Comercial]
+        estado: [En proceso, Hecha]
+        horas: "Sin estimar, o medias horas de 0,5 a 8"
+
+  deck-avance:
+    receta: deck-avance
+    activo: true
+    fuentes: [github, sesiones_ia]
+    horario:
+      dias: [jue]
+      hora: "16:00"
+    destino:
+      tipo: doc
+      nombre: Deck semanal de Producto
+      formato: slides
+
+  reunion-comercial:
+    receta: reunion-comercial
+    activo: false
+    fuentes: [mail, calendario]
+    horario:
+      a_pedido: true
+    destino:
+      tipo: formulario
+      nombre: CRM de Acme
+      url: https://crm.acme.example/reuniones
+      campos: [fecha, cliente, participantes, comercial, conclusion]
+
+modulos:
+  digest_jira:
+    activo: false
+  seguimiento_comercial:
+    activo: false
+  resumen_local:
+    activo: false
+
+modelos:
+  corridas: sonnet
+  chat: sonnet

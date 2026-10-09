@@ -1,0 +1,41 @@
+{
+  "name": "orquestador-entregables",
+  "version": "0.1.0",
+  "description": "Plantilla para que cada equipo arme sus entregables recurrentes con Claude Code: recetas, configuración, interfaz web y orquestador.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node servidor/index.mjs",
+    "demo": "node servidor/index.mjs --demo",
+    "instalar": "node scripts/instalar.mjs",
+    "validar": "node scripts/validar-config.mjs",
+    "correr": "node scripts/correr.mjs",
+    "programar": "node scripts/programar.mjs",
+    "escanear": "node scripts/escanear.mjs",
+    "capturas": "node scripts/capturas.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@xyflow/react": "^12.8.0",
+    "ajv": "^8.17.1",
+    "ajv-i18n": "^4.2.0",
+    "diff": "^8.0.2",
+    "express": "^5.1.0",
+    "lucide-react": "^1.54.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "vite": "^7.1.0",
+    "yaml": "^2.8.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.20.0"
+  }
+}

@@ -1,0 +1,19 @@
+id: seguimiento-comercial
+clave: seguimiento_comercial
+nombre: Seguimiento de próximos pasos comerciales
+descripcion: Cada próximo paso de una reunión comercial queda con responsable y fecha, y la daily avisa cuáles vencen.
+tipo: extension
+aplica_a:
+  reunion-comercial:
+    - despues_de: redactar
+      paso:
+        id: proximos-pasos
+        nombre: Registrar próximos pasos
+        detalle: Cada próximo paso con responsable y fecha límite, en el seguimiento local.
+  daily:
+    - antes_de: redactar
+      paso:
+        id: seguimiento-comercial
+        nombre: Próximos pasos por vencer
+        detalle: Los compromisos comerciales que vencen hoy o ya vencieron.
+instrucciones: instrucciones.md

@@ -1,0 +1,49 @@
+id: daily
+nombre: Daily
+descripcion: Guion corto para la daily con lo que se hizo, lo que sigue y lo que frena, armado con el trabajo real del día hábil anterior.
+version: 1
+disparador:
+  tipo: horario
+  por_defecto:
+    dias: [lun, mar, mie, jue, vie]
+    hora: "09:00"
+  ventana: dia_habil_anterior
+  frases:
+    - armá la daily
+    - resumen para la daily
+    - qué hicimos ayer
+fuentes:
+  - id: github
+    para: PRs mergeados y abiertos en la ventana, en los repos de cada proyecto
+    requerida: true
+  - id: sesiones_ia
+    para: Pedidos y cierres de las sesiones de Claude Code y Codex (no los transcripts enteros)
+  - id: registros
+    para: Registros de trabajo fechados, si los llevás
+  - id: calendario
+    para: Solo para confirmar fechas; nunca para deducir trabajo
+  - id: chat
+    para: Bloqueos o pedidos mencionados en el chat del equipo
+pasos:
+  - id: ventana
+    nombre: Definir la ventana
+    detalle: El día hábil anterior más lo que ya se hizo hoy. Un lunes incluye el viernes y lo registrado el fin de semana, con su fecha real.
+  - id: evidencia
+    nombre: Juntar evidencia
+    detalle: Leer cada fuente activa, en el orden de la lista, sin barrer historiales enteros.
+    usa: [github, sesiones_ia, registros, calendario, chat]
+  - id: agrupar
+    nombre: Agrupar por proyecto
+    detalle: Agrupar por proyecto y por resultado, no PR por PR.
+  - id: redactar
+    nombre: Redactar el guion
+    detalle: Primera persona, para decir en 60 a 90 segundos, en tres bloques.
+control:
+  - Cada ítem del guion cita al menos una evidencia (PR, sesión, registro o mensaje).
+  - Se dice el estado exacto de cada cosa (en producción, mergeado, en preview, local, investigación o pendiente). Nunca "listo" si solo está en una rama.
+  - No se deduce trabajo de reuniones agendadas ni se rellenan horas.
+  - Si falta evidencia de algún día, se dice en una línea en vez de rellenar.
+destino:
+  por_defecto: borrador
+  formato: "Guion en tres bloques: Hecho (agrupado por proyecto), Pendiente / hoy, Bloqueos (qué frena y de quién depende)."
+reglas: []

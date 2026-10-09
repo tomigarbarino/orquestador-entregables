@@ -1,0 +1,50 @@
+id: registro-tareas
+nombre: Registro de tareas y horas
+descripcion: Registro retrospectivo del trabajo del día en el tablero o formulario de tareas, con fechas reales, estados exactos y horas solo si hay base.
+version: 1
+disparador:
+  tipo: horario
+  por_defecto:
+    dias: [lun, mar, mie, jue, vie]
+    hora: "18:00"
+  ventana: ultimos_7_dias
+  frases:
+    - cargá las tareas de hoy
+    - registro de tareas
+    - completá las horas del día
+fuentes:
+  - id: registros
+    para: Registros de trabajo fechados (la fuente más confiable)
+  - id: sesiones_ia
+    para: Sesiones de Claude Code y Codex con entrega concreta
+  - id: github
+    para: PRs de la persona, con fecha de merge y rama de destino
+    requerida: true
+  - id: calendario
+    para: Reuniones, solo con evidencia de que ocurrieron
+pasos:
+  - id: ventana
+    nombre: Definir la ventana
+    detalle: Los hitos completos de hoy más lo no registrado de los siete días anteriores, con su fecha original.
+  - id: evidencia
+    nombre: Juntar evidencia
+    usa: [registros, sesiones_ia, github, calendario]
+  - id: agrupar
+    nombre: Agrupar por resultado
+    detalle: Varios PR o sesiones de la misma cosa son un solo registro.
+  - id: deduplicar
+    nombre: Deduplicar contra lo ya registrado
+    detalle: Comparar con los recibos de corridas anteriores por fecha y título.
+  - id: redactar
+    nombre: Redactar cada registro
+    detalle: Título, fecha, categoría, estado, horas y descripción en el formato del destino.
+control:
+  - Cada registro cita su evidencia (registro, sesión, PR o evento confirmado).
+  - No se inventan horas. Sin base, queda "sin estimar".
+  - No se infiere trabajo de reuniones agendadas ni de planes recurrentes; las reuniones sin confirmar quedan como pendientes de confirmar.
+  - Se distingue analizado, implementado, mergeado, desplegado y verificado en producción.
+  - No se borran ni se fusionan registros existentes; los duplicados se avisan.
+destino:
+  por_defecto: formulario
+  formato: "Tabla con un registro por fila: fecha, título, categoría, estado, horas y descripción. Al final, lo que quedó afuera y por qué."
+reglas: []

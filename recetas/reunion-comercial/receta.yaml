@@ -1,0 +1,42 @@
+id: reunion-comercial
+nombre: Notas de reunión comercial
+descripcion: Ficha de cada reunión con un cliente o prospecto, cruzando el resumen automático del mail con el calendario y la lectura de la persona.
+version: 1
+disparador:
+  tipo: a_pedido
+  ventana: evento
+  frases:
+    - subí la reunión con
+    - cargá la llamada comercial
+    - notas de la reunión con
+fuentes:
+  - id: mail
+    para: Resumen automático de la reunión (notetaker) y la invitación del comercial
+    requerida: true
+  - id: calendario
+    para: Fecha real de la reunión y participantes
+    requerida: true
+  - id: chat
+    para: Lo que se habló antes o después de la reunión, si hace falta contexto
+pasos:
+  - id: lectura
+    nombre: Tomar la lectura de la persona
+    detalle: Qué quiere realmente el cliente, qué oportunidad ve y cómo lo venderían. Manda sobre el resumen automático.
+  - id: evidencia
+    nombre: Buscar resumen y fecha
+    detalle: Resumen del notetaker en el mail y fecha real en el calendario.
+    usa: [mail, calendario, chat]
+  - id: deduplicar
+    nombre: Deduplicar por cliente y fecha
+  - id: redactar
+    nombre: Redactar la ficha
+    detalle: Contexto y conclusión, oportunidad, próximos pasos.
+control:
+  - La fecha es la de la reunión según el calendario, no la de hoy.
+  - Cuenta como comercial si hay participantes externos o un comercial presente, y además un resumen de la reunión.
+  - La oportunidad comercial no se inventa; sin la lectura de la persona, queda solo lo que dice el resumen.
+  - Participantes solo internos, salvo que la persona pida otra cosa; los contactos del cliente van en la conclusión.
+destino:
+  por_defecto: formulario
+  formato: "Ficha con fecha, cliente, participantes internos, comercial asociado y conclusión en tres bloques: contexto y conclusión, oportunidad, próximos pasos."
+reglas: []

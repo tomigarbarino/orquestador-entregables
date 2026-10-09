@@ -1,0 +1,223 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://orquestador-entregables.local/esquema/config.schema.json",
+  "title": "Configuración del orquestador de entregables",
+  "description": "Una configuración por persona. La validan la interfaz y el orquestador.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "persona", "idioma", "zona_horaria", "fuentes", "entregables"],
+  "properties": {
+    "version": { "const": 1 },
+    "persona": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nombre"],
+      "properties": {
+        "nombre": { "type": "string", "minLength": 1, "description": "Cómo te llamás." },
+        "rol": { "type": "string", "description": "Tu rol, por ejemplo 'Líder técnica'." },
+        "equipo": { "type": "string", "description": "Tu equipo o área." },
+        "empresa": { "type": "string", "description": "Tu empresa." },
+        "github_usuario": { "type": "string", "pattern": "^[A-Za-z0-9-]*$", "description": "Tu usuario de GitHub, para filtrar tus PRs." }
+      }
+    },
+    "idioma": { "type": "string", "minLength": 2, "description": "Idioma de los entregables, por ejemplo es-AR." },
+    "zona_horaria": { "type": "string", "minLength": 3, "description": "Zona horaria IANA, por ejemplo America/Argentina/Buenos_Aires." },
+    "proyectos": {
+      "type": "array",
+      "description": "Proyectos en los que trabajás y sus repos.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["nombre"],
+        "properties": {
+          "nombre": { "type": "string", "minLength": 1 },
+          "repos": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+            "description": "Repos de GitHub como dueño/repo."
+          },
+          "rama_produccion": { "type": "string", "description": "Rama que equivale a producción (por defecto main)." },
+          "descripcion": { "type": "string" }
+        }
+      }
+    },
+    "personas": {
+      "type": "array",
+      "description": "Cómo nombrar a la gente en los textos.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["nombre"],
+        "properties": {
+          "nombre": { "type": "string", "minLength": 1 },
+          "alias": { "type": "string" },
+          "rol": { "type": "string" },
+          "nota": { "type": "string" }
+        }
+      }
+    },
+    "clientes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["nombre"],
+        "properties": {
+          "nombre": { "type": "string", "minLength": 1 },
+          "nota": { "type": "string" }
+        }
+      }
+    },
+    "glosario": {
+      "type": "array",
+      "description": "Términos propios y cómo se escriben (útil si dictás por voz).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["termino"],
+        "properties": {
+          "termino": { "type": "string", "minLength": 1 },
+          "significa": { "type": "string" },
+          "variantes_dictado": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "reglas_redaccion": {
+      "type": "array",
+      "description": "Reglas de tono y formato que valen para todos los entregables.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "marca": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "design_system": { "type": "string", "description": "Link o nombre del design system para decks y documentos." },
+        "notas": { "type": "string" }
+      }
+    },
+    "fuentes": {
+      "type": "object",
+      "description": "De dónde salen los datos. La clave es el id de la fuente.",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+      "additionalProperties": { "$ref": "#/definitions/fuente" }
+    },
+    "entregables": {
+      "type": "object",
+      "description": "Entregables configurados. La clave es el id del entregable.",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" },
+      "additionalProperties": { "$ref": "#/definitions/entregable" }
+    },
+    "modulos": {
+      "type": "object",
+      "description": "Módulos opcionales (vueltas de tuerca). Apagados por defecto.",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["activo"],
+        "properties": {
+          "activo": { "type": "boolean" },
+          "opciones": { "type": "object" }
+        }
+      }
+    },
+    "modelos": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "corridas": { "type": "string", "description": "Modelo para correr entregables (sonnet, opus, haiku o nombre completo)." },
+        "chat": { "type": "string", "description": "Modelo para el chat de la interfaz." }
+      }
+    }
+  },
+  "definitions": {
+    "fuente": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["activo", "via"],
+      "properties": {
+        "activo": { "type": "boolean" },
+        "via": { "enum": ["gh", "mcp", "local"], "description": "gh: GitHub CLI. mcp: un conector de Claude. local: archivos o servicios de tu máquina." },
+        "servidor": { "type": "string", "description": "Nombre (o parte del nombre) del conector tal como aparece en `claude mcp list`." },
+        "herramientas_extra": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+          "description": "Herramientas de solo lectura del conector que se suman a las del catálogo."
+        },
+        "carpeta": { "type": "string", "description": "Para fuentes locales: carpeta con registros de trabajo." },
+        "claude": { "type": "boolean", "description": "Sesiones de Claude Code (solo para sesiones_ia)." },
+        "codex": { "type": "boolean", "description": "Sesiones de Codex (solo para sesiones_ia)." },
+        "modelo": { "type": "string", "description": "Para ollama: modelo local a usar." },
+        "proyectos": { "type": "array", "items": { "type": "string" }, "description": "Para jira: claves de proyecto." },
+        "remitentes_resumen": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Para mail: remitentes de los resúmenes automáticos de reuniones."
+        },
+        "notas": { "type": "string" }
+      }
+    },
+    "horario": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dias", "hora"],
+          "properties": {
+            "dias": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "enum": ["lun", "mar", "mie", "jue", "vie", "sab", "dom"] }
+            },
+            "hora": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["a_pedido"],
+          "properties": { "a_pedido": { "const": true } }
+        }
+      ]
+    },
+    "destino": {
+      "type": "object",
+      "required": ["tipo"],
+      "additionalProperties": false,
+      "properties": {
+        "tipo": { "enum": ["borrador", "slack", "doc", "formulario"] },
+        "nombre": { "type": "string", "description": "Nombre corto del destino, para mostrarlo." },
+        "canal": { "type": "string", "description": "Para slack: canal o persona." },
+        "url": { "type": "string", "description": "Para doc o formulario: dónde se carga." },
+        "formato": { "type": "string", "description": "Formato esperado (por ejemplo, slides o documento)." },
+        "campos": { "type": "array", "items": { "type": "string" }, "description": "Para formulario: campos a completar." },
+        "taxonomia": { "type": "object", "description": "Para formulario: valores válidos de cada campo." },
+        "notas": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "tipo": { "const": "slack" } } }, "then": { "required": ["canal"] } },
+        { "if": { "properties": { "tipo": { "const": "formulario" } } }, "then": { "required": ["url"] } }
+      ]
+    },
+    "entregable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receta", "activo", "horario", "destino"],
+      "properties": {
+        "receta": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "nombre": { "type": "string", "description": "Nombre a mostrar. Si falta, se usa el de la receta." },
+        "activo": { "type": "boolean" },
+        "fuentes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "description": "Fuentes que usa. Si falta, se usan las de la receta."
+        },
+        "horario": { "$ref": "#/definitions/horario" },
+        "destino": { "$ref": "#/definitions/destino" },
+        "opciones": { "type": "object", "description": "Parámetros propios de la receta." }
+      }
+    }
+  }
+}

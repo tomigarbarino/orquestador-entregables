@@ -1,0 +1,91 @@
+# Catálogo de fuentes conocidas.
+#
+# Para cada fuente: cómo se conecta y qué herramientas de SOLO LECTURA puede usar el
+# orquestador. Las corridas solo tienen permitidas estas herramientas: así nada se manda
+# ni se carga en otro sistema sin tu OK.
+#
+# Para las fuentes "mcp", el nombre del conector se busca en `claude mcp list`
+# (por el campo `servidor` de tu config o por las palabras de `coincide`). Si tu conector
+# tiene otras herramientas de lectura, sumalas en `herramientas_extra` de la fuente.
+
+fuentes:
+  github:
+    nombre: GitHub
+    descripcion: PRs de tus repos, leídos con el GitHub CLI.
+    via: gh
+    como_conectar: Instalá el GitHub CLI (cli.github.com) y corré `gh auth login`.
+    herramientas_propias: [leer_github]
+
+  sesiones_ia:
+    nombre: Sesiones de Claude y Codex
+    descripcion: Pedidos y cierres de tus sesiones de Claude Code y Codex, leídos de tu máquina.
+    via: local
+    carpetas:
+      claude: ~/.claude/projects
+      codex: ~/.codex/sessions
+    como_conectar: No hace falta conectar nada; se leen las carpetas locales de cada herramienta.
+    herramientas_propias: [leer_sesiones]
+
+  registros:
+    nombre: Registros de trabajo
+    descripcion: Una carpeta con registros fechados (JSON o Markdown) que llevás vos o tus herramientas.
+    via: local
+    como_conectar: Poné la ruta de la carpeta en el campo "carpeta" de la fuente.
+    herramientas_propias: [leer_registros]
+
+  calendario:
+    nombre: Calendario
+    descripcion: Reuniones con fecha, hora y participantes.
+    via: mcp
+    como_conectar: Conectá Microsoft 365 o Google Calendar en claude.ai y autorizalo con tu cuenta.
+    proveedores:
+      - nombre: Microsoft 365
+        coincide: [microsoft 365, microsoft365, m365, outlook, office]
+        herramientas: [outlook_calendar_search, find_meeting_availability, outlook_find_available_time, get_me, read_resource]
+      - nombre: Google Calendar
+        coincide: [google calendar, gcal]
+        herramientas: [list_gcal_calendars, list_gcal_events, fetch_gcal_event, find_free_time]
+
+  mail:
+    nombre: Mail
+    descripcion: Mails, por ejemplo los resúmenes automáticos de reuniones.
+    via: mcp
+    como_conectar: Conectá Microsoft 365 o Gmail en claude.ai y autorizalo con tu cuenta.
+    proveedores:
+      - nombre: Microsoft 365
+        coincide: [microsoft 365, microsoft365, m365, outlook, office]
+        herramientas: [outlook_email_search, read_resource, get_me]
+      - nombre: Gmail
+        coincide: [gmail]
+        herramientas: [search_gmail_messages, read_gmail_message, read_gmail_thread, read_gmail_profile]
+
+  chat:
+    nombre: Chat del equipo
+    descripcion: Mensajes de Slack o Teams.
+    via: mcp
+    como_conectar: Conectá Slack o Microsoft 365 en claude.ai y autorizalo con tu cuenta.
+    proveedores:
+      - nombre: Slack
+        coincide: [slack]
+        herramientas: [slack_search_public, slack_search_public_and_private, slack_read_channel, slack_read_thread, slack_search_channels, slack_search_users, slack_read_user_profile, slack_list_user_channels]
+      - nombre: Microsoft Teams
+        coincide: [microsoft 365, microsoft365, m365, teams]
+        herramientas: [teams_list_chats, chat_message_search, teams_list_channel_messages, teams_list_channels, teams_list_teams, read_resource]
+
+  jira:
+    nombre: Jira
+    descripcion: Tickets y sus cambios de estado.
+    via: mcp
+    como_conectar: Conectá Atlassian en claude.ai y autorizalo con tu cuenta.
+    proveedores:
+      - nombre: Atlassian
+        coincide: [atlassian, jira]
+        herramientas: [searchJiraIssuesUsingJql, getJiraIssue, getVisibleJiraProjects, getAccessibleAtlassianResources, atlassianUserInfo, lookupJiraAccountId, search, fetch]
+
+  ollama:
+    nombre: Modelo local (Ollama)
+    descripcion: Un modelo que corre en tu computadora, para resumir sin sacar datos de la máquina.
+    via: local
+    url: http://127.0.0.1:11434
+    como_conectar: Instalá Ollama (ollama.com) y bajá un modelo, por ejemplo `ollama pull qwen3.5:9b`.
+    herramientas_propias: [resumir_local]
