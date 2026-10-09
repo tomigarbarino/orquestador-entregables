@@ -145,7 +145,7 @@ registrar('estado', TODOS, {
 // ---------- Corridas ----------
 
 registrar('preparar_corrida', CORRIDA, {
-  description: 'Prepara una corrida de un entregable: receta efectiva, instrucciones completas con la config, ventana de fechas, días especiales y estado de cada fuente con la herramienta que hay que usar para leerla. Las fuentes que se leen con conectores (calendario, mail, chat, jira) se registran después con registrar_lectura.',
+  description: 'Prepara una corrida de un entregable: receta efectiva, instrucciones completas con la config, ventana de fechas, días especiales y estado de cada fuente con la herramienta que hay que usar para leerla. Las fuentes que se leen con conectores (calendario, mail, slack, teams, jira) se registran después con registrar_lectura.',
   inputSchema: {
     entregable: z.string().describe('Id del entregable, por ejemplo "daily"'),
     corrida: z.string().optional().describe('Id de corrida ya creada (lo pasa la interfaz). Si falta, se crea una.'),

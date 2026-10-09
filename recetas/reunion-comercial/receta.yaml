@@ -16,8 +16,10 @@ fuentes:
   - id: calendario
     para: Fecha real de la reunión, participantes con su nombre (del detalle del evento) y la respuesta de la persona
     requerida: true
-  - id: chat
-    para: Lo que se habló antes o después de la reunión, si hace falta contexto
+  - id: slack
+    para: Lo que se habló en Slack antes o después de la reunión, si hace falta contexto
+  - id: teams
+    para: Lo que se habló en Teams antes o después de la reunión, si hace falta contexto
 pasos:
   - id: lectura
     nombre: Tomar la lectura de la persona
@@ -25,7 +27,7 @@ pasos:
   - id: evidencia
     nombre: Buscar resumen y fecha
     detalle: Resumen del notetaker en el mail y fecha real, participantes y respuesta de la persona en el detalle del evento del calendario. Cada búsqueda se registra con registrar_lectura, con todos los ids que devolvió, la consulta y el total.
-    usa: [mail, calendario, chat]
+    usa: [mail, calendario, slack, teams]
   - id: candidatas
     nombre: Revisar las reuniones candidatas
     detalle: Para cada evento de la ventana, las dos condiciones por separado (participantes externos, o un comercial de la lista de personas presente) y si hay resumen. Cada una va a ficha, a "posible, confirmá" o a descartados con su motivo.
@@ -37,7 +39,7 @@ control:
   - Cuenta como comercial si hay participantes externos o un comercial presente, y además un resumen de la reunión. Las dos condiciones se revisan por separado y los eventos con dominios externos excluidos se nombran con su motivo. Un descarte por "comercial presente" nombra a los comerciales de la lista que están en ese evento.
   - Los nombres de los participantes salen del detalle del evento. Nunca se deduce un nombre de una dirección de mail; sin nombre a la vista, va la dirección.
   - Solo es "comercial" o "comercial asociado" alguien de la lista de personas con ese rol. Si una misma persona aparece con un dominio interno y uno externo, se dice, y que la reunión sea con el cliente se rotula como hipótesis.
-  - Sin resumen, chat o lectura de la persona que confirme que ocurrió, la reunión está "agendada", con la respuesta de la persona en el calendario (aceptada, tentativa o sin respuesta), y la lista se rotula "Invitados (según calendario)", no "participantes".
+  - Sin resumen, mensaje de Slack o Teams o lectura de la persona que confirme que ocurrió, la reunión está "agendada", con la respuesta de la persona en el calendario (aceptada, tentativa o sin respuesta), y la lista se rotula "Invitados (según calendario)", no "participantes".
   - La oportunidad comercial no se inventa; sin la lectura de la persona, queda solo lo que dice el resumen.
   - Participantes solo internos, salvo que la persona pida otra cosa; los contactos del cliente van en la conclusión.
   - Cada candidata muestra qué quedaría en cada campo del destino y cuáles faltan.

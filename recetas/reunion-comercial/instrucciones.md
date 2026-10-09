@@ -17,11 +17,11 @@ Después buscá:
 - En el **mail**, el resumen automático de la reunión. Remitentes habituales: {{fuentes.mail.remitentes_resumen}}. Suele haber también una invitación que confirma el título.
 - En el **calendario**, la fecha real de la reunión (la que se carga, no la de hoy) y los participantes. Los nombres salen del **detalle del evento** (leelo con la herramienta de detalle del conector). Nunca deduzcas un nombre a partir de la dirección de mail: si no hay nombre a la vista, poné la dirección.
 
-Registrá cada búsqueda de mail, calendario y chat con `registrar_lectura`: las refs son **todos** los ids que devolvió (no una selección; lo que no sirve va a descartados), `consulta` es la búsqueda tal como la hiciste y `total`, cuántos resultados trajo. El `resumen` cuenta lo leído ("23 eventos del 2 al 9"), sin clasificar todavía: las candidatas y los descartes se reportan en el paso candidatas. En "Fuentes revisadas" nombrá solo las consultas que hiciste, con el término usado: una búsqueda sin resultados que cites tiene que estar en la corrida. Buscá un término por consulta; si hiciste una consulta combinada, citala tal cual y no afirmes que no hay nada sobre cada término por separado. Al describir un mail o un evento descartado, usá su asunto o título real.
+Registrá cada búsqueda de mail, calendario, Slack y Teams (cada una con su fuente, `slack` o `teams`) con `registrar_lectura`: las refs son **todos** los ids que devolvió (no una selección; lo que no sirve va a descartados), `consulta` es la búsqueda tal como la hiciste y `total`, cuántos resultados trajo. El `resumen` cuenta lo leído ("23 eventos del 2 al 9"), sin clasificar todavía: las candidatas y los descartes se reportan en el paso candidatas. En "Fuentes revisadas" nombrá solo las consultas que hiciste, con el término usado: una búsqueda sin resultados que cites tiene que estar en la corrida. Buscá un término por consulta; si hiciste una consulta combinada, citala tal cual y no afirmes que no hay nada sobre cada término por separado. Al describir un mail o un evento descartado, usá su asunto o título real.
 
 Si el detalle del evento trae un enlace de transcripción y no se puede leer, decilo en una línea en "Fuentes revisadas".
 
-Mientras no haya resumen, chat o lectura de la persona que confirme que la reunión ocurrió, decí que está "agendada" e indicá la respuesta de la persona en el calendario (aceptada, tentativa o sin respuesta). Rotulá la lista como "Invitados (según calendario)", nunca "participantes".
+Mientras no haya resumen, mensaje de Slack o Teams o lectura de la persona que confirme que la reunión ocurrió, decí que está "agendada" e indicá la respuesta de la persona en el calendario (aceptada, tentativa o sin respuesta). Rotulá la lista como "Invitados (según calendario)", nunca "participantes".
 
 ## 2. Qué cuenta como comercial
 
@@ -36,7 +36,7 @@ En las candidatas, igual que en la ficha, separá invitados internos, comercial 
 
 Cada candidata usa esta plantilla fija:
 
-- **Estado**: agendada (tu respuesta: aceptada / tentativa / sin respuesta), o "ocurrió" si hay resumen, chat o lectura que lo confirme.
+- **Estado**: agendada (tu respuesta: aceptada / tentativa / sin respuesta), o "ocurrió" si hay resumen, mensaje de Slack o Teams o lectura que lo confirme.
 - **Invitados (según calendario)**: internos, con su respuesta si la hay.
 - **Comercial asociado**: de la lista de personas, o "ninguno de la lista".
 - **Contactos del cliente**: nombre y dominio, del detalle del evento.

@@ -20,6 +20,7 @@ Fuentes, en este orden de confianza:
 {{lista.proyectos}}
    Contá lo que hace cada PR a partir de su `cuerpo`, no solo del título. Usá `motivo_cierre`, `incluye` y `en_produccion` para el estado.
 4. Calendario, solo para reuniones (ver reglas). Lo leído con el conector registralo con `registrar_lectura`.
+5. **Slack** y **Teams**, si las fuentes están activas: solo para confirmar que algo se hizo o que una reunión ocurrió, en los canales configurados ({{fuentes.slack.canales}}) y los equipos ({{fuentes.teams.equipos}}). No deduzcas trabajo de una conversación. Registrá cada lectura con `registrar_lectura` (fuente `slack` o `teams`) y citá los mensajes con la ref que indica `como_referenciar`. Solo lectura: no envíes ni respondas mensajes.
 
 Reglas:
 

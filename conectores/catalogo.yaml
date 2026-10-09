@@ -65,9 +65,34 @@ fuentes:
         coincide: [gmail]
         herramientas: [search_gmail_messages, read_gmail_message, read_gmail_thread, read_gmail_profile]
 
+  slack:
+    nombre: Slack
+    descripcion: Mensajes de los canales de Slack que elijas y los que te mencionan, solo lectura.
+    via: mcp
+    como_referenciar: "slack:<id del canal>/<marca de tiempo del mensaje o del hilo> (o el link del mensaje que devuelve la búsqueda)"
+    como_conectar: Conectá Slack en claude.ai y autorizalo con tu cuenta.
+    proveedores:
+      - nombre: Slack
+        coincide: [slack]
+        herramientas: [slack_search_public, slack_search_public_and_private, slack_read_channel, slack_read_thread, slack_search_channels, slack_search_users, slack_read_user_profile, slack_list_user_channels]
+
+  teams:
+    nombre: Microsoft Teams
+    descripcion: Mensajes de los equipos, canales y chats de Teams que elijas, solo lectura.
+    via: mcp
+    como_referenciar: "teams:<id del mensaje o del chat> (el id o el link que devuelve la búsqueda)"
+    como_conectar: Conectá Microsoft 365 en claude.ai y autorizalo con tu cuenta (es el mismo conector que usan el mail y el calendario).
+    proveedores:
+      - nombre: Microsoft 365
+        coincide: [microsoft 365, microsoft365, m365, teams]
+        herramientas: [teams_list_chats, chat_message_search, teams_list_channel_messages, teams_list_channels, teams_list_teams, read_resource]
+
+  # Alias por compatibilidad: las configs viejas con "chat" siguen funcionando (Slack o Teams, uno solo).
+  # Las configs nuevas usan `slack` y `teams`.
   chat:
     nombre: Chat del equipo
-    descripcion: Mensajes de Slack o Teams.
+    descripcion: Mensajes de Slack o Teams (fuente anterior; usá Slack y Teams por separado).
+    alias: true
     via: mcp
     como_referenciar: "chat:<id del mensaje o del hilo>"
     como_conectar: Conectá Slack o Microsoft 365 en claude.ai y autorizalo con tu cuenta.

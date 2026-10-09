@@ -355,7 +355,7 @@ export default function Asistente() {
             {paso === 1 && (
               <Grupo etiqueta="Fuentes">
                 <div className="fuentes-asistente" id={ids.fuentes}>
-                  {Object.entries(s.catalogo?.fuentes || {}).map(([id, cat]) => {
+                  {Object.entries(s.catalogo?.fuentes || {}).filter(([, cat]) => !cat.alias).map(([id, cat]) => {
                     const elegida = f.fuentes.find((x) => x.id === id);
                     const k = conexionDe(s, id);
                     const falta = elegida && k !== 'conectada' && k !== 'desconocida';

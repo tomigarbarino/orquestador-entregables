@@ -173,6 +173,18 @@
           "items": { "type": "string" },
           "description": "Para mail: remitentes de los resúmenes automáticos de reuniones."
         },
+        "canales": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Para slack y teams: canales a leer, por ejemplo #pedidos-producto."
+        },
+        "menciones_directas": { "type": "boolean", "description": "Para slack: leer también los mensajes que te mencionan." },
+        "equipos": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Para teams: equipos cuyos canales se leen."
+        },
+        "chats_directos": { "type": "boolean", "description": "Para teams: leer también tus chats directos y grupales." },
         "notas": { "type": "string" }
       }
     },

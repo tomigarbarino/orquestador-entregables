@@ -4,7 +4,7 @@ import { useApp, useAccion } from '../estado.jsx';
 import { api } from '../api.js';
 import { Campo } from '../componentes/Editores.jsx';
 import Boton from '../componentes/Boton.jsx';
-import { Icono, ICONO_FUENTE, ICONO_CONEXION, CircleCheck, Plug, RefreshCw, TriangleAlert, ChevronDown } from '../componentes/Iconos.jsx';
+import { Icono, ICONO_FUENTE, ICONO_CONEXION, CircleCheck, Plug, Plus, RefreshCw, TriangleAlert, ChevronDown } from '../componentes/Iconos.jsx';
 import { TEXTO_CONEXION, haceCuanto, fechaHora, nombreFuente, plural } from '../textos.js';
 
 const URL_CONECTORES = 'https://claude.ai/settings/connectors';
@@ -118,6 +118,37 @@ function FilaFuente({ id }) {
   );
 }
 
+// Fuentes del catálogo que todavía no están en la configuración (por ejemplo Slack y Teams en una
+// configuración que usaba "chat"). Se suman apagadas: la persona las prende cuando quiere.
+function FilaSumar({ id }) {
+  const { s, acciones } = useApp();
+  const cat = s.catalogo?.fuentes?.[id] || {};
+  const nombre = nombreFuente(s, id);
+  const [sumar] = useAccion(() => {
+    const nueva = { activo: false, via: cat.via || 'mcp' };
+    if (nueva.via === 'mcp' && cat.proveedores?.[0]) nueva.servidor = cat.proveedores[0].nombre;
+    return acciones.guardarConfig({ ...s.config, fuentes: { ...s.config.fuentes, [id]: nueva } }, `Sumar la fuente ${nombre}`);
+  });
+  return (
+    <tr className="apagada">
+      <td>
+        <div className="nombre-fuente">
+          <Icono de={ICONO_FUENTE[id] || Plug} />
+          <div>
+            <b>{nombre}</b>
+            {cat.descripcion && <div className="descripcion-fuente">{cat.descripcion}</div>}
+          </div>
+        </div>
+      </td>
+      <td><span className="conexion conexion-apagada"><Icono de={ICONO_CONEXION.apagada} />No está en tu configuración</span></td>
+      <td><div className="que-hacer"><span>Sumala para poder prenderla y elegirla en tus entregables.</span></div></td>
+      <td className="col-activa">
+        <Boton chico variante="texto" icono={Plus} onClick={sumar} aria-label={`Sumar ${nombre}`}>Sumar</Boton>
+      </td>
+    </tr>
+  );
+}
+
 function AgregarMcp() {
   const { s, acciones } = useApp();
   const [datos, setDatos] = useState({ nombre: '', transporte: 'stdio', comando: '', args: '', url: '', alcance: 'user' });
@@ -196,6 +227,7 @@ export default function Conectores() {
   const [revisar, revisando] = useAccion(() => acciones.refrescarConectores());
   const det = s.detectado || {};
   const ids = Object.keys(s.config?.fuentes || {});
+  const sumables = Object.entries(s.catalogo?.fuentes || {}).filter(([id, c]) => !c.alias && c.via === 'mcp' && !ids.includes(id)).map(([id]) => id);
   return (
     <div className="pagina">
       <header className="cabecera">
@@ -211,7 +243,10 @@ export default function Conectores() {
         <div className="tabla-scroll">
           <table className="tabla tabla-fuentes">
             <thead><tr><th scope="col">Fuente</th><th scope="col">Estado</th><th scope="col">Qué hacer</th><th scope="col">Activa</th></tr></thead>
-            <tbody>{ids.map((id) => <FilaFuente key={id} id={id} />)}</tbody>
+            <tbody>
+              {ids.map((id) => <FilaFuente key={id} id={id} />)}
+              {sumables.map((id) => <FilaSumar key={id} id={id} />)}
+            </tbody>
           </table>
         </div>
         {det.actualizado && <p className="pie-revisado" title={fechaHora(det.actualizado)}>Revisado {haceCuanto(det.actualizado)}</p>}

@@ -79,10 +79,19 @@ fuentes:
     via: mcp
     servidor: Microsoft 365
     remitentes_resumen: [resumenes@notetaker.example.com]
-  chat:
+  slack:
     activo: false
     via: mcp
     servidor: Slack
+    canales: ["#pedidos-producto"]
+    menciones_directas: true
+  teams:
+    activo: false
+    via: mcp
+    servidor: Microsoft 365
+    equipos: [Producto Acme]
+    canales: [General]
+    chats_directos: false
   jira:
     activo: false
     via: mcp

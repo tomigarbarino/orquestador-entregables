@@ -22,8 +22,10 @@ fuentes:
     para: Registros de trabajo fechados, si los llevás
   - id: calendario
     para: Solo para confirmar fechas; nunca para deducir trabajo
-  - id: chat
-    para: Bloqueos o pedidos mencionados en el chat del equipo
+  - id: slack
+    para: Bloqueos o pedidos en los canales de Slack configurados y en los mensajes que mencionan a la persona
+  - id: teams
+    para: Bloqueos o pedidos en los equipos y canales de Teams configurados (y los chats directos, si están prendidos)
 pasos:
   - id: ventana
     nombre: Definir la ventana
@@ -31,7 +33,7 @@ pasos:
   - id: evidencia
     nombre: Juntar evidencia
     detalle: Leer cada fuente activa, en el orden de la lista, sin barrer historiales enteros y pidiendo todas las páginas. De las sesiones se usan los hitos de la ventana y los pendientes; de los PRs, el cuerpo, el motivo de cierre, lo que incluyen y si ya están en producción. Lo leído con conectores se registra con registrar_lectura.
-    usa: [github, sesiones_ia, registros, calendario, chat]
+    usa: [github, sesiones_ia, registros, calendario, slack, teams]
   - id: agrupar
     nombre: Agrupar por proyecto
     detalle: Agrupar por proyecto y por resultado, no PR por PR. El proyecto sale del repo o del tema que nombra el pedido, no de la carpeta desde la que corrió la sesión. Si el repo no es de un proyecto configurado, va a "Otros" o a descartados. Una sesión con varios hitos de la ventana aporta cada hito con entrega, no solo el primero.

@@ -22,6 +22,10 @@ fuentes:
     requerida: true
   - id: calendario
     para: Reuniones del día, solo con evidencia de que ocurrieron
+  - id: slack
+    para: Confirmaciones de trabajo hecho o de reuniones que ocurrieron, en los canales de Slack configurados; nunca para deducir trabajo
+  - id: teams
+    para: Confirmaciones de trabajo hecho o de reuniones que ocurrieron, en los equipos y canales de Teams configurados; nunca para deducir trabajo
 pasos:
   - id: ventana
     nombre: Definir el día
@@ -29,7 +33,7 @@ pasos:
   - id: evidencia
     nombre: Juntar evidencia
     detalle: De las sesiones se usan los hitos de ese día y los pendientes; de los PRs, el cuerpo, el motivo de cierre, lo que incluyen y si ya están en producción. Se piden todas las páginas. Lo leído con conectores se registra con registrar_lectura.
-    usa: [registros, sesiones_ia, github, calendario]
+    usa: [registros, sesiones_ia, github, calendario, slack, teams]
   - id: agrupar
     nombre: Agrupar por resultado
     detalle: Varios PR o sesiones de la misma cosa son un solo registro del día. El proyecto sale del repo o del tema que nombra el pedido, no de la carpeta desde la que corrió la sesión; si no es de un proyecto configurado, la iniciativa es "Otros" (el tema va en el título) o va a descartados.
