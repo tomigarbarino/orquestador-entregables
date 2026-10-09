@@ -180,6 +180,8 @@ Vienen apagados. Se prenden en **Entregables → Módulos opcionales**:
 
 ## Cómo está armado
 
+Detalle por funcionalidad, flujo de una corrida, validación y riesgos conocidos: [docs/funcionalidades.md](docs/funcionalidades.md).
+
 ```
 recetas/             recetas genéricas: daily, registro-tareas, deck-avance, reunion-comercial, bitacora-reuniones
 modulos/             vueltas de tuerca opcionales
