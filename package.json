@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12.0"
   },
   "scripts": {
     "start": "node servidor/index.mjs",
@@ -19,7 +19,8 @@
     "capturas": "node scripts/capturas.mjs",
     "test": "node --test test/*.test.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "build:demo": "node scripts/build-demo.mjs"
+    "build:demo": "node scripts/build-demo.mjs",
+    "caso": "node scripts/caso-guiado.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.20.0",

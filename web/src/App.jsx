@@ -8,6 +8,7 @@ import Conectores from './paginas/Conectores.jsx';
 import Perfil from './paginas/Perfil.jsx';
 import Asistente from './paginas/Asistente.jsx';
 import Historial from './paginas/Historial.jsx';
+import CasoGuiado from './paginas/CasoGuiado.jsx';
 import Chat from './componentes/Chat.jsx';
 import Boton from './componentes/Boton.jsx';
 import {
@@ -30,6 +31,7 @@ import {
 } from './componentes/Iconos.jsx';
 
 const PAGINAS = [
+  { id: 'caso', nombre: 'Caso guiado', icono: FlaskConical, Componente: CasoGuiado },
   { id: 'visualizador', nombre: 'Inicio', icono: Workflow, Componente: Visualizador },
   { id: 'entregables', nombre: 'Entregables', icono: FileStack, Componente: Entregables, borradores: 'entregable:' },
   { id: 'conectores', nombre: 'Conectores', icono: Plug, Componente: Conectores },
@@ -187,7 +189,7 @@ export default function App() {
   const pendientes = s.propuestas.filter((p) => p.estado === 'pendiente').length;
   const validaOk = s.validacion?.ok;
   return (
-    <div className={`app ${s.ui.chatAbierto ? 'con-chat' : ''}`}>
+    <div className={`app ${s.ui.chatAbierto && pagina.id !== 'caso' ? 'con-chat' : ''}`}>
       <a className="salto-contenido" href="#contenido">Saltar al contenido</a>
       <div className="nav">
         <div className="marca">
@@ -227,10 +229,10 @@ export default function App() {
         <div className="nav-pie">
           <div className={`nav-validez ${validaOk ? 'ok' : 'error'}`}>
             <Icono de={validaOk ? CircleCheck : TriangleAlert} />
-            <span>{validaOk ? 'Configuración válida' : 'La configuración tiene errores'}</span>
+            <span>{pagina.id === 'caso' ? 'Snapshot público, sin cuentas' : validaOk ? 'Configuración válida' : 'La configuración tiene errores'}</span>
           </div>
-          <div className="nav-persona">{s.config?.persona?.nombre}</div>
-          <div className="nav-espacio" title={s.espacio}>{s.espacio}</div>
+          <div className="nav-persona">{pagina.id === 'caso' ? 'Caso guiado' : s.config?.persona?.nombre}</div>
+          <div className="nav-espacio" title={pagina.id === 'caso' ? 'Corrida registrada · revisión humana pendiente' : s.espacio}>{pagina.id === 'caso' ? 'Corrida registrada · revisión pendiente' : s.espacio}</div>
         </div>
       </div>
       <div className="columna-principal">
@@ -244,7 +246,7 @@ export default function App() {
           <div className="franja-demo franja-demo-publica" role="note">
             <Icono de={FlaskConical} />
             <span>
-              Demo pública con datos ficticios. Para usarlo con tus datos, instalalo en tu compu{' '}
+              Demo pública: el caso guiado reproduce un snapshot público; las otras recetas usan datos ficticios.{' '}
               <a href={URL_REPO} target="_blank" rel="noopener noreferrer">(github.com/tomigarbarino/orquestador-entregables)</a>
             </span>
           </div>
@@ -256,12 +258,12 @@ export default function App() {
           </div>
         )}
         <main id="contenido" className="principal" tabIndex={-1} ref={principal}>
-          <Banners />
+          {pagina.id !== 'caso' && <Banners />}
           <pagina.Componente />
         </main>
         <Avisos />
       </div>
-      <Chat />
+      {pagina.id !== 'caso' && <Chat />}
       <div className="visualmente-oculto" role="status" aria-live="polite">{s.anuncio}</div>
     </div>
   );

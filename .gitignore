@@ -5,6 +5,7 @@ node_modules/
 # Nunca se sube al repo.
 mi-espacio/
 config.yaml
+!ejemplo/demo/semilla/config.yaml
 mis-recetas/
 
 # Varios

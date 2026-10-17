@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useReducer,
 import { api, escucharEventos } from './api.js';
 import { crearValidadores } from '@lib/validar.mjs';
 import { entregableDePropuesta, nombreEntregable, plural } from './textos.js';
+import { DEMO_ESTATICA } from './demo/estatica.js';
 
 const Contexto = createContext(null);
 
@@ -27,7 +28,7 @@ const inicial = {
   avisos: [],
   borradores: {},
   ui: {
-    pagina: 'visualizador',
+    pagina: (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('caso') === 'avance') || DEMO_ESTATICA ? 'caso' : 'visualizador',
     vista: 'general',
     entregable: null,
     entregableEnFoco: null,

@@ -25,7 +25,7 @@ Los entregables que cada persona arma siempre igual (daily, registro de tareas y
 - Las fuentes sin conector no aportan evidencia.
 - Una reunión sin resumen queda aparte: no se inventa qué se habló.
 - Los módulos opcionales (digest de Jira, seguimiento comercial, resumen local con Ollama) vienen apagados.
-- La demo pública (https://orquestador-entregables.vercel.app) usa datos ficticios y corre entera en el navegador.
+- La demo pública (https://orquestador-entregables-tomas.vercel.app) usa datos ficticios y corre entera en el navegador.
 
 ## Panorama técnico
 

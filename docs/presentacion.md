@@ -1,7 +1,7 @@
 # Presentación para el AI Day
 
 - **Video de 2 minutos:** [presentacion/orquestador-presentacion.webm](presentacion/orquestador-presentacion.webm). Recorre la demo pública con un texto por paso: mapa general, Probar ahora, borrador con evidencia, chat que suma Jira, Conectores, origen de tareas, Historial y Nuevo entregable.
-- **Demo pública:** https://orquestador-entregables.vercel.app (datos ficticios, sin instalar nada).
+- **Demo pública:** https://orquestador-entregables-tomas.vercel.app (datos ficticios, sin instalar nada).
 - **Detalle técnico:** [funcionalidades.md](funcionalidades.md).
 
 ## Qué resuelve

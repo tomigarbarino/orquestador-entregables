@@ -1,0 +1,71 @@
+# Semilla ficticia pública. Hereda equipo.yaml; no contiene cuentas reales.
+version: 1
+persona:
+  nombre: Ana Ejemplo
+  rol: Líder de producto
+  equipo: Producto
+  empresa: Acme Logística
+  github_usuario: ana-ejemplo
+idioma: es-AR
+zona_horaria: America/Argentina/Buenos_Aires
+proyectos:
+  - nombre: Rutas
+    descripcion: Planificador de recorridos de reparto
+    repos:
+      - acme-ejemplo/rutas-api
+      - acme-ejemplo/rutas-web
+    rama_produccion: main
+  - nombre: Depósitos
+    descripcion: Control de stock en depósitos
+    repos:
+      - acme-ejemplo/depositos
+    rama_produccion: main
+personas:
+  - nombre: Beto Ejemplo
+    alias: Beto
+    rol: Gerente de operaciones
+    nota: Decir "Beto", nunca "el gerente".
+clientes:
+  - nombre: Transportes Demo
+    nota: Cliente piloto de Rutas.
+glosario:
+  - termino: Rutas
+    significa: el planificador de recorridos
+    variantes_dictado:
+      - rutaz
+      - rutas app
+dias_especiales:
+  - fecha: 2026-10-12
+    nota: Feriado, no se trabaja.
+marca:
+  design_system: Plantilla de presentaciones de Acme
+  notas: Fondo claro, una idea por slide.
+fuentes:
+  registros:
+    activo: true
+    via: local
+    carpeta: ~/registros-de-trabajo
+  sesiones_ia:
+    claude: true
+    codex: true
+  ollama:
+    modelo: qwen3.5:9b
+  slack:
+    activo: true
+entregables:
+  bitacora-reuniones:
+    opciones:
+      periodo: semana
+  deck-avance:
+    opciones:
+      ultima_entrega: 2026-10-01
+modulos:
+  digest_jira:
+    activo: true
+  seguimiento_comercial:
+    activo: true
+  resumen_local:
+    activo: true
+modelos:
+  corridas: sonnet
+  chat: sonnet

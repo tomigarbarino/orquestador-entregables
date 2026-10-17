@@ -4,9 +4,11 @@
 
 Una plantilla configurable para los entregables que un equipo prepara una y otra vez: la daily, el registro de tareas, el deck de avance, las notas de una reunión y la bitácora semanal. Combina recetas, una interfaz web local y Claude Code para reunir las fuentes y dejar visible cómo se armó cada borrador.
 
-**[Probar la demo pública](https://orquestador-entregables.vercel.app) · [Ver la presentación](docs/presentacion.md) · [Mi trabajo y contacto](https://tomas-garbarino.vercel.app/)**
+**[Probar la demo pública](https://orquestador-entregables-tomas.vercel.app) · [Ver la presentación](docs/presentacion.md) · [Mi trabajo y contacto](https://tomas-garbarino.vercel.app/)**
 
-La demo usa **datos ficticios y corridas simuladas**. Permite explorar el flujo sin conectar cuentas ni ejecutar modelos; no muestra lecturas reales de GitHub, chats o reuniones.
+**Empezá por el [caso guiado de avance con evidencia](https://orquestador-entregables-tomas.vercel.app/?caso=avance):** tres commits públicos → selección IA registrada → control de referencias/estados → borrador revisable. Probá el fallo deliberado: afirmar «desplegado» sin evidencia bloquea todo el borrador.
+
+El navegador reproduce una corrida local capturada, sin conectar cuentas ni llamar modelos. Las otras recetas conservan datos ficticios y corridas simuladas. [Recorrido de dos minutos, mediciones y límites](docs/caso-guiado.md).
 
 ![Flujo de fuentes, pasos y entregables en el visualizador](docs/capturas/01-visualizador-general.png)
 
@@ -63,7 +65,7 @@ La disponibilidad de cada fuente depende de la cuenta, los permisos y los conect
 
 | Modo | Qué hace | Qué necesitás |
 | --- | --- | --- |
-| **Demo pública** | Simula corridas, datos y cambios desde el navegador. | Abrir el enlace de la demo. |
+| **Demo pública** | Caso guiado con snapshot público y replay de una corrida registrada; otras recetas ficticias. | Abrir el enlace de la demo. |
 | **Demo local** (`npm run demo`) | Abre un espacio temporal con datos ficticios y simulación de corridas/chat. | Node.js, npm y las dependencias del repo. |
 | **Uso con fuentes reales** (`npm start`) | Usa tu espacio local y ejecuta las recetas con Claude Code. | Claude Code con sesión, skills y MCP del orquestador, más las fuentes que autorices. |
 
@@ -78,7 +80,7 @@ npm ci
 npm run demo
 ```
 
-La interfaz abre en **http://127.0.0.1:4317**. Este modo no necesita conectar cuentas ni hacer inferencia.
+La interfaz abre en [http://127.0.0.1:4317](http://127.0.0.1:4317). Este modo no necesita conectar cuentas ni hacer inferencia.
 
 ### Instalar para usar fuentes reales
 
@@ -152,6 +154,7 @@ Para revisar las decisiones y límites de cada función, empezá por [docs/funci
 
 | Comando | Qué permite revisar |
 | --- | --- |
+| `npm run caso` | Reproduce y controla la corrida pública sin red ni inferencia. |
 | `npm test` | Tests de lógica, recetas, control, fuentes, semilla y textos. |
 | `npm run smoke` | Flujo de ejemplo sin usar tu espacio personal. |
 | `npm run validar` | Configuración y recetas del espacio seleccionado. |

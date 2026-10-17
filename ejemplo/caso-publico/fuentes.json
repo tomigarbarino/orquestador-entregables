@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "capturado_en": "2026-10-17T20:50:54.666Z",
+  "repositorio": "tomigarbarino/orquestador-entregables",
+  "rama": "main",
+  "head": "af6dfb003d4dbaefeb7185b38298143359c6c62e",
+  "verificacion": "git merge-base --is-ancestor para cada SHA respecto del HEAD público capturado; no verifica despliegues",
+  "fuentes": [
+    {
+      "id": "C1",
+      "sha": "af6dfb003d4dbaefeb7185b38298143359c6c62e",
+      "titulo": "docs: align setup guidance with locked Vite Node requirements",
+      "fecha": "2026-10-17",
+      "estado": "en_main",
+      "url": "https://github.com/tomigarbarino/orquestador-entregables/commit/af6dfb003d4dbaefeb7185b38298143359c6c62e"
+    },
+    {
+      "id": "C2",
+      "sha": "0b8dc9bc71d07b259ecdf917534d50c285e51b5f",
+      "titulo": "docs: clarify project value, evaluation steps, and evidence boundaries",
+      "fecha": "2026-10-17",
+      "estado": "en_main",
+      "url": "https://github.com/tomigarbarino/orquestador-entregables/commit/0b8dc9bc71d07b259ecdf917534d50c285e51b5f"
+    },
+    {
+      "id": "C3",
+      "sha": "dec0a048c393b7cf7fff9beffd7d1e10b1f670d8",
+      "titulo": "GitHub: cuenta lo que llegó a producción con una convergencia aunque se haya mergeado antes del período, hasta 200 PRs por repo, y reglas más estrictas para el deck de avance",
+      "fecha": "2026-10-09",
+      "estado": "en_main",
+      "url": "https://github.com/tomigarbarino/orquestador-entregables/commit/dec0a048c393b7cf7fff9beffd7d1e10b1f670d8"
+    }
+  ]
+}

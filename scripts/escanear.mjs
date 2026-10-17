@@ -20,7 +20,8 @@ const HOSTS_PERMITIDOS = [
   'registry.npmjs.org', 'www.w3.org', 'localhost', '127.0.0.1', 'orquestador-entregables.local',
   'fathom.ai', 'developers.fathom.ai', // documentación pública del conector de Fathom
   'github.com/acme-ejemplo', // organización ficticia de los ejemplos y los tests
-  'orquestador-entregables.vercel.app', // demo pública de este repo
+  'orquestador-entregables-tomas.vercel.app', // demo pública de este repo
+  'tomas-garbarino.vercel.app', // portfolio y contacto públicos del autor
 ];
 const DOMINIOS_EJEMPLO = /(^|\.)example(\.com|\.org)?$|\.example$|\.invalid$|\.test$/;
 const PALABRAS_GENERICAS = new Set(['producto', 'equipo', 'desarrollo', 'investigación', 'comercial', 'daily', 'main', 'develop', 'jira', 'slack', 'github', 'ejemplo', 'datos', 'proyecto', 'agentes']);
