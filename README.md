@@ -69,7 +69,7 @@ La disponibilidad de cada fuente depende de la cuenta, los permisos y los conect
 
 ### Probar la demo local
 
-El proyecto declara Node.js 20 o superior en `package.json`. Instalá una versión compatible con sus dependencias y git; después:
+Para seguir esta guía, usá **Node.js 22.12 o posterior**, npm y git. Esa versión cumple los requisitos de Vite y del plugin de React registrados en el lockfile. Después:
 
 ```sh
 git clone https://github.com/tomigarbarino/orquestador-entregables.git
